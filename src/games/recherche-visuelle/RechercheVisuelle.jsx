@@ -1,0 +1,183 @@
+import { useEffect, useRef, useState } from 'react'
+import Feedback from '../../components/Feedback.jsx'
+import GameOver from '../../components/GameOver.jsx'
+import { useRounds } from '../../hooks/useRounds.js'
+import { PICTOS, Picto } from '../../lib/pictos.jsx'
+import { pick, randomInt, sample, shuffle } from '../../lib/random.js'
+
+const TOTAL_ROUNDS = 6
+
+const LEVEL_CONFIG = {
+  calme: { objets: 24, rotation: 0, tailleMin: 100, tailleMax: 100 },
+  charge: { objets: 48, rotation: 14, tailleMin: 84, tailleMax: 112 },
+  dense: { objets: 80, rotation: 26, tailleMin: 70, tailleMax: 120 },
+}
+
+/**
+ * Compose un décor : la cible apparaît une seule fois, noyée parmi des
+ * objets distracteurs répartis sur une grille légèrement bousculée.
+ */
+function construireScene(level) {
+  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG.calme
+  const cible = pick(PICTOS)
+  const autres = PICTOS.filter((picto) => picto.id !== cible.id)
+
+  const distracteurs = Array.from({ length: config.objets - 1 }, () => pick(autres))
+  const objets = shuffle([cible, ...distracteurs])
+
+  const colonnes = Math.ceil(Math.sqrt(objets.length * 1.6))
+  const lignes = Math.ceil(objets.length / colonnes)
+  const cases = sample(
+    Array.from({ length: colonnes * lignes }, (_, index) => index),
+    objets.length,
+  )
+
+  const largeur = 100 / colonnes
+  const hauteur = 100 / lignes
+
+  const items = objets.map((picto, index) => {
+    const caseIndex = cases[index]
+    const colonne = caseIndex % colonnes
+    const ligne = Math.floor(caseIndex / colonnes)
+    const jitter = (amplitude) => (Math.random() - 0.5) * amplitude
+    return {
+      key: `${picto.id}-${index}`,
+      picto,
+      estCible: picto.id === cible.id,
+      left: colonne * largeur + largeur / 2 + jitter(largeur * 0.5),
+      top: ligne * hauteur + hauteur / 2 + jitter(hauteur * 0.5),
+      taille: (largeur * randomInt(config.tailleMin, config.tailleMax)) / 100,
+      rotation: config.rotation === 0 ? 0 : randomInt(-config.rotation, config.rotation),
+    }
+  })
+
+  return { cible, items }
+}
+
+export default function RechercheVisuelle({ level, session }) {
+  const rounds = useRounds(TOTAL_ROUNDS)
+  const [scene, setScene] = useState(() => construireScene(level))
+  const [trouve, setTrouve] = useState(false)
+  const [erreurs, setErreurs] = useState(0)
+  const [erreursTotal, setErreursTotal] = useState(0)
+  const debut = useRef(performance.now())
+  const temps = useRef([])
+
+  useEffect(() => {
+    debut.current = performance.now()
+  }, [scene])
+
+  const cliquer = (item) => {
+    if (trouve) return
+    if (item.estCible) {
+      temps.current.push(performance.now() - debut.current)
+      // La manche est réussie si la cible a été désignée du premier coup.
+      session.register(erreurs === 0)
+      setTrouve(true)
+    } else {
+      setErreurs(erreurs + 1)
+      setErreursTotal(erreursTotal + 1)
+    }
+  }
+
+  const suivant = () => {
+    rounds.next()
+    setScene(construireScene(level))
+    setTrouve(false)
+    setErreurs(0)
+  }
+
+  const replay = () => {
+    session.reset()
+    rounds.restart()
+    temps.current = []
+    setScene(construireScene(level))
+    setTrouve(false)
+    setErreurs(0)
+    setErreursTotal(0)
+  }
+
+  if (rounds.isOver) {
+    const moyenne =
+      temps.current.length > 0
+        ? temps.current.reduce((sum, value) => sum + value, 0) / temps.current.length / 1000
+        : 0
+    return (
+      <GameOver correct={session.correct} total={session.attempts} onReplay={replay}>
+        <p className="muted">
+          Temps de recherche moyen : {moyenne.toFixed(1)} s · {erreursTotal} clic
+          {erreursTotal > 1 ? 's' : ''} à côté
+        </p>
+      </GameOver>
+    )
+  }
+
+  return (
+    <div className="game-board">
+      <p className="game-round">
+        Recherche {rounds.round + 1} sur {TOTAL_ROUNDS} · {scene.items.length} objets
+      </p>
+
+      <div className="target-preview">
+        <Picto id={scene.cible.id} size={56} title={scene.cible.label} />
+        <span className="target-preview__label">Trouve : {scene.cible.label}</span>
+      </div>
+
+      <div className="scene">
+        {scene.items.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            className="scene__item"
+            style={{
+              left: `${item.left}%`,
+              top: `${item.top}%`,
+              width: `${item.taille}%`,
+              transform: `translate(-50%, -50%) rotate(${item.rotation}deg)`,
+            }}
+            disabled={trouve}
+            aria-label={item.picto.label}
+            onClick={() => cliquer(item)}
+          >
+            <Picto id={item.picto.id} />
+          </button>
+        ))}
+
+        {trouve && (
+          <span
+            className="scene__halo"
+            style={{
+              left: `${scene.items.find((item) => item.estCible).left}%`,
+              top: `${scene.items.find((item) => item.estCible).top}%`,
+              width: `${scene.items.find((item) => item.estCible).taille * 1.6}%`,
+              aspectRatio: '1',
+            }}
+          />
+        )}
+      </div>
+
+      {trouve ? (
+        <>
+          <Feedback
+            status={erreurs === 0 ? 'correct' : 'wrong'}
+            message={
+              erreurs === 0
+                ? 'Trouvé du premier coup !'
+                : `Trouvé, après ${erreurs} clic${erreurs > 1 ? 's' : ''} à côté.`
+            }
+          />
+          <div className="game-actions">
+            <button type="button" className="btn btn--lg" onClick={suivant}>
+              Objet suivant
+            </button>
+          </div>
+        </>
+      ) : (
+        <Feedback
+          status={erreurs > 0 ? 'wrong' : null}
+          message={erreurs > 0 ? 'Ce n’est pas le bon objet, continue de chercher.' : ' '}
+        />
+      )}
+    </div>
+  )
+}

@@ -1,30 +1,53 @@
 /* ---------------------------------------------------------------
    Orthobox — feuille de style globale
-   Les jeux reutilisent les classes de ce fichier (.panel, .choice-grid,
-   .choice, .feedback...) pour rester visuellement coherents entre eux.
+
+   Palette pastel : quatre teintes de domaine (pêche, sauge, lavande, sable)
+   posées sur un neutre chaud, avec pour chacune une déclinaison foncée
+   réservée au texte, pour que les contrastes restent lisibles.
+   https://coolors.co/f6bdab-b9d8c2-cdc3ec-f4dfa8-a8c8ec
+
+   Les jeux réutilisent les classes de ce fichier (.panel, .choice-grid,
+   .choice, .feedback…) pour rester cohérents entre eux.
    --------------------------------------------------------------- */
 
 :root {
-  --brand: #3f5bd9;
-  --brand-dark: #2c42ae;
-  --brand-tint: #eef1fe;
-  --ink: #1b1f2a;
-  --ink-soft: #5a6274;
-  --ink-faint: #8a92a6;
+  /* Teintes */
+  --accent-pastel: #a8c8ec;
+  --accent: #35608f;
+  --accent-tint: #eaf2fb;
+
+  /* Neutres, légèrement chauds */
+  --ground: #faf7f5;
   --surface: #ffffff;
-  --surface-alt: #f6f7fb;
-  --line: #e3e6ef;
-  --success: #1f8a5a;
-  --success-tint: #e6f5ee;
-  --danger: #cc3f3f;
-  --danger-tint: #fdecec;
+  --surface-alt: #f4f0ed;
+  --line: #e7e0db;
+  --line-strong: #d6cdc6;
+  --ink: #33303a;
+  --ink-soft: #6b6674;
+  --ink-faint: #98929f;
+
+  /* Sémantique */
+  --success: #2f7d57;
+  --success-pastel: #bfe0cb;
+  --success-tint: #eaf5ee;
+  --danger: #b4453f;
+  --danger-pastel: #f3c2be;
+  --danger-tint: #fdecea;
+
+  /* Domaine courant (redéfini par catégorie sur les conteneurs) */
+  --category: var(--accent);
+  --category-pastel: var(--accent-pastel);
+  --category-tint: var(--accent-tint);
+
   --radius-sm: 10px;
   --radius: 16px;
-  --radius-lg: 24px;
-  --shadow-sm: 0 1px 2px rgba(27, 31, 42, 0.06), 0 2px 8px rgba(27, 31, 42, 0.05);
-  --shadow: 0 6px 24px rgba(27, 31, 42, 0.09);
-  --category: var(--brand);
-  --category-tint: var(--brand-tint);
+  --radius-lg: 22px;
+  --shadow-sm: 0 1px 2px rgba(51, 48, 58, 0.05), 0 2px 10px rgba(51, 48, 58, 0.04);
+  --shadow: 0 8px 28px rgba(51, 48, 58, 0.1);
+
+  --font-ui: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-reading: 'Atkinson Hyperlegible', 'Nunito', 'Segoe UI', system-ui, sans-serif;
+
   color-scheme: light;
 }
 
@@ -40,19 +63,22 @@ body,
 
 body {
   margin: 0;
-  background: var(--surface-alt);
+  background: var(--ground);
   color: var(--ink);
-  font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
+  font-family: var(--font-ui);
+  font-size: 17px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
 }
 
 h1,
 h2,
 h3 {
-  line-height: 1.2;
+  line-height: 1.18;
   margin: 0;
+  font-weight: 800;
+  text-wrap: balance;
 }
 
 button {
@@ -61,11 +87,11 @@ button {
 }
 
 a {
-  color: var(--brand-dark);
+  color: var(--accent);
 }
 
 :focus-visible {
-  outline: 3px solid var(--brand);
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -91,54 +117,51 @@ a {
 
 .app-main {
   flex: 1;
-  width: min(1120px, 100%);
+  width: min(1180px, 100%);
   margin: 0 auto;
-  padding: 24px 20px 64px;
+  padding: 28px 20px 72px;
 }
 
 .app-header {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(250, 247, 245, 0.94);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
 }
 
 .app-header__inner {
-  width: min(1120px, 100%);
+  width: min(1180px, 100%);
   margin: 0 auto;
   padding: 12px 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 1.15rem;
+  min-height: 44px;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
   text-decoration: none;
   color: var(--ink);
+  margin-right: auto;
 }
 
 .brand__mark {
+  display: block;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(160deg, #5b74e8, #353fa8);
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 1rem;
 }
 
 .app-footer {
   border-top: 1px solid var(--line);
-  padding: 20px;
+  padding: 22px 20px;
   text-align: center;
   color: var(--ink-faint);
   font-size: 0.85rem;
@@ -151,20 +174,20 @@ a {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 10px 18px;
+  min-height: 46px;
+  padding: 10px 20px;
   border-radius: 999px;
   border: 1px solid transparent;
-  background: var(--brand);
-  color: #fff;
-  font-weight: 600;
+  background: var(--accent-pastel);
+  color: #1d3a5c;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+  transition: filter 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
 }
 
 .btn:hover:not(:disabled) {
-  background: var(--brand-dark);
+  filter: brightness(0.96);
 }
 
 .btn:active:not(:disabled) {
@@ -172,33 +195,24 @@ a {
 }
 
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 .btn--ghost {
-  background: transparent;
-  color: var(--ink);
-  border-color: var(--line);
-}
-
-.btn--ghost:hover:not(:disabled) {
   background: var(--surface);
-  border-color: var(--ink-faint);
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
 
 .btn--subtle {
-  background: var(--brand-tint);
-  color: var(--brand-dark);
-}
-
-.btn--subtle:hover:not(:disabled) {
-  background: #e0e6fd;
+  background: var(--category-tint);
+  color: var(--category);
 }
 
 .btn--lg {
   min-height: 56px;
-  padding: 14px 28px;
+  padding: 14px 30px;
   font-size: 1.05rem;
 }
 
@@ -215,7 +229,7 @@ a {
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .row {
@@ -229,10 +243,9 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 3px 12px;
   border-radius: 999px;
   background: var(--surface-alt);
-  border: 1px solid var(--line);
   font-size: 0.82rem;
   color: var(--ink-soft);
   white-space: nowrap;
@@ -240,16 +253,15 @@ a {
 
 .badge--category {
   background: var(--category-tint);
-  border-color: transparent;
   color: var(--category);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .muted {
   color: var(--ink-soft);
 }
 
-/* --- Elements de jeu partages ----------------------------------- */
+/* --- Éléments de jeu partagés ----------------------------------- */
 
 .game-board {
   display: flex;
@@ -257,11 +269,14 @@ a {
   gap: 24px;
   align-items: center;
   text-align: center;
+  width: 100%;
 }
 
 .game-prompt {
-  font-size: clamp(1.4rem, 1rem + 2vw, 2.2rem);
-  font-weight: 700;
+  margin: 0;
+  font-size: clamp(1.35rem, 1rem + 1.8vw, 2rem);
+  font-weight: 800;
+  text-wrap: balance;
 }
 
 .choice-grid {
@@ -281,14 +296,16 @@ a {
   border-radius: var(--radius);
   border: 2px solid var(--line);
   background: var(--surface);
+  font-family: var(--font-reading);
   font-size: 1.3rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
 }
 
 .choice:hover:not(:disabled) {
-  border-color: var(--category);
+  border-color: var(--category-pastel);
+  background: var(--category-tint);
   transform: translateY(-2px);
 }
 
@@ -309,12 +326,13 @@ a {
 }
 
 .choice--dim {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .feedback {
   min-height: 32px;
-  font-weight: 600;
+  margin: 0;
+  font-weight: 700;
   font-size: 1.05rem;
 }
 
@@ -326,59 +344,12 @@ a {
   color: var(--danger);
 }
 
-.progress {
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--line);
-  overflow: hidden;
-}
-
-.progress__bar {
-  height: 100%;
-  background: var(--category);
-  border-radius: inherit;
-  transition: width 0.3s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
 /* --- Navigation et notifications -------------------------------- */
 
-.app-nav {
-  display: flex;
-  gap: 4px;
-  margin-right: auto;
-}
-
-.app-nav__link {
-  padding: 8px 14px;
-  border-radius: 999px;
-  text-decoration: none;
-  color: var(--ink-soft);
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.app-nav__link:hover {
-  background: var(--surface-alt);
-  color: var(--ink);
-}
-
-.app-nav__link.active {
-  background: var(--brand-tint);
-  color: var(--brand-dark);
-}
-
 .app-header__install {
-  min-height: 38px;
-  padding: 6px 14px;
-  font-size: 0.9rem;
+  min-height: 40px;
+  padding: 6px 16px;
+  font-size: 0.92rem;
 }
 
 .toast {
@@ -402,5 +373,12 @@ a {
 
 .toast__text {
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

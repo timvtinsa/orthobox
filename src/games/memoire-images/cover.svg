@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une planche d'images à mémoriser">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <g>
+    <rect x="30" y="34" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
+    <path d="M52 76l17-22 17 22z" fill="#b9d8c2"/>
+    <rect x="120" y="34" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
+    <circle cx="159" cy="64" r="18" fill="#f6bdab"/>
+    <rect x="210" y="34" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
+    <rect x="233" y="48" width="32" height="32" rx="8" fill="#a8c8ec"/>
+    <rect x="30" y="106" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
+    <path d="M50 148a19 19 0 0 1 38 0z" fill="#f4dfa8"/>
+    <rect x="120" y="106" width="78" height="60" rx="12" fill="#ffffff" stroke="#5b45a0" stroke-width="5"/>
+    <path d="M141 136l12 12 26-26" stroke="#5b45a0" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="210" y="106" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
+    <path d="M236 130h26M249 117v26" stroke="#cdc3ec" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>

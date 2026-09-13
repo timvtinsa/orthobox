@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'devinettes',
   title: 'Qui suis-je ?',
   tagline: 'Retrouver un mot à partir d’indices de plus en plus précis.',
   category: 'langage-oral',
-  icon: '💭',
+  cover,
   ages: '5 ans et +',
   duration: '5 à 10 min',
   keywords: ['évocation', 'lexique', 'définition', 'manque du mot'],

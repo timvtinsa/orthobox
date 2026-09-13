@@ -9,7 +9,7 @@ import { isCategoryId } from '../lib/categories.js'
 
 const modules = import.meta.glob('./*/game.js', { eager: true })
 
-const REQUIRED = ['id', 'title', 'tagline', 'category', 'component']
+const REQUIRED = ['id', 'title', 'tagline', 'category', 'cover', 'component']
 
 function validate(meta, path) {
   for (const field of REQUIRED) {

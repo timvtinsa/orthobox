@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import UpdatePrompt from './UpdatePrompt.jsx'
 import InstallButton from './InstallButton.jsx'
@@ -16,26 +16,15 @@ export default function Layout() {
       <header className="app-header">
         <div className="app-header__inner">
           <Link to="/" className="brand">
-            <span className="brand__mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                <path d="M12 3C6.9 3 3 6.2 3 10.2c0 2.2 1.2 4.2 3.2 5.5L5.4 20l4.3-2.4c.7.1 1.5.2 2.3.2 5.1 0 9-3.2 9-7.6S17.1 3 12 3Z" />
-                <g fill="#353fa8">
-                  <circle cx="8.4" cy="10.2" r="1.3" />
-                  <circle cx="12" cy="10.2" r="1.3" />
-                  <circle cx="15.6" cy="10.2" r="1.3" />
-                </g>
-              </svg>
-            </span>
+            <svg className="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="12" fill="#a8c8ec" />
+              <circle cx="13" cy="16" r="4" fill="#35608f" />
+              <circle cx="27" cy="16" r="4" fill="#f6bdab" />
+              <circle cx="13" cy="28" r="4" fill="#b9d8c2" />
+              <circle cx="27" cy="28" r="4" fill="#cdc3ec" />
+            </svg>
             Orthobox
           </Link>
-          <nav className="app-nav" aria-label="Navigation principale">
-            <NavLink to="/" end className="app-nav__link">
-              Galerie
-            </NavLink>
-            <NavLink to="/a-propos" className="app-nav__link">
-              À propos
-            </NavLink>
-          </nav>
           <InstallButton />
         </div>
       </header>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une suite de quantités à retenir dans l'ordre">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <g>
+    <rect x="26" y="58" width="62" height="84" rx="14" fill="#ffffff" stroke="#cdc3ec" stroke-width="5"/>
+    <circle cx="57" cy="100" r="9" fill="#5b45a0"/>
+    <rect x="104" y="58" width="62" height="84" rx="14" fill="#ffffff" stroke="#cdc3ec" stroke-width="5"/>
+    <g fill="#5b45a0"><circle cx="121" cy="86" r="9"/><circle cx="149" cy="114" r="9"/></g>
+    <rect x="182" y="58" width="62" height="84" rx="14" fill="#ffffff" stroke="#cdc3ec" stroke-width="5"/>
+    <g fill="#5b45a0"><circle cx="199" cy="84" r="9"/><circle cx="213" cy="100" r="9"/><circle cx="227" cy="116" r="9"/></g>
+    <rect x="260" y="58" width="34" height="84" rx="14" fill="#cdc3ec"/>
+    <g fill="#5b45a0" opacity=".6"><circle cx="277" cy="86" r="6"/><circle cx="277" cy="100" r="6"/><circle cx="277" cy="114" r="6"/></g>
+  </g>
+</svg>

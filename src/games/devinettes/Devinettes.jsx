@@ -8,7 +8,8 @@ import { DEVINETTES, THEMES } from './data.js'
 const TOTAL_ROUNDS = 8
 
 function buildDeck(level) {
-  const pool = level === 'melange' ? DEVINETTES : DEVINETTES.filter((item) => item.theme === level)
+  const parTheme = DEVINETTES.filter((item) => item.theme === level)
+  const pool = level === 'melange' || parTheme.length === 0 ? DEVINETTES : parTheme
   return shuffle(pool).slice(0, TOTAL_ROUNDS)
 }
 

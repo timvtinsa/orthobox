@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'comparaison-quantites',
   title: 'Le plus grand tas',
   tagline: 'Comparer deux collections d’un coup d’œil, sans les compter.',
   category: 'cognition-mathematique',
-  icon: '⚖️',
+  cover,
   ages: '4 ans et +',
   duration: '5 min',
   keywords: ['subitizing', 'estimation', 'sens du nombre', 'comparaison'],

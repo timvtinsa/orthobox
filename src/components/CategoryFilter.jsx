@@ -1,4 +1,4 @@
-import { CATEGORIES } from '../lib/categories.js'
+import { CATEGORIES, categoryStyle } from '../lib/categories.js'
 
 export default function CategoryFilter({ value, counts, onChange }) {
   const total = Object.values(counts).reduce((sum, count) => sum + count, 0)
@@ -20,10 +20,11 @@ export default function CategoryFilter({ value, counts, onChange }) {
           type="button"
           className={`filter${value === category.id ? ' filter--active' : ''}`}
           aria-pressed={value === category.id}
-          style={{ '--category': category.color, '--category-tint': category.tint }}
+          style={categoryStyle(category)}
           onClick={() => onChange(category.id)}
         >
-          <span aria-hidden="true">{category.icon}</span> {category.label}
+          <span className="filter__dot" aria-hidden="true" />
+          {category.label}
           <span className="filter__count">{counts[category.id] ?? 0}</span>
         </button>
       ))}

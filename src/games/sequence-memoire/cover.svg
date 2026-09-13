@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une grille de cases dont l'une s'allume">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <g rx="14">
+    <rect x="62" y="28" width="76" height="66" rx="14" fill="#ffffff" stroke="#cdc3ec" stroke-width="5"/>
+    <rect x="152" y="28" width="76" height="66" rx="14" fill="#cdc3ec"/>
+    <rect x="62" y="108" width="76" height="66" rx="14" fill="#cdc3ec" opacity=".45"/>
+    <rect x="152" y="108" width="76" height="66" rx="14" fill="#ffffff" stroke="#cdc3ec" stroke-width="5"/>
+  </g>
+  <g fill="#5b45a0">
+    <circle cx="258" cy="72" r="9"/>
+    <circle cx="258" cy="100" r="9" opacity=".6"/>
+    <circle cx="258" cy="128" r="9" opacity=".25"/>
+  </g>
+</svg>

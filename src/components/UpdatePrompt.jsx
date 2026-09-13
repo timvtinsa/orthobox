@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
 /**
@@ -10,6 +11,14 @@ export default function UpdatePrompt() {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW()
+
+  // Le message « disponible hors ligne » est une confirmation : il s'efface
+  // seul pour ne pas masquer le jeu. Celui d'une mise à jour attend un choix.
+  useEffect(() => {
+    if (!offlineReady || needRefresh) return undefined
+    const id = window.setTimeout(() => setOfflineReady(false), 6000)
+    return () => window.clearTimeout(id)
+  }, [offlineReady, needRefresh, setOfflineReady])
 
   if (!offlineReady && !needRefresh) return null
 

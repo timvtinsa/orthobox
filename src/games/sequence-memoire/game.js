@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'sequence-memoire',
   title: 'La suite lumineuse',
   tagline: 'Mémoriser une suite de cases, puis la reproduire — à l’endroit ou à l’envers.',
   category: 'fonctions-executives',
-  icon: '💡',
+  cover,
   ages: '5 ans et +',
   duration: '5 min',
   keywords: ['empan', 'mémoire de travail', 'séquence', 'attention visuelle'],

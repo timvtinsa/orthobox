@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'lecture-flash',
   title: 'Lecture flash',
   tagline: 'Identifier un mot affiché très brièvement, parmi des leurres proches.',
   category: 'langage-ecrit',
-  icon: '⚡',
+  cover,
   ages: '7 ans et +',
   duration: '5 min',
   keywords: ['lecture', 'voie d’adressage', 'fluence', 'discrimination visuelle'],

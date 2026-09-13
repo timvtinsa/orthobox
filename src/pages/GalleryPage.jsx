@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import CategoryFilter from '../components/CategoryFilter.jsx'
 import GameCard from '../components/GameCard.jsx'
-import { CATEGORIES, getCategory } from '../lib/categories.js'
+import Icon from '../components/Icon.jsx'
+import { CATEGORIES, categoryStyle, getCategory } from '../lib/categories.js'
 import { GAMES, searchGames } from '../games/registry.js'
 import { useLocalStorage } from '../hooks/useLocalStorage.js'
 
@@ -51,6 +52,7 @@ export default function GalleryPage() {
           <label htmlFor="search" className="visually-hidden">
             Rechercher un jeu
           </label>
+          <Icon name="search" className="search__icon" size={20} filled={false} />
           <input
             id="search"
             type="search"
@@ -66,7 +68,8 @@ export default function GalleryPage() {
           aria-pressed={onlyFavorites}
           onClick={() => setOnlyFavorites((value) => !value)}
         >
-          ★ Favoris <span className="filter__count">{favorites.length}</span>
+          <Icon name="star" size={18} filled={onlyFavorites} />
+          Favoris <span className="filter__count">{favorites.length}</span>
         </button>
       </div>
 
@@ -81,13 +84,8 @@ export default function GalleryPage() {
 
       {sections.map(({ category: entry, games }) => (
         <section key={entry.id} className="category-section">
-          <header
-            className="category-section__header"
-            style={{ '--category': entry.color, '--category-tint': entry.tint }}
-          >
-            <h2 className="category-section__title">
-              <span aria-hidden="true">{entry.icon}</span> {entry.label}
-            </h2>
+          <header className="category-section__header" style={categoryStyle(entry)}>
+            <h2 className="category-section__title">{entry.label}</h2>
             <p className="category-section__desc muted">{entry.description}</p>
           </header>
 

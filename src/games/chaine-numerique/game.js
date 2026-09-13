@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'chaine-numerique',
   title: 'Range les nombres',
   tagline: 'Ordonner une poignée de nombres, du plus petit au plus grand.',
   category: 'cognition-mathematique',
-  icon: '📏',
+  cover,
   ages: '5 ans et +',
   duration: '5 min',
   keywords: ['ordre', 'comparaison', 'ligne numérique', 'décimaux'],

@@ -1,14 +1,21 @@
 import { Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import Icon from '../components/Icon.jsx'
 import LevelPicker from '../components/LevelPicker.jsx'
 import Scoreboard from '../components/Scoreboard.jsx'
 import { getGame } from '../games/registry.js'
-import { getCategory } from '../lib/categories.js'
+import { categoryStyle, getCategory } from '../lib/categories.js'
 import { useGameSession } from '../hooks/useGameSession.js'
 import NotFoundPage from './NotFoundPage.jsx'
 
 export default function GamePage() {
   const { gameId } = useParams()
+  // La clé remonte toute la page quand on passe d'un jeu à l'autre : sans
+  // cela, le niveau et le score du jeu précédent seraient conservés.
+  return <GameScreen key={gameId} gameId={gameId} />
+}
+
+function GameScreen({ gameId }) {
   const game = getGame(gameId)
   const [level, setLevel] = useState(game?.levels?.[0]?.id ?? null)
   // Changer cette clé remonte le jeu : c'est la remise à zéro de la partie.
@@ -31,22 +38,19 @@ export default function GamePage() {
   }
 
   return (
-    <div
-      className="game-page stack"
-      style={{ '--category': category.color, '--category-tint': category.tint }}
-    >
+    <div className="game-page stack" style={categoryStyle(category)}>
       <nav className="breadcrumb">
         <Link to="/" className="breadcrumb__back">
-          ← Galerie
+          <Icon name="back" size={18} filled={false} />
+          Galerie
         </Link>
         <span className="badge badge--category">{category.label}</span>
       </nav>
 
       <header className="game-header">
-        <div>
-          <h1 className="game-header__title">
-            <span aria-hidden="true">{game.icon ?? category.icon}</span> {game.title}
-          </h1>
+        <img className="game-header__cover" src={game.cover} alt="" width="320" height="200" />
+        <div className="game-header__text">
+          <h1 className="game-header__title">{game.title}</h1>
           <p className="muted">{game.tagline}</p>
         </div>
         <div className="game-header__controls">

@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'syllabes-melangees',
   title: 'Le mot en morceaux',
   tagline: 'Reconstruire un mot à partir de ses syllabes mélangées.',
   category: 'langage-ecrit',
-  icon: '🧱',
+  cover,
   ages: '6 ans et +',
   duration: '5 min',
   keywords: ['syllabe', 'lecture', 'assemblage', 'combinatoire'],

@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'stroop',
   title: 'Encre ou mot ?',
   tagline: 'Répondre sur la couleur de l’encre malgré ce que le mot raconte.',
   category: 'fonctions-executives',
-  icon: '🎨',
+  cover,
   ages: '7 ans et +',
   duration: '3 à 5 min',
   keywords: ['stroop', 'inhibition', 'flexibilité', 'attention'],

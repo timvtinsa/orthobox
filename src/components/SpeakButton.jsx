@@ -1,6 +1,7 @@
+import Icon from './Icon.jsx'
 import { isSpeechAvailable, speak } from '../lib/speech.js'
 
-/** Petit haut-parleur : prononce un mot ou une consigne. */
+/** Bouton de lecture vocale : prononce un mot ou une consigne. */
 export default function SpeakButton({ text, label = 'Écouter', className = '' }) {
   if (!isSpeechAvailable()) return null
 
@@ -15,7 +16,7 @@ export default function SpeakButton({ text, label = 'Écouter', className = '' }
       aria-label={`${label} : ${text}`}
       title={label}
     >
-      🔊
+      <Icon name="sound" size={18} />
     </button>
   )
 }

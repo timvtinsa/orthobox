@@ -1,11 +1,12 @@
 import { lazy } from 'react'
+import cover from './cover.svg'
 
 export default {
   id: 'intrus-sonore',
   title: 'L’intrus sonore',
   tagline: 'Repérer le mot qui ne partage pas le son des autres.',
   category: 'langage-oral',
-  icon: '👂',
+  cover,
   ages: '4 à 8 ans',
   duration: '5 min',
   keywords: ['phonologie', 'rime', 'attaque', 'discrimination auditive'],
