@@ -1,3 +1,6 @@
+/**
+ * Galerie : tous les jeux, filtrables par domaine, par mot-clé et par favori.
+ */
 import { useMemo, useState } from 'react'
 import CategoryFilter from '../components/CategoryFilter.jsx'
 import GameCard from '../components/GameCard.jsx'

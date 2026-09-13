@@ -1,3 +1,9 @@
+/**
+ * Le mot en morceaux : reconstruire un mot syllabe par syllabe.
+ *
+ * Les jetons portent un identifiant propre, car un même mot peut contenir
+ * deux syllabes identiques.
+ */
 import { useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'

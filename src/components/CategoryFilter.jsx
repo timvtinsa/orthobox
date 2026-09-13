@@ -1,3 +1,6 @@
+/**
+ * Filtres par domaine, avec le nombre de jeux de chacun.
+ */
 import { CATEGORIES, categoryStyle } from '../lib/categories.js'
 
 export default function CategoryFilter({ value, counts, onChange }) {

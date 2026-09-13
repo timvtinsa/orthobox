@@ -1,3 +1,9 @@
+/**
+ * Lecture flash : identifier un mot affiché brièvement.
+ *
+ * Le déroulé est en trois temps : prêt, affichage minuté, puis choix parmi
+ * des leurres orthographiquement proches.
+ */
 import { useEffect, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'

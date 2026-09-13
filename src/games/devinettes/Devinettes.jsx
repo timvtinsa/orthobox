@@ -1,3 +1,9 @@
+/**
+ * Qui suis-je ? : retrouver un mot à partir d'indices progressifs.
+ *
+ * La réponse se donne à l'oral : c'est le praticien qui valide, le jeu ne
+ * fait que dérouler les indices et tenir le compte.
+ */
 import { useState } from 'react'
 import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'

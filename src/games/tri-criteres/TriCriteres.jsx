@@ -1,3 +1,9 @@
+/**
+ * Le tri des formes : classer des objets selon un critère.
+ *
+ * Le réglage « règle qui change » bascule le critère à mi parcours, ce qui
+ * met à l'épreuve la flexibilité plutôt que la seule catégorisation.
+ */
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'

@@ -9,7 +9,7 @@ module.exports = {
   ],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.3' } },
-  ignorePatterns: ['dist', 'dist-preview', 'dev-dist', 'node_modules'],
+  ignorePatterns: ['dist', 'dist-preview', 'dev-dist', 'node_modules', '*.svg'],
   rules: {
     'react/prop-types': 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

@@ -1,3 +1,9 @@
+/**
+ * Range les nombres : cliquer une suite de nombres dans l'ordre.
+ *
+ * Une suite ne compte comme réussie que si elle est terminée sans aucune
+ * erreur, ce qui distingue le rangement maîtrisé du tâtonnement.
+ */
 import { useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'

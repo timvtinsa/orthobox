@@ -1,3 +1,9 @@
+/**
+ * La suite de chiffres : empan numérique direct ou inverse.
+ *
+ * La restitution se fait au pavé numérique, et la comparaison est affichée
+ * chiffre par chiffre.
+ */
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import StudyPhase from '../../components/StudyPhase.jsx'

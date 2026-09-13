@@ -1,3 +1,9 @@
+/**
+ * Le rappel de liste : restitution libre d'une liste de mots.
+ *
+ * La comparaison ignore la casse et les accents : c'est la mémoire qui est
+ * évaluée, pas l'orthographe.
+ */
 import { useRef, useState } from 'react'
 import StudyPhase from '../../components/StudyPhase.jsx'
 import { MOTS_COURANTS, memeMot } from '../../lib/lexique.js'

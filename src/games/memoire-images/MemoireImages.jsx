@@ -1,3 +1,9 @@
+/**
+ * La planche d'images : mémorisation puis reconnaissance visuelle.
+ *
+ * Le test présente autant d'images nouvelles que d'images de la planche, ce
+ * qui permet de distinguer les oublis des faux souvenirs.
+ */
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import StudyPhase from '../../components/StudyPhase.jsx'

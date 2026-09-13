@@ -1,3 +1,9 @@
+/**
+ * L'intrus sonore : repérer le mot qui ne partage pas le son des autres.
+ *
+ * Les mots sont tirés dans deux familles phonologiques distinctes, l'intrus
+ * venant de la seconde.
+ */
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'

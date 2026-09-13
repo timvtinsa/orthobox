@@ -1,3 +1,9 @@
+/**
+ * Encre ou mot ? : épreuve de Stroop.
+ *
+ * Le temps de réponse est mesuré à chaque essai : c'est lui, autant que le
+ * score, qui révèle le coût de l'inhibition.
+ */
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'

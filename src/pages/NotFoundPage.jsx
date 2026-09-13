@@ -1,3 +1,6 @@
+/**
+ * Page affichée pour une adresse inconnue.
+ */
 import { Link } from 'react-router-dom'
 
 export default function NotFoundPage() {
