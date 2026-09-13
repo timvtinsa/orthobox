@@ -64,3 +64,5 @@ en tablette (1024×768 et 768×1024) : l'application est utilisée sur tablette.
   affiche l'écran de réglages et ne lance la partie qu'au « Démarrer ».
 - Les jeux doivent rester utilisables dans le mode séance : le score passe par
   `session.register()`, jamais par un écran de fin.
+- Le mode enfant n'ajoute que des encouragements : il ne modifie ni le
+  matériel, ni les réglages, ni le calcul du score. Un jeu ne lit pas le mode.

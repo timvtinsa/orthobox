@@ -85,6 +85,10 @@ Le jeu est aussi utilisé tel quel dans le **mode séance**, où le praticien
 passe au jeu suivant quand il le décide : ne comptez pas sur une fin de partie
 pour transmettre le score, appelez `session.register()` au fil des réponses.
 
+C'est également `session.register()` qui fait réagir la mascotte du **mode
+enfant** : un jeu qui appelle cette fonction à chaque réponse en bénéficie
+sans rien ajouter, et n'a pas à savoir quel mode est actif.
+
 ## 3. La vignette `cover.svg`
 
 Un SVG en `viewBox="0 0 320 200"`, sans texte, qui évoque la mécanique du jeu :

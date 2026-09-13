@@ -65,6 +65,21 @@ travaillé et les variantes possibles.
 Aucune durée n’est annoncée pour les jeux : le nombre de manches est réglable,
 et le rythme dépend du patient.
 
+## Mode adulte et mode enfant
+
+Un interrupteur dans l’en-tête bascule entre deux modes, et le choix est
+conservé d’une séance à l’autre.
+
+- **Adulte** : l’interface sobre, sans animation superflue.
+- **Enfant** : un petit renard accompagne la partie. Il sourit et saute quand
+  la réponse est juste, prend un air désolé et encourage quand elle est
+  fausse, et la fin d’une partie réussie déclenche des confettis.
+
+Le mode enfant ne change ni le contenu des jeux, ni les réglages, ni la façon
+de compter les points : un même exercice reste comparable d’un mode à l’autre.
+Toutes les animations se désactivent si le système demande de réduire les
+animations.
+
 ## Le mode séance
 
 Le bouton **Séance** ouvre un plan de travail : on compose une suite de jeux en

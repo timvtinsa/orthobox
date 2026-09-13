@@ -119,10 +119,26 @@ inutilisable sur tablette. Le geste en cours est suivi dans des refs et non
 dans l'état React, car un glissement rapide peut produire déplacement et
 relâchement dans la même frame, avant tout nouveau rendu.
 
+## Mode adulte et mode enfant
+
+`ModeProvider` porte le mode courant, le conserve dans le navigateur et le
+pose sur l'élément racine (`data-mode`). Le mode enfant ajoute une couche
+d'encouragement, jamais une variante d'exercice : ni les réglages, ni le
+matériel, ni le calcul du score ne dépendent du mode.
+
+Le compagnon ne connaît aucun jeu. Il observe la session, qui note la dernière
+réponse et incrémente un compteur d'évènements à chaque appel de
+`session.register()` ; ce compteur permet de rejouer l'animation même sur deux
+bonnes réponses de suite, où l'état ne change pas. Un nouveau jeu bénéficie
+donc de la mascotte sans une ligne de code supplémentaire.
+
+Les animations sont en CSS et disparaissent sous `prefers-reduced-motion`,
+comme le reste de l'application.
+
 ## Données et confidentialité
 
-Seules deux choses sont écrites dans le navigateur : la liste des jeux mis en
-favori, et la séance en préparation. Aucune donnée patient, aucun score
+Trois choses seulement sont écrites dans le navigateur : la liste des jeux mis
+en favori, la séance en préparation, et le mode d'affichage. Aucune donnée patient, aucun score
 historisé, aucun appel réseau en cours d'utilisation. `lib/storage.js` protège
 chaque accès : navigation privée ou stockage bloqué ne doivent jamais empêcher
 un jeu de fonctionner.
