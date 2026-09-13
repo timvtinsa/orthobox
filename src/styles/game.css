@@ -346,16 +346,20 @@
 
 .switch-group {
   display: flex;
+  /* Quatre options ne tiennent pas sur une ligne en écran étroit : elles
+     passent alors à la ligne au lieu de déborder. */
+  flex-wrap: wrap;
   gap: 6px;
   padding: 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
   border: 1px solid var(--line);
 }
 
 .switch-group__option {
-  flex: 1;
-  min-height: 42px;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
   padding: 6px 14px;
   border: none;
   border-radius: 999px;
@@ -1039,9 +1043,12 @@
 
 .memory-grid {
   display: grid;
-  gap: 12px;
-  justify-content: center;
-  width: 100%;
+  gap: clamp(6px, 1.4vw, 12px);
+  /* Colonnes fractionnaires : les cartes rétrécissent au lieu de déborder,
+     et la grille ne dépasse jamais la largeur disponible. */
+  grid-template-columns: repeat(var(--colonnes, 3), minmax(0, 1fr));
+  width: min(100%, calc(var(--colonnes, 3) * 132px));
+  margin-inline: auto;
 }
 
 .memory-card {
@@ -1277,9 +1284,62 @@
   font-size: 1.2rem;
 }
 
-.seance-barre__progress {
+.seance-barre__jalons {
   grid-column: 1 / -1;
-  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.jalon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 32px;
+}
+
+.jalon::after {
+  content: '';
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+}
+
+.jalon:last-child::after {
+  display: none;
+}
+
+.jalon__pastille {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-alt);
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.jalon--fait .jalon__pastille {
+  background: var(--category-pastel);
+  color: var(--category);
+}
+
+.jalon--fait::after {
+  background: var(--category-pastel);
+}
+
+.jalon--encours .jalon__pastille {
+  background: var(--category);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--category-tint);
 }
 
 .seance-barre__actions {
@@ -1383,4 +1443,113 @@
   .recap-table td {
     padding: 8px 10px;
   }
+}
+
+/* --- Calcul éclair -------------------------------------------------- */
+
+.calcul-enonce {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 3.4rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.calcul-enonce__egal {
+  color: var(--ink-faint);
+}
+
+.choice--nombre {
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- La monnaie ------------------------------------------------------ */
+
+.porte-monnaie {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-height: 84px;
+  width: min(620px, 100%);
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--line-strong);
+  background: var(--surface-alt);
+}
+
+.porte-monnaie--correct {
+  border-color: var(--success);
+  background: var(--success-tint);
+}
+
+.porte-monnaie--wrong {
+  border-color: var(--danger);
+  background: var(--danger-tint);
+}
+
+.monnaie-total {
+  margin: 0;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.monnaie-total__ecart {
+  color: var(--danger);
+}
+
+.tiroir {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.piece-btn {
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 4px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.piece-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+}
+
+.piece-btn:disabled {
+  cursor: default;
+}
+
+/* --- Phrase à trous --------------------------------------------------- */
+
+.phrase-trou {
+  margin: 0;
+  max-width: 46ch;
+  font-family: var(--font-reading);
+  font-size: clamp(1.2rem, 1rem + 1.1vw, 1.65rem);
+  line-height: 1.7;
+}
+
+.trou {
+  display: inline-block;
+  min-width: 6ch;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  border-bottom: 3px solid var(--category-pastel);
+  background: var(--category-tint);
+  font-weight: 700;
+  color: var(--category);
+}
+
+.trou--rempli {
+  border-bottom-style: solid;
 }

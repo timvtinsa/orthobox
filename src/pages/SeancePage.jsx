@@ -1,6 +1,10 @@
+/**
+ * Préparation d'une séance : composer et ordonner une suite de jeux.
+ */
 import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
+import { formaterValeur } from '../components/Stepper.jsx'
 import Icon from '../components/Icon.jsx'
 import { GAMES, getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -62,11 +66,6 @@ export default function SeancePage() {
     setReglageOuvert(null)
   }
 
-  const dureeEstimee = etapes.reduce((total, etape) => {
-    const minutes = parseInt(getGame(etape.gameId)?.duration ?? '5', 10)
-    return total + (Number.isNaN(minutes) ? 5 : minutes)
-  }, 0)
-
   return (
     <div className="stack seance-page">
       <section className="hero">
@@ -84,7 +83,7 @@ export default function SeancePage() {
             <h2 className="seance-colonne__titre">La séance</h2>
             {etapes.length > 0 && (
               <span className="badge">
-                {etapes.length} jeu{etapes.length > 1 ? 'x' : ''} · environ {dureeEstimee} min
+                {etapes.length} jeu{etapes.length > 1 ? 'x' : ''}
               </span>
             )}
           </header>
@@ -259,7 +258,7 @@ function resumerConfig(game, config) {
       if (champ.type === 'choice') {
         return champ.options.find((option) => option.id === valeur)?.label ?? valeur
       }
-      return `${champ.label.toLowerCase()} : ${valeur}${champ.suffix ? ` ${champ.suffix}` : ''}`
+      return `${champ.label.toLowerCase()} : ${formaterValeur(valeur, champ.unite, champ.suffix)}`
     })
     .join(' · ')
 }

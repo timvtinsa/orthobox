@@ -1,3 +1,9 @@
+/**
+ * Le jeu des paires : un memory classique.
+ *
+ * Chaque tentative de paire compte comme un essai, ce qui permet de comparer
+ * le nombre d'essais au minimum théorique en fin de partie.
+ */
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
@@ -67,7 +73,7 @@ export default function MemoryPaires({ config, session }) {
     return (
       <GameOver correct={session.correct} total={session.attempts} onReplay={rejouer}>
         <p className="muted">
-          {total} paires retrouvées en {coups} essais — le minimum possible est {total}.
+          {total} paires retrouvées en {coups} essais, le minimum possible étant {total}.
         </p>
       </GameOver>
     )
@@ -81,10 +87,7 @@ export default function MemoryPaires({ config, session }) {
       </p>
       <p className="game-prompt">Retrouve les paires</p>
 
-      <div
-        className="memory-grid"
-        style={{ gridTemplateColumns: `repeat(${colonnes}, minmax(74px, 130px))` }}
-      >
+      <div className="memory-grid" style={{ '--colonnes': colonnes }}>
         {cartes.map((carte) => {
           const visible =
             trouvees.includes(carte.paire) || retournees.some((item) => item.cle === carte.cle)

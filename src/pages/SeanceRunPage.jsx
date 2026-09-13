@@ -1,3 +1,6 @@
+/**
+ * Déroulé d'une séance : les jeux s'enchaînent, puis le récapitulatif.
+ */
 import { Suspense, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Icon from '../components/Icon.jsx'
@@ -95,14 +98,25 @@ function EtapeSeance({ etape, numero, total, onTerminer }) {
       <div className="seance-barre">
         <div className="seance-barre__texte">
           <span className="game-round">
-            Séance · jeu {numero} sur {total}
+            Séance, jeu {numero} sur {total}
           </span>
           <strong className="seance-barre__titre">{game.title}</strong>
         </div>
 
-        <div className="progress seance-barre__progress">
-          <div className="progress__bar" style={{ width: `${((numero - 1) / total) * 100}%` }} />
-        </div>
+        <ol className="jalons seance-barre__jalons" aria-label={`Progression : jeu ${numero} sur ${total}`}>
+          {Array.from({ length: total }, (_, position) => {
+            const etat =
+              position < numero - 1 ? 'fait' : position === numero - 1 ? 'encours' : 'avenir'
+            return (
+              <li key={position} className={`jalon jalon--${etat}`}>
+                <span className="jalon__pastille">{position + 1}</span>
+                <span className="visually-hidden">
+                  {etat === 'fait' ? 'terminé' : etat === 'encours' ? 'en cours' : 'à venir'}
+                </span>
+              </li>
+            )
+          })}
+        </ol>
 
         <div className="seance-barre__actions">
           <Scoreboard session={session} />
@@ -180,7 +194,7 @@ function Recapitulatif({ etapes, resultats, onRecommencer, onModifier }) {
                     )}
                   </td>
                   <td className="recap-table__nombre">
-                    {resultat.passe ? '—' : `${resultat.correct} / ${resultat.attempts}`}
+                    {resultat.passe ? '·' : `${resultat.correct} / ${resultat.attempts}`}
                   </td>
                   <td className="recap-table__nombre">
                     {taux === null ? (
