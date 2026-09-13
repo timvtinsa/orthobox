@@ -137,7 +137,26 @@ a {
   padding: 12px 20px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  /* L'en-tête porte le titre, la navigation et l'interrupteur de mode :
+     en écran étroit, il passe sur deux lignes plutôt que de déborder. */
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+@media (max-width: 560px) {
+  .app-header__inner {
+    padding: 10px 16px;
+    gap: 8px 10px;
+  }
+
+  .brand {
+    font-size: 1.05rem;
+    gap: 8px;
+  }
+
+  .app-nav__link {
+    padding: 6px 12px;
+  }
 }
 
 .brand {
