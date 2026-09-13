@@ -3,6 +3,7 @@
  */
 import { Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import CompagnonDeJeu from '../components/CompagnonDeJeu.jsx'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
 import Scoreboard from '../components/Scoreboard.jsx'
@@ -87,6 +88,8 @@ function GameScreen({ gameId }) {
           </Suspense>
         )}
       </section>
+
+      {config && <CompagnonDeJeu session={session} />}
 
       <details className="game-notes">
         <summary>Consignes et objectifs</summary>

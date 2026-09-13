@@ -3,6 +3,7 @@
  */
 import { Suspense, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import CompagnonDeJeu from '../components/CompagnonDeJeu.jsx'
 import Icon from '../components/Icon.jsx'
 import Scoreboard from '../components/Scoreboard.jsx'
 import { getGame } from '../games/registry.js'
@@ -142,6 +143,8 @@ function EtapeSeance({ etape, numero, total, onTerminer }) {
           <GameComponent key={runKey} config={etape.config} session={session} />
         </Suspense>
       </section>
+
+      <CompagnonDeJeu session={session} />
 
       <p className="game-instruction seance-note">
         Le passage au jeu suivant se fait quand vous le décidez : le score obtenu jusque-là est

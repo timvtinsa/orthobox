@@ -5,6 +5,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import UpdatePrompt from './UpdatePrompt.jsx'
 import InstallButton from './InstallButton.jsx'
+import ModeSwitch from './ModeSwitch.jsx'
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -36,6 +37,7 @@ export default function Layout() {
               Séance
             </NavLink>
           </nav>
+          <ModeSwitch />
           <InstallButton />
         </div>
       </header>
