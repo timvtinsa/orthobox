@@ -7,22 +7,21 @@ export default {
   tagline: 'Lire une petite histoire, puis répondre à des questions sur ses détails.',
   category: 'langage-ecrit',
   cover,
-  ages: '8 ans et +',
-  duration: '5 à 10 min',
-  keywords: ['compréhension', 'lecture', 'mémoire de texte', 'QCM', 'détails'],
+  ages: '8 ans et plus',
+  keywords: ['compréhension', 'lecture', 'mémoire de texte', 'questions', 'détails'],
   objectives: [
     'Compréhension fine d’un texte narratif',
-    'Mémorisation des détails (noms, nombres, lieux, moments)',
+    'Mémorisation des détails : noms, nombres, lieux, moments',
     'Repérage des informations explicites',
   ],
   materials: [
-    'Six histoires, deux par longueur : le texte n’est plus visible pendant les questions.',
+    'Six histoires, deux par longueur. Le texte n’est plus visible pendant les questions.',
     'L’ordre des propositions change à chaque passation.',
     'Variante orale : lire le texte au patient, ou utiliser la lecture vocale, pour travailler la compréhension orale.',
     'Variante différée : poser les questions en fin de séance plutôt qu’immédiatement.',
   ],
   instructions:
-    'Le patient lit l’histoire à son rythme, puis passe aux questions à choix multiple. Chaque réponse est corrigée immédiatement ; le texte reste masqué jusqu’au bilan.',
+    'Le patient lit l’histoire à son rythme, puis répond aux questions à choix multiple. Chaque réponse est corrigée immédiatement.',
   settings: [
     {
       id: 'longueur',
@@ -35,6 +34,7 @@ export default {
         { id: 'long', label: 'Long', hint: 'Environ 180 mots, 7 questions.' },
       ],
     },
+
   ],
   component: lazy(() => import('./HistoireMemoire.jsx')),
 }

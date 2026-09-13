@@ -1,4 +1,11 @@
+/**
+ * L'histoire et les détails : lecture d'un texte, puis questions.
+ *
+ * Le texte disparaît pendant les questions, et l'ordre des propositions est
+ * remélangé à chaque passation pour éviter l'apprentissage des positions.
+ */
 import { useState } from 'react'
+import ChoixMultiple from '../../components/ChoixMultiple.jsx'
 import Feedback from '../../components/Feedback.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
@@ -94,26 +101,12 @@ export default function HistoireMemoire({ config, session }) {
 
         <div className="quiz">
           <p className="quiz__question">{question.question}</p>
-          <div className="quiz__options">
-            {question.options.map((option, position) => {
-              let modifier = ''
-              if (choix !== null) {
-                if (position === question.reponse) modifier = ' quiz__option--correct'
-                else if (position === choix) modifier = ' quiz__option--wrong'
-              }
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  className={`quiz__option${modifier}`}
-                  disabled={choix !== null}
-                  onClick={() => repondre(position)}
-                >
-                  {option}
-                </button>
-              )
-            })}
-          </div>
+          <ChoixMultiple
+            options={question.options}
+            bonne={question.reponse}
+            choix={choix}
+            onChoisir={repondre}
+          />
         </div>
 
         {choix !== null && (
@@ -132,7 +125,7 @@ export default function HistoireMemoire({ config, session }) {
 
   return (
     <div className="game-final">
-      <p className="game-round">Résultat · {histoire.titre}</p>
+      <p className="game-round">Résultat : {histoire.titre}</p>
       <p className="game-final__score">
         {justes} / {questions.length}
       </p>
