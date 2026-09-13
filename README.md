@@ -14,7 +14,7 @@ Les jeux sont classés en quatre domaines :
 | Fonctions exécutives | Inhibition, mémoire de travail, attention, flexibilité, recherche visuelle |
 | Cognition mathématique | Sens du nombre, estimation, chaîne numérique, calcul |
 
-## Les 14 jeux
+## Les 17 jeux
 
 **Langage oral**
 
@@ -22,6 +22,7 @@ Les jeux sont classés en quatre domaines :
 | --- | --- |
 | L’intrus sonore | Repérer le mot qui ne partage pas l’attaque ou la rime des autres |
 | Qui suis-je ? | Retrouver un mot à partir d’indices progressifs (évocation lexicale) |
+| La suite de sons | Écouter une suite de bruitages, puis remettre les cartes dans l’ordre |
 
 **Langage écrit**
 
@@ -42,6 +43,8 @@ Les jeux sont classés en quatre domaines :
 | La planche d’images | Même principe, avec des images |
 | Le rappel de liste | Mémoriser une liste, puis la restituer de mémoire |
 | La suite de chiffres | Retenir une suite de chiffres, la retaper à l’endroit ou à l’envers |
+| Le jeu des paires | Memory : retrouver les paires d’images, en 3 niveaux |
+| Le tri des formes | Classer des objets par couleur, par forme, ou selon une règle qui change |
 
 **Cognition mathématique**
 
@@ -50,10 +53,23 @@ Les jeux sont classés en quatre domaines :
 | Le plus grand tas | Comparer deux collections (subitizing, estimation, transcodage) |
 | Range les nombres | Ordonner des nombres, y compris décimaux |
 
-Chaque jeu affiche un score de séance et un bloc « Consignes et objectifs »
-rappelant ce qui est travaillé et les variantes possibles. Les jeux de
-mémorisation s’ouvrent sur un **écran de réglages** : nombre d’éléments, temps
-d’affichage et options se fixent avant que le patient ne voie le matériel.
+**Tous les jeux s’ouvrent sur un écran de réglages** : nombre de manches,
+matériel, durées et options se fixent avant d’appuyer sur « Démarrer », donc
+avant que le patient ne voie quoi que ce soit. Chaque jeu affiche ensuite un
+score de séance et un bloc « Consignes et objectifs » rappelant ce qui est
+travaillé et les variantes possibles.
+
+## Le mode séance
+
+Le bouton **Séance** ouvre un plan de travail : on compose une suite de jeux en
+les glissant depuis la liste (au doigt comme à la souris), on la réordonne par
+glissement ou avec les flèches, et chaque étape garde ses propres réglages. La
+séance est conservée dans le navigateur d’une fois sur l’autre.
+
+Au lancement, les jeux s’enchaînent dans l’ordre : une barre indique où l’on en
+est, et le passage au jeu suivant se fait quand le praticien le décide. À la
+fin, un **récapitulatif** reprend le score de chaque jeu, son taux de réussite
+et le total de la séance — imprimable, et non enregistré.
 
 ## Démarrer
 
@@ -91,6 +107,9 @@ séances suivantes fonctionnent sans connexion.
   lu par le patient — cette dernière différencie `b/d/p/q` et `I/l/1`, ce qui
   évite d’ajouter une difficulté visuelle au matériel
   (voir `src/assets/fonts/README.md`).
+- **Sons de synthèse** : les bruitages de « La suite de sons » sont fabriqués
+  par l’application (Web Audio), sans aucun fichier audio — voir `src/lib/audio.js`
+  pour en ajouter ou brancher de vrais enregistrements.
 - **Aucune icône emoji** : chaque jeu a sa vignette SVG dessinée
   (`src/games/<id>/cover.svg`), et l’interface utilise un jeu d’icônes maison.
   Les jeux d’images reposent sur 24 pictogrammes dessinés (`src/lib/pictos.jsx`).
@@ -106,7 +125,7 @@ il n’y a **aucune liste centrale à mettre à jour**.
 
 ```
 src/games/mon-jeu/
-  game.js        # fiche : titre, domaine, niveaux, objectifs, composant
+  game.js        # fiche : titre, domaine, réglages, objectifs, composant
   cover.svg      # vignette de la carte
   MonJeu.jsx     # le composant React du jeu
   data.js        # (optionnel) le matériel du jeu
@@ -122,10 +141,11 @@ src/
   assets/fonts/  polices embarquées (Nunito, Atkinson Hyperlegible)
   components/    cadre commun : cartes, filtres, score, réglages, PWA
   games/         un dossier par jeu + le registre
-  hooks/         useGameSession, useRounds, useCountdown, useAnswerLock…
+  hooks/         useGameSession, useRounds, useCountdown, useAnswerLock,
+                 useDragSequence (glisser-déposer tactile)
   lib/           domaines, tirage aléatoire, stockage local, lexique,
-                 pictogrammes, synthèse vocale
-  pages/         galerie, page de jeu
+                 pictogrammes, synthèse vocale, bruitages, séance
+  pages/         galerie, page de jeu, séance (préparation et déroulé)
   styles/        polices, styles globaux, galerie, page de jeu
 scripts/         génération des icônes PWA (PNG, sans dépendance)
 ```

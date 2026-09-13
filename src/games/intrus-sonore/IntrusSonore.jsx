@@ -7,18 +7,10 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { pick, sample, shuffle } from '../../lib/random.js'
 import { ATTAQUES, RIMES } from './data.js'
 
-const TOTAL_ROUNDS = 10
-
-const LEVEL_CONFIG = {
-  'attaque-3': { familles: ATTAQUES, taille: 3, critere: 'commence' },
-  'attaque-4': { familles: ATTAQUES, taille: 4, critere: 'commence' },
-  'rime-4': { familles: RIMES, taille: 4, critere: 'rime' },
-}
-
-function buildRound(level) {
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG['attaque-3']
-  const [familleCible, familleIntrus] = sample(config.familles, 2)
-  const mots = sample(familleCible.mots, config.taille - 1)
+function buildRound(config) {
+  const familles = config.critere === 'rime' ? RIMES : ATTAQUES
+  const [familleCible, familleIntrus] = sample(familles, 2)
+  const mots = sample(familleCible.mots, config.propositions - 1)
   const intrus = pick(familleIntrus.mots.filter((mot) => !mots.includes(mot)))
 
   return {
@@ -30,14 +22,14 @@ function buildRound(level) {
   }
 }
 
-export default function IntrusSonore({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [round, setRound] = useState(() => buildRound(level))
+export default function IntrusSonore({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
   const consigne =
-    round.critere === 'commence'
+    round.critere === 'attaque'
       ? 'Quel mot ne commence pas comme les autres ?'
       : 'Quel mot ne rime pas avec les autres ?'
 
@@ -51,7 +43,7 @@ export default function IntrusSonore({ level, session }) {
     lock.release()
     setPicked(null)
     rounds.next()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
   }
 
   const replay = () => {
@@ -59,7 +51,7 @@ export default function IntrusSonore({ level, session }) {
     session.reset()
     rounds.restart()
     setPicked(null)
-    setRound(buildRound(level))
+    setRound(buildRound(config))
   }
 
   if (rounds.isOver) {
@@ -69,7 +61,7 @@ export default function IntrusSonore({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Mot {rounds.round + 1} sur {TOTAL_ROUNDS}
+        Mot {rounds.round + 1} sur {rounds.total}
       </p>
       <p className="game-prompt">{consigne}</p>
 

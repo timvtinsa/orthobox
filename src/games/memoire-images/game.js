@@ -22,6 +22,36 @@ export default {
   ],
   instructions:
     'Une planche d’images est affichée pendant le temps choisi. Ensuite, les images défilent une par une, mélangées à autant d’images nouvelles : pour chacune, le patient dit si elle figurait sur la planche.',
-  levels: [],
+  settings: [
+    {
+      id: 'nombre',
+      type: 'number',
+      label: 'Nombre d’images',
+      hint: 'Repère : 5 à 7 images pour commencer.',
+      min: 3,
+      max: 12,
+      default: 6,
+    },
+    {
+      id: 'duree',
+      type: 'number',
+      label: 'Temps de mémorisation',
+      min: 5,
+      max: 60,
+      step: 5,
+      default: 10,
+      suffix: 's',
+    },
+    {
+      id: 'noms',
+      type: 'choice',
+      label: 'Nom des images',
+      default: 'avec',
+      options: [
+        { id: 'avec', label: 'Affichés', hint: 'Le nom soutient la mémorisation.' },
+        { id: 'sans', label: 'Masqués', hint: 'Mémorisation visuelle, sans appui du langage.' },
+      ],
+    },
+  ],
   component: lazy(() => import('./MemoireImages.jsx')),
 }

@@ -1,13 +1,8 @@
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
-import SetupPanel from '../../components/SetupPanel.jsx'
-import Stepper from '../../components/Stepper.jsx'
-import SwitchGroup from '../../components/SwitchGroup.jsx'
 import StudyPhase from '../../components/StudyPhase.jsx'
 import { PICTOS, Picto } from '../../lib/pictos.jsx'
 import { sample, shuffle } from '../../lib/random.js'
-
-const REGLAGES_PAR_DEFAUT = { nombre: 6, duree: 10, noms: 'avec' }
 
 function preparer({ nombre }) {
   const tirage = sample(PICTOS, Math.min(nombre * 2, PICTOS.length))
@@ -20,18 +15,17 @@ function preparer({ nombre }) {
   return { planche, epreuves }
 }
 
-export default function MemoireImages({ session }) {
-  const [reglages, setReglages] = useState(REGLAGES_PAR_DEFAUT)
-  const [phase, setPhase] = useState('reglages')
-  const [partie, setPartie] = useState(null)
+export default function MemoireImages({ config, session }) {
+  const [phase, setPhase] = useState('memorisation')
+  const [partie, setPartie] = useState(() => preparer(config))
   const [index, setIndex] = useState(0)
   const [reponses, setReponses] = useState([])
   const [dernier, setDernier] = useState(null)
 
-  const avecNoms = reglages.noms === 'avec'
+  const avecNoms = config.noms === 'avec'
 
   const demarrer = () => {
-    setPartie(preparer(reglages))
+    setPartie(preparer(config))
     setIndex(0)
     setReponses([])
     setDernier(null)
@@ -48,49 +42,10 @@ export default function MemoireImages({ session }) {
     else setIndex(index + 1)
   }
 
-  if (phase === 'reglages') {
-    return (
-      <SetupPanel
-        title="Réglages de la planche"
-        description="Choisissez le nombre d’images et le temps de mémorisation avant de montrer l’écran au patient."
-        onStart={demarrer}
-        actionLabel="Afficher les images"
-      >
-        <Stepper
-          label="Nombre d’images"
-          hint="Repère : 5 à 7 images pour commencer."
-          value={reglages.nombre}
-          min={3}
-          max={12}
-          onChange={(nombre) => setReglages({ ...reglages, nombre })}
-        />
-        <Stepper
-          label="Temps de mémorisation"
-          value={reglages.duree}
-          min={5}
-          max={60}
-          step={5}
-          suffix="s"
-          onChange={(duree) => setReglages({ ...reglages, duree })}
-        />
-        <SwitchGroup
-          label="Nom des images"
-          hint="Sans les noms, la mémorisation visuelle est moins soutenue par le langage."
-          value={reglages.noms}
-          options={[
-            { id: 'avec', label: 'Affichés' },
-            { id: 'sans', label: 'Masqués' },
-          ]}
-          onChange={(noms) => setReglages({ ...reglages, noms })}
-        />
-      </SetupPanel>
-    )
-  }
-
   if (phase === 'memorisation') {
     return (
       <StudyPhase
-        seconds={reglages.duree}
+        seconds={config.duree}
         instruction="Retiens bien ces images"
         onDone={() => setPhase('test')}
       >
@@ -161,9 +116,6 @@ export default function MemoireImages({ session }) {
       <div className="game-actions">
         <button type="button" className="btn btn--lg" onClick={demarrer}>
           Nouvelle planche
-        </button>
-        <button type="button" className="btn btn--ghost" onClick={() => setPhase('reglages')}>
-          Changer les réglages
         </button>
       </div>
     </div>

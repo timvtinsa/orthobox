@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des ondes sonores puis des cartes numérotées à ranger">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <g fill="none" stroke="#f6bdab" stroke-width="8" stroke-linecap="round">
+    <path d="M58 46a18 18 0 0 1 0 30"/>
+    <path d="M72 34a36 36 0 0 1 0 54"/>
+  </g>
+  <circle cx="44" cy="61" r="11" fill="#a44a28"/>
+  <g fill="#ffffff" stroke="#a44a28" stroke-width="4">
+    <rect x="120" y="30" width="56" height="62" rx="10"/>
+    <rect x="190" y="30" width="56" height="62" rx="10"/>
+    <rect x="260" y="30" width="46" height="62" rx="10"/>
+  </g>
+  <g fill="#f2d3a6">
+    <circle cx="148" cy="61" r="14"/>
+    <rect x="204" y="47" width="28" height="28" rx="5"/>
+    <path d="M283 47l14 26h-28z"/>
+  </g>
+  <g fill="#ffffff" stroke="#f6bdab" stroke-width="4">
+    <rect x="30" y="120" width="80" height="54" rx="10"/>
+    <rect x="120" y="120" width="80" height="54" rx="10"/>
+    <rect x="210" y="120" width="80" height="54" rx="10"/>
+  </g>
+  <g fill="#a44a28" font-family="Nunito, sans-serif" font-size="26" font-weight="700" text-anchor="middle">
+    <text x="70" y="156">1</text>
+    <text x="160" y="156">2</text>
+    <text x="250" y="156">3</text>
+  </g>
+</svg>

@@ -3,19 +3,16 @@ import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import { randomInt } from '../../lib/random.js'
 
-const LEVEL_CONFIG = {
-  'direct-4': { cases: 4, colonnes: 2, sens: 'direct', depart: 2 },
-  'direct-9': { cases: 9, colonnes: 3, sens: 'direct', depart: 3 },
-  'inverse-4': { cases: 4, colonnes: 2, sens: 'inverse', depart: 2 },
-}
+const COLONNES = { 4: 2, 6: 3, 9: 3 }
 
 const DUREE_ALLUMEE = 450
 const DUREE_PAS = 700
 const EMPAN_MAX = 9
 
-export default function SequenceMemoire({ level, session }) {
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG['direct-4']
-  const [sequence, setSequence] = useState(() => creerSequence(config.cases, config.depart))
+export default function SequenceMemoire({ config, session }) {
+  const cases = Number(config.cases)
+  const colonnes = COLONNES[cases] ?? 3
+  const [sequence, setSequence] = useState(() => creerSequence(cases, config.depart))
   const [phase, setPhase] = useState('montre') // montre -> repete -> reussi | rate
   const [step, setStep] = useState(0)
   const [allumee, setAllumee] = useState(null)
@@ -68,7 +65,7 @@ export default function SequenceMemoire({ level, session }) {
 
   const sequenceSuivante = () => {
     const taille = Math.min(sequence.length + 1, EMPAN_MAX)
-    setSequence(creerSequence(config.cases, taille))
+    setSequence(creerSequence(cases, taille))
     saisieRef.current = []
     setSaisie([])
     setStep(0)
@@ -77,7 +74,7 @@ export default function SequenceMemoire({ level, session }) {
 
   const replay = () => {
     session.reset()
-    setSequence(creerSequence(config.cases, config.depart))
+    setSequence(creerSequence(cases, config.depart))
     saisieRef.current = []
     setSaisie([])
     setStep(0)
@@ -117,9 +114,9 @@ export default function SequenceMemoire({ level, session }) {
 
       <div
         className="memo-grid"
-        style={{ gridTemplateColumns: `repeat(${config.colonnes}, minmax(72px, 110px))` }}
+        style={{ gridTemplateColumns: `repeat(${colonnes}, minmax(72px, 110px))` }}
       >
-        {Array.from({ length: config.cases }, (_, index) => (
+        {Array.from({ length: cases }, (_, index) => (
           <button
             key={index}
             type="button"

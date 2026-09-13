@@ -6,27 +6,19 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { pick, shuffle } from '../../lib/random.js'
 import { MOTS_COURTS, MOTS_LONGS } from './data.js'
 
-const TOTAL_ROUNDS = 10
-
-const LEVEL_CONFIG = {
-  lent: { duree: 1400, pool: MOTS_COURTS },
-  rapide: { duree: 700, pool: MOTS_COURTS },
-  expert: { duree: 400, pool: MOTS_LONGS },
-}
-
-function buildRound(level) {
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG.lent
-  const entree = pick(config.pool)
+function buildRound(config) {
+  const entree = pick(config.longueur === 'longs' ? MOTS_LONGS : MOTS_COURTS)
   return {
-    duree: config.duree,
+    // Le réglage est en dixièmes de seconde.
+    duree: config.duree * 100,
     mot: entree.mot,
     propositions: shuffle([entree.mot, ...entree.leurres]),
   }
 }
 
-export default function LectureFlash({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [round, setRound] = useState(() => buildRound(level))
+export default function LectureFlash({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [round, setRound] = useState(() => buildRound(config))
   const [phase, setPhase] = useState('pret') // pret -> flash -> choix
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
@@ -46,7 +38,7 @@ export default function LectureFlash({ level, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     setPicked(null)
     setPhase('pret')
   }
@@ -55,7 +47,7 @@ export default function LectureFlash({ level, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     setPicked(null)
     setPhase('pret')
   }
@@ -67,7 +59,7 @@ export default function LectureFlash({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Mot {rounds.round + 1} sur {TOTAL_ROUNDS}
+        Mot {rounds.round + 1} sur {rounds.total}
       </p>
 
       {phase === 'pret' && (

@@ -23,10 +23,18 @@ export default {
   ],
   instructions:
     'Le patient lit l’histoire à son rythme, puis passe aux questions à choix multiple. Chaque réponse est corrigée immédiatement ; le texte reste masqué jusqu’au bilan.',
-  levels: [
-    { id: 'court', label: 'Texte court', hint: '~65 mots, 5 questions' },
-    { id: 'moyen', label: 'Texte moyen', hint: '~120 mots, 6 questions' },
-    { id: 'long', label: 'Texte long', hint: '~180 mots, 7 questions' },
+  settings: [
+    {
+      id: 'longueur',
+      type: 'choice',
+      label: 'Longueur du texte',
+      default: 'court',
+      options: [
+        { id: 'court', label: 'Court', hint: 'Environ 65 mots, 5 questions.' },
+        { id: 'moyen', label: 'Moyen', hint: 'Environ 120 mots, 6 questions.' },
+        { id: 'long', label: 'Long', hint: 'Environ 180 mots, 7 questions.' },
+      ],
+    },
   ],
   component: lazy(() => import('./HistoireMemoire.jsx')),
 }

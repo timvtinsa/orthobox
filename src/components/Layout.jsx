@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import UpdatePrompt from './UpdatePrompt.jsx'
 import InstallButton from './InstallButton.jsx'
@@ -25,6 +25,14 @@ export default function Layout() {
             </svg>
             Orthobox
           </Link>
+          <nav className="app-nav" aria-label="Navigation principale">
+            <NavLink to="/" end className="app-nav__link">
+              Galerie
+            </NavLink>
+            <NavLink to="/seance" className="app-nav__link app-nav__link--seance">
+              Séance
+            </NavLink>
+          </nav>
           <InstallButton />
         </div>
       </header>

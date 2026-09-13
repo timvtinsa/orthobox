@@ -5,10 +5,9 @@ import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { randomInt, sample } from '../../lib/random.js'
 
-const TOTAL_ROUNDS = 12
 const GRILLE = 6 // 36 emplacements possibles par collection
 
-const LEVEL_CONFIG = {
+const MATERIEL = {
   subitizing: { min: 1, max: 6, ecartMin: 2, duree: null, mixte: false },
   moyennes: { min: 4, max: 14, ecartMin: 2, duree: null, mixte: false },
   estimation: { min: 10, max: 28, ecartMin: 2, duree: 1200, mixte: false },
@@ -35,25 +34,25 @@ function positions(nombre) {
   })
 }
 
-function buildRound(level) {
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG.subitizing
-  const gauche = randomInt(config.min, config.max)
-  let droite = randomInt(config.min, config.max)
-  while (Math.abs(droite - gauche) < config.ecartMin) {
-    droite = randomInt(config.min, config.max)
+function buildRound(config) {
+  const materiel = MATERIEL[config.materiel] ?? MATERIEL.subitizing
+  const gauche = randomInt(materiel.min, materiel.max)
+  let droite = randomInt(materiel.min, materiel.max)
+  while (Math.abs(droite - gauche) < materiel.ecartMin) {
+    droite = randomInt(materiel.min, materiel.max)
   }
   return {
-    duree: config.duree,
+    duree: materiel.duree,
     // En mode transcodage, un des deux côtés est écrit en chiffres.
-    chiffre: config.mixte ? (Math.random() < 0.5 ? 'gauche' : 'droite') : null,
+    chiffre: materiel.mixte ? (Math.random() < 0.5 ? 'gauche' : 'droite') : null,
     gauche: { total: gauche, points: positions(gauche) },
     droite: { total: droite, points: positions(droite) },
   }
 }
 
-export default function ComparaisonQuantites({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [round, setRound] = useState(() => buildRound(level))
+export default function ComparaisonQuantites({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const [cache, setCache] = useState(false)
   const lock = useAnswerLock()
@@ -77,7 +76,7 @@ export default function ComparaisonQuantites({ level, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     setPicked(null)
   }
 
@@ -85,7 +84,7 @@ export default function ComparaisonQuantites({ level, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     setPicked(null)
   }
 
@@ -138,7 +137,7 @@ export default function ComparaisonQuantites({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Comparaison {rounds.round + 1} sur {TOTAL_ROUNDS}
+        Comparaison {rounds.round + 1} sur {rounds.total}
       </p>
       <p className="game-prompt">Où y en a-t-il le plus ?</p>
 

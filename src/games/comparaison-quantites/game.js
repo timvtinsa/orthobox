@@ -21,11 +21,20 @@ export default {
   ],
   instructions:
     'Deux collections sont présentées côte à côte : l’enfant désigne la plus nombreuse. Au niveau estimation, les points disparaissent au bout d’une seconde, ce qui empêche le comptage.',
-  levels: [
-    { id: 'subitizing', label: 'Petites quantités', hint: '1 à 6 points' },
-    { id: 'moyennes', label: 'Quantités moyennes', hint: '4 à 14 points' },
-    { id: 'estimation', label: 'Estimation', hint: 'Affichage limité à 1,2 s' },
-    { id: 'transcodage', label: 'Points et chiffres', hint: 'Une collection, un nombre écrit' },
+  settings: [
+    {
+      id: 'materiel',
+      type: 'choice',
+      label: 'Matériel',
+      default: 'subitizing',
+      options: [
+        { id: 'subitizing', label: 'Petites quantités', hint: '1 à 6 points.' },
+        { id: 'moyennes', label: 'Quantités moyennes', hint: '4 à 14 points.' },
+        { id: 'estimation', label: 'Estimation', hint: 'Les points disparaissent au bout d’un instant.' },
+        { id: 'transcodage', label: 'Points et chiffres', hint: 'Une collection face à un nombre écrit.' },
+      ],
+    },
+    { id: 'manches', type: 'number', label: 'Nombre de comparaisons', min: 6, max: 24, default: 12 },
   ],
   component: lazy(() => import('./ComparaisonQuantites.jsx')),
 }

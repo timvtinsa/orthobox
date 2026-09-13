@@ -239,6 +239,103 @@ const DESSINS = {
       </>
     ),
   },
+  telephone: {
+    label: 'téléphone',
+    draw: (
+      <>
+        <rect x="20" y="8" width="24" height="48" rx="6" fill={P.bleu} stroke={P.trait} strokeWidth="3" />
+        <rect x="25" y="15" width="14" height="24" rx="2" fill="#fff" />
+        <circle cx="32" cy="48" r="4" fill={P.trait} />
+      </>
+    ),
+  },
+  tambour: {
+    label: 'tambour',
+    draw: (
+      <>
+        <rect x="12" y="26" width="40" height="24" rx="4" fill={P.peche} />
+        <ellipse cx="32" cy="26" rx="20" ry="7" fill={P.sable} stroke={P.trait} strokeWidth="3" />
+        <path d="M14 30l36 14M50 30L14 44" stroke={P.trait} strokeWidth="2.5" />
+        <path d="M20 22l-6-12M44 22l6-12" stroke={P.trait} strokeWidth="3.5" strokeLinecap="round" />
+      </>
+    ),
+  },
+  sifflet: {
+    label: 'sifflet',
+    draw: (
+      <>
+        <path d="M10 26h26a12 12 0 0 1 0 24H22a12 12 0 0 1-12-12z" fill={P.sauge} stroke={P.trait} strokeWidth="3" />
+        <rect x="36" y="30" width="18" height="8" rx="4" fill={P.trait} opacity=".8" />
+        <path d="M44 18a10 10 0 0 1 8-6M46 12a14 14 0 0 1 10-4" fill="none" stroke={P.trait} strokeWidth="3" strokeLinecap="round" />
+      </>
+    ),
+  },
+  chat: {
+    label: 'chat',
+    draw: (
+      <>
+        <path d="M14 24l2-14 12 8h8l12-8 2 14z" fill={P.lavande} />
+        <circle cx="32" cy="36" r="20" fill={P.lavande} />
+        <g fill={P.trait}>
+          <circle cx="24" cy="33" r="3" /><circle cx="40" cy="33" r="3" />
+          <path d="M32 40l-4 4h8z" />
+        </g>
+        <path d="M8 38h12M44 38h12" stroke={P.trait} strokeWidth="2.5" strokeLinecap="round" />
+      </>
+    ),
+  },
+  chien: {
+    label: 'chien',
+    draw: (
+      <>
+        <path d="M12 20a8 8 0 0 1 8-8v20z" fill={P.sable} />
+        <path d="M52 20a8 8 0 0 0-8-8v20z" fill={P.sable} />
+        <rect x="18" y="16" width="28" height="30" rx="13" fill={P.sable} />
+        <ellipse cx="32" cy="46" rx="12" ry="9" fill="#fff" opacity=".55" />
+        <g fill={P.trait}>
+          <circle cx="25" cy="30" r="3" /><circle cx="39" cy="30" r="3" />
+          <ellipse cx="32" cy="42" rx="5" ry="4" />
+        </g>
+      </>
+    ),
+  },
+  oiseau: {
+    label: 'oiseau',
+    draw: (
+      <>
+        <circle cx="28" cy="30" r="16" fill={P.bleu} />
+        <path d="M40 26l14-6-6 12z" fill={P.sable} />
+        <path d="M24 42c-4 8-10 12-16 12 6-4 8-10 8-14z" fill={P.bleu} />
+        <circle cx="24" cy="26" r="3" fill={P.trait} />
+        <path d="M22 48v8M32 48v8" stroke={P.trait} strokeWidth="3" strokeLinecap="round" />
+      </>
+    ),
+  },
+  vache: {
+    label: 'vache',
+    draw: (
+      <>
+        <path d="M10 22a8 8 0 0 1 10-6M54 22a8 8 0 0 0-10-6" fill="none" stroke={P.trait} strokeWidth="3.5" strokeLinecap="round" />
+        <rect x="14" y="16" width="36" height="30" rx="14" fill="#fff" stroke={P.trait} strokeWidth="3" />
+        <path d="M20 22a5 5 0 0 0 8 4 5 5 0 0 0-8-4z" fill={P.trait} opacity=".7" />
+        <ellipse cx="32" cy="44" rx="12" ry="9" fill={P.peche} />
+        <g fill={P.trait}>
+          <circle cx="26" cy="30" r="2.6" /><circle cx="40" cy="30" r="2.6" />
+          <circle cx="28" cy="44" r="2.4" /><circle cx="36" cy="44" r="2.4" />
+        </g>
+      </>
+    ),
+  },
+  cheval: {
+    label: 'cheval',
+    draw: (
+      <>
+        <path d="M20 54V30c0-8 6-14 14-14h6l6-8 4 10-4 4v10c0 6-4 8-10 10l-6 12z" fill={P.peche} stroke={P.trait} strokeWidth="3" strokeLinejoin="round" />
+        <path d="M40 16c6-2 10 2 10 8" fill="none" stroke={P.trait} strokeWidth="3" strokeLinecap="round" />
+        <circle cx="40" cy="24" r="2.6" fill={P.trait} />
+      </>
+    ),
+  },
   cadeau: {
     label: 'cadeau',
     draw: (

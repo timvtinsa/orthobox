@@ -21,10 +21,19 @@ export default {
   ],
   instructions:
     'Un nom de couleur est écrit dans une encre différente. Il faut répondre selon la consigne affichée — la couleur de l’encre, et au niveau le plus difficile tantôt l’encre, tantôt le mot.',
-  levels: [
-    { id: 'facile', label: 'Échauffement', hint: 'Un essai sur deux est congruent' },
-    { id: 'classique', label: 'Classique', hint: 'Toujours la couleur de l’encre' },
-    { id: 'flexible', label: 'Consigne qui change', hint: 'Encre ou mot, au hasard' },
+  settings: [
+    {
+      id: 'consigne',
+      type: 'choice',
+      label: 'Consigne',
+      default: 'encre',
+      options: [
+        { id: 'echauffement', label: 'Échauffement', hint: 'Un essai sur deux est congruent.' },
+        { id: 'encre', label: 'Couleur de l’encre', hint: 'Toujours la couleur de l’encre.' },
+        { id: 'flexible', label: 'Consigne qui change', hint: 'Tantôt l’encre, tantôt le mot.' },
+      ],
+    },
+    { id: 'manches', type: 'number', label: 'Nombre d’essais', min: 5, max: 40, step: 5, default: 15 },
   ],
   component: lazy(() => import('./Stroop.jsx')),
 }

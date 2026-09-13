@@ -4,41 +4,38 @@ import GameOver from '../../components/GameOver.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
 import { sample, shuffle } from '../../lib/random.js'
 
-const TOTAL_ROUNDS = 6
-
-const LEVEL_CONFIG = {
-  'vingt': { min: 1, max: 20, quantite: 5, pas: 1, sens: 'croissant' },
-  'cent': { min: 1, max: 100, quantite: 6, pas: 1, sens: 'croissant' },
-  'decroissant': { min: 1, max: 100, quantite: 6, pas: 1, sens: 'décroissant' },
-  'decimaux': { min: 1, max: 100, quantite: 6, pas: 0.1, sens: 'croissant' },
+const PLAGES = {
+  vingt: { min: 1, max: 20, pas: 1 },
+  cent: { min: 1, max: 100, pas: 1 },
+  mille: { min: 1, max: 1000, pas: 1 },
+  decimaux: { min: 1, max: 100, pas: 0.1 },
 }
 
 const formate = (valeur, pas) =>
   pas < 1 ? valeur.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) : String(valeur)
 
-function buildRound(level) {
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG.vingt
+function buildRound(config) {
+  const plageConfig = PLAGES[config.plage] ?? PLAGES.vingt
   const plage = Array.from(
-    { length: config.max - config.min + 1 },
-    (_, index) => config.min + index,
+    { length: plageConfig.max - plageConfig.min + 1 },
+    (_, index) => plageConfig.min + index,
   )
   const valeurs = sample(plage, config.quantite).map((valeur) =>
-    config.pas < 1 ? Math.round(valeur * config.pas * 10) / 10 : valeur,
+    plageConfig.pas < 1 ? Math.round(valeur * plageConfig.pas * 10) / 10 : valeur,
   )
-  const ordonnes = [...valeurs].sort((a, b) =>
-    config.sens === 'croissant' ? a - b : b - a,
-  )
+  const sens = config.sens === 'decroissant' ? 'décroissant' : 'croissant'
+  const ordonnes = [...valeurs].sort((a, b) => (sens === 'croissant' ? a - b : b - a))
   return {
-    sens: config.sens,
-    pas: config.pas,
+    sens,
+    pas: plageConfig.pas,
     attendu: ordonnes,
     jetons: shuffle(valeurs),
   }
 }
 
-export default function ChaineNumerique({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [round, setRound] = useState(() => buildRound(level))
+export default function ChaineNumerique({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [round, setRound] = useState(() => buildRound(config))
   const [places, setPlaces] = useState([])
   const [erreur, setErreur] = useState(null)
   const [sansFaute, setSansFaute] = useState(true)
@@ -80,14 +77,14 @@ export default function ChaineNumerique({ level, session }) {
 
   const goNext = () => {
     rounds.next()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     reinitialiser()
   }
 
   const replay = () => {
     session.reset()
     rounds.restart()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     reinitialiser()
   }
 
@@ -102,7 +99,7 @@ export default function ChaineNumerique({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Suite {rounds.round + 1} sur {TOTAL_ROUNDS}
+        Suite {rounds.round + 1} sur {rounds.total}
       </p>
       <p className="game-prompt">
         Clique sur les nombres dans l’ordre {round.sens}

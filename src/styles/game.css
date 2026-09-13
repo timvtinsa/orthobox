@@ -1034,3 +1034,353 @@
   width: 100%;
   height: auto;
 }
+
+/* --- Jeu des paires ------------------------------------------------ */
+
+.memory-grid {
+  display: grid;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+.memory-card {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  padding: 6px;
+  border-radius: var(--radius);
+  border: 2px solid var(--line);
+  background: var(--category-pastel);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease, border-color 0.15s ease;
+}
+
+.memory-card:hover {
+  transform: translateY(-2px);
+}
+
+.memory-card--face {
+  background: var(--surface);
+  border-color: var(--category-pastel);
+  cursor: default;
+}
+
+.memory-card--trouvee {
+  border-color: var(--success);
+  background: var(--success-tint);
+}
+
+.memory-card__dos {
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--category);
+  opacity: 0.25;
+}
+
+/* --- Tri des formes ------------------------------------------------ */
+
+.tri-reserve {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 84px;
+  padding: 10px;
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  width: 100%;
+}
+
+.tri-objet {
+  display: grid;
+  place-items: center;
+  min-width: 64px;
+  min-height: 64px;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 3px solid transparent;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.tri-objet:hover {
+  transform: translateY(-2px);
+}
+
+.tri-objet--choisi {
+  border-color: var(--category);
+  transform: translateY(-4px);
+}
+
+.tri-bacs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.tri-bac {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 110px;
+  padding: 14px 10px;
+  border-radius: var(--radius);
+  border: 3px dashed var(--line-strong);
+  background: var(--surface);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tri-bac:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.tri-bac--actif {
+  border-color: var(--category-pastel);
+}
+
+.tri-bac--actif:hover {
+  border-style: solid;
+  background: var(--category-tint);
+}
+
+.tri-bac--erreur {
+  border-color: var(--danger);
+  background: var(--danger-tint);
+}
+
+.tri-bac__titre {
+  font-size: 0.95rem;
+}
+
+.tri-bac__compte {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.rule-change {
+  margin: 0;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  background: #fcf5e4;
+  color: #8a6410;
+  font-weight: 700;
+}
+
+/* --- Suite de sons -------------------------------------------------- */
+
+.ordre-slot {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ordre-case {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: var(--radius);
+  border: 3px dashed var(--line-strong);
+  background: var(--surface-alt);
+}
+
+.ordre-case--juste {
+  border-style: solid;
+  border-color: var(--success);
+  background: var(--success-tint);
+}
+
+.ordre-case--faux {
+  border-style: solid;
+  border-color: var(--danger);
+  background: var(--danger-tint);
+}
+
+.ordre-case__rang {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--category-pastel);
+  color: var(--category);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.son-carte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 96px;
+  min-height: 96px;
+  padding: 10px;
+  border-radius: var(--radius);
+  border: 2px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.son-carte:hover:not(:disabled) {
+  border-color: var(--category-pastel);
+  transform: translateY(-2px);
+}
+
+.son-carte--placee {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.son-carte__label {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+/* --- Déroulement d'une séance --------------------------------------- */
+
+.seance-barre {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 20px;
+  align-items: center;
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.seance-barre__texte {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.seance-barre__titre {
+  font-size: 1.2rem;
+}
+
+.seance-barre__progress {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.seance-barre__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.seance-note {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.recap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.recap-table th,
+.recap-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.recap-table thead th {
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.recap-table tbody tr:last-child th,
+.recap-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.recap-table__nombre {
+  white-space: nowrap;
+}
+
+.recap-taux {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.recap-taux__jauge {
+  width: 90px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  overflow: hidden;
+}
+
+.recap-taux__valeur {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-pastel);
+}
+
+@media (max-width: 700px) {
+  .seance-barre {
+    grid-template-columns: 1fr;
+  }
+
+  .seance-barre__actions {
+    justify-content: flex-start;
+  }
+}
+
+@media print {
+  .app-header,
+  .app-footer,
+  .no-print,
+  .toast {
+    display: none !important;
+  }
+
+  .app-main {
+    padding: 0;
+  }
+
+  .table-wrap {
+    border: none;
+  }
+
+  .recap-table th,
+  .recap-table td {
+    padding: 8px 10px;
+  }
+}

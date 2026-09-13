@@ -5,8 +5,8 @@ import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { pick, shuffle } from '../../lib/random.js'
 import { HISTOIRES } from './data.js'
 
-function choisirHistoire(level, precedente) {
-  const parLongueur = HISTOIRES.filter((histoire) => histoire.longueur === level)
+function choisirHistoire(longueur, precedente) {
+  const parLongueur = HISTOIRES.filter((histoire) => histoire.longueur === longueur)
   const pool = parLongueur.length > 0 ? parLongueur : HISTOIRES
   const fraiches = pool.filter((histoire) => histoire.id !== precedente)
   return pick(fraiches.length > 0 ? fraiches : pool)
@@ -21,8 +21,8 @@ function preparerQuestions(histoire) {
   })
 }
 
-export default function HistoireMemoire({ level, session }) {
-  const [histoire, setHistoire] = useState(() => choisirHistoire(level))
+export default function HistoireMemoire({ config, session }) {
+  const [histoire, setHistoire] = useState(() => choisirHistoire(config.longueur))
   const [questions, setQuestions] = useState(() => preparerQuestions(histoire))
   const [phase, setPhase] = useState('lecture')
   const [index, setIndex] = useState(0)
@@ -48,7 +48,7 @@ export default function HistoireMemoire({ level, session }) {
   }
 
   const nouvelleHistoire = () => {
-    const prochaine = choisirHistoire(level, histoire.id)
+    const prochaine = choisirHistoire(config.longueur, histoire.id)
     setHistoire(prochaine)
     setQuestions(preparerQuestions(prochaine))
     setPhase('lecture')

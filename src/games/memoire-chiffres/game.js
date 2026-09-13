@@ -22,6 +22,35 @@ export default {
   ],
   instructions:
     'La suite s’affiche pendant le temps choisi, puis disparaît. Le patient la retape sur le pavé numérique, dans le même ordre ou à l’envers selon le réglage.',
-  levels: [],
+  settings: [
+    {
+      id: 'longueur',
+      type: 'number',
+      label: 'Nombre de chiffres',
+      hint: 'Repère : l’empan direct adulte se situe autour de 6 à 7 chiffres.',
+      min: 3,
+      max: 10,
+      default: 5,
+    },
+    {
+      id: 'duree',
+      type: 'number',
+      label: 'Temps d’affichage',
+      min: 3,
+      max: 30,
+      default: 8,
+      suffix: 's',
+    },
+    {
+      id: 'sens',
+      type: 'choice',
+      label: 'Sens de restitution',
+      default: 'direct',
+      options: [
+        { id: 'direct', label: 'À l’endroit', hint: 'Empan direct.' },
+        { id: 'inverse', label: 'À l’envers', hint: 'Sollicite davantage la mémoire de travail.' },
+      ],
+    },
+  ],
   component: lazy(() => import('./MemoireChiffres.jsx')),
 }

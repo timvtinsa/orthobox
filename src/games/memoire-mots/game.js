@@ -22,6 +22,27 @@ export default {
   ],
   instructions:
     'Une liste de mots est affichée pendant le temps choisi. Ensuite, les mots défilent un par un, mélangés à autant de mots nouveaux : pour chacun, le patient dit s’il figurait dans la liste.',
-  levels: [],
+  settings: [
+    {
+      id: 'nombre',
+      type: 'number',
+      label: 'Nombre de mots',
+      hint: 'Repère : 5 à 7 mots pour commencer.',
+      min: 3,
+      max: 12,
+      default: 7,
+    },
+    {
+      id: 'duree',
+      type: 'number',
+      label: 'Temps de mémorisation',
+      hint: 'Le patient peut aussi passer au test dès qu’il se sent prêt.',
+      min: 5,
+      max: 60,
+      step: 5,
+      default: 10,
+      suffix: 's',
+    },
+  ],
   component: lazy(() => import('./MemoireMots.jsx')),
 }

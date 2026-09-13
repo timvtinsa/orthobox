@@ -5,20 +5,18 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { PICTOS, Picto } from '../../lib/pictos.jsx'
 import { pick, randomInt, sample, shuffle } from '../../lib/random.js'
 
-const TOTAL_ROUNDS = 6
-
-const LEVEL_CONFIG = {
-  calme: { objets: 24, rotation: 0, tailleMin: 100, tailleMax: 100 },
-  charge: { objets: 48, rotation: 14, tailleMin: 84, tailleMax: 112 },
-  dense: { objets: 80, rotation: 26, tailleMin: 70, tailleMax: 120 },
+const VARIATIONS = {
+  alignes: { rotation: 0, tailleMin: 100, tailleMax: 100 },
+  varies: { rotation: 0, tailleMin: 80, tailleMax: 116 },
+  tournes: { rotation: 26, tailleMin: 70, tailleMax: 120 },
 }
 
 /**
  * Compose un décor : la cible apparaît une seule fois, noyée parmi des
  * objets distracteurs répartis sur une grille légèrement bousculée.
  */
-function construireScene(level) {
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG.calme
+function construireScene(config) {
+  const variation = VARIATIONS[config.variations] ?? VARIATIONS.alignes
   const cible = pick(PICTOS)
   const autres = PICTOS.filter((picto) => picto.id !== cible.id)
 
@@ -46,17 +44,17 @@ function construireScene(level) {
       estCible: picto.id === cible.id,
       left: colonne * largeur + largeur / 2 + jitter(largeur * 0.5),
       top: ligne * hauteur + hauteur / 2 + jitter(hauteur * 0.5),
-      taille: (largeur * randomInt(config.tailleMin, config.tailleMax)) / 100,
-      rotation: config.rotation === 0 ? 0 : randomInt(-config.rotation, config.rotation),
+      taille: (largeur * randomInt(variation.tailleMin, variation.tailleMax)) / 100,
+      rotation: variation.rotation === 0 ? 0 : randomInt(-variation.rotation, variation.rotation),
     }
   })
 
   return { cible, items }
 }
 
-export default function RechercheVisuelle({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [scene, setScene] = useState(() => construireScene(level))
+export default function RechercheVisuelle({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [scene, setScene] = useState(() => construireScene(config))
   const [trouve, setTrouve] = useState(false)
   const [erreurs, setErreurs] = useState(0)
   const [erreursTotal, setErreursTotal] = useState(0)
@@ -82,7 +80,7 @@ export default function RechercheVisuelle({ level, session }) {
 
   const suivant = () => {
     rounds.next()
-    setScene(construireScene(level))
+    setScene(construireScene(config))
     setTrouve(false)
     setErreurs(0)
   }
@@ -91,7 +89,7 @@ export default function RechercheVisuelle({ level, session }) {
     session.reset()
     rounds.restart()
     temps.current = []
-    setScene(construireScene(level))
+    setScene(construireScene(config))
     setTrouve(false)
     setErreurs(0)
     setErreursTotal(0)
@@ -115,7 +113,7 @@ export default function RechercheVisuelle({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Recherche {rounds.round + 1} sur {TOTAL_ROUNDS} · {scene.items.length} objets
+        Recherche {rounds.round + 1} sur {rounds.total} · {scene.items.length} objets
       </p>
 
       <div className="target-preview">

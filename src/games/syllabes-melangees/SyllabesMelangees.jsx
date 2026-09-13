@@ -6,11 +6,8 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { pick, shuffle } from '../../lib/random.js'
 import { MOTS } from './data.js'
 
-const TOTAL_ROUNDS = 8
-
-function buildRound(level) {
-  const taille = Number(level) || 2
-  const syllabes = pick(MOTS[taille] ?? MOTS[2])
+function buildRound(config) {
+  const syllabes = pick(MOTS[config.syllabes] ?? MOTS[2])
   // Un identifiant par jeton : deux syllabes identiques peuvent coexister.
   const jetons = syllabes.map((texte, index) => ({ id: `${index}-${texte}`, texte }))
   let melange = shuffle(jetons)
@@ -21,9 +18,9 @@ function buildRound(level) {
   return { mot: syllabes.join(''), jetons: melange, taille: syllabes.length }
 }
 
-export default function SyllabesMelangees({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [round, setRound] = useState(() => buildRound(level))
+export default function SyllabesMelangees({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [round, setRound] = useState(() => buildRound(config))
   const [placed, setPlaced] = useState([])
   const [result, setResult] = useState(null)
   // Miroir synchrone de `placed` : deux clics dans la même frame liraient
@@ -62,7 +59,7 @@ export default function SyllabesMelangees({ level, session }) {
 
   const goNext = () => {
     rounds.next()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     majPlaced([])
     setResult(null)
   }
@@ -70,7 +67,7 @@ export default function SyllabesMelangees({ level, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     majPlaced([])
     setResult(null)
   }
@@ -86,7 +83,7 @@ export default function SyllabesMelangees({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Mot {rounds.round + 1} sur {TOTAL_ROUNDS} · {round.taille} syllabes
+        Mot {rounds.round + 1} sur {rounds.total} · {round.taille} syllabes
       </p>
       <p className="game-prompt">Remets les syllabes dans l’ordre</p>
 

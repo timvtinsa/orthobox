@@ -40,5 +40,7 @@ en tablette (1024×768 et 768×1024) : l'application est utilisée sur tablette.
   l'application doit fonctionner hors ligne.
 - Cibles tactiles d'au moins 44 px, aucune information portée par la seule
   couleur.
-- Un jeu dont le matériel se règle (nombre d'éléments, durée) déclare
-  `levels: []` et ouvre sur un `SetupPanel`.
+- Tout jeu déclare ses paramètres dans `settings` (`game.js`) : le cadre
+  affiche l'écran de réglages et ne lance la partie qu'au « Démarrer ».
+- Les jeux doivent rester utilisables dans le mode séance : le score passe par
+  `session.register()`, jamais par un écran de fin.

@@ -21,10 +21,27 @@ export default {
   ],
   instructions:
     'Trois (ou quatre) mots partagent le même son de début ou la même rime : l’enfant désigne celui qui ne va pas avec les autres.',
-  levels: [
-    { id: 'attaque-3', label: 'Son initial · 3 mots', hint: 'Entrée en matière' },
-    { id: 'attaque-4', label: 'Son initial · 4 mots', hint: 'Plus de choix à comparer' },
-    { id: 'rime-4', label: 'Rime · 4 mots', hint: 'Attention portée sur la fin du mot' },
+  settings: [
+    {
+      id: 'critere',
+      type: 'choice',
+      label: 'Ce qu’on écoute',
+      default: 'attaque',
+      options: [
+        { id: 'attaque', label: 'Son du début', hint: 'Le mot intrus ne commence pas comme les autres.' },
+        { id: 'rime', label: 'Rime', hint: 'Le mot intrus ne rime pas avec les autres.' },
+      ],
+    },
+    {
+      id: 'propositions',
+      type: 'number',
+      label: 'Mots par question',
+      hint: 'Trois pour commencer, davantage pour charger la comparaison.',
+      min: 3,
+      max: 5,
+      default: 3,
+    },
+    { id: 'manches', type: 'number', label: 'Nombre de questions', min: 5, max: 20, default: 10 },
   ],
   component: lazy(() => import('./IntrusSonore.jsx')),
 }

@@ -5,8 +5,6 @@ import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { pick, shuffle } from '../../lib/random.js'
 
-const TOTAL_ROUNDS = 15
-
 const COULEURS = [
   { id: 'rouge', label: 'ROUGE', hex: '#d0342c' },
   { id: 'bleu', label: 'BLEU', hex: '#2d5fd0' },
@@ -14,12 +12,12 @@ const COULEURS = [
   { id: 'jaune', label: 'JAUNE', hex: '#c98a00' },
 ]
 
-function buildRound(level) {
+function buildRound(config) {
   const mot = pick(COULEURS)
-  // En mode facile un essai sur deux est congruent (mot et encre identiques).
-  const congruent = level === 'facile' ? Math.random() < 0.5 : false
+  // À l'échauffement, un essai sur deux est congruent (mot et encre identiques).
+  const congruent = config.consigne === 'echauffement' ? Math.random() < 0.5 : false
   const encre = congruent ? mot : pick(COULEURS.filter((couleur) => couleur.id !== mot.id))
-  const consigne = level === 'flexible' ? pick(['encre', 'mot']) : 'encre'
+  const consigne = config.consigne === 'flexible' ? pick(['encre', 'mot']) : 'encre'
   return {
     mot,
     encre,
@@ -29,9 +27,9 @@ function buildRound(level) {
   }
 }
 
-export default function Stroop({ level, session }) {
-  const rounds = useRounds(TOTAL_ROUNDS)
-  const [round, setRound] = useState(() => buildRound(level))
+export default function Stroop({ config, session }) {
+  const rounds = useRounds(config.manches)
+  const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
   const temps = useRef([])
@@ -53,7 +51,7 @@ export default function Stroop({ level, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     setPicked(null)
   }
 
@@ -62,7 +60,7 @@ export default function Stroop({ level, session }) {
     session.reset()
     rounds.restart()
     temps.current = []
-    setRound(buildRound(level))
+    setRound(buildRound(config))
     setPicked(null)
   }
 
@@ -86,7 +84,7 @@ export default function Stroop({ level, session }) {
   return (
     <div className="game-board">
       <p className="game-round">
-        Essai {rounds.round + 1} sur {TOTAL_ROUNDS}
+        Essai {rounds.round + 1} sur {rounds.total}
       </p>
       <p className={`stroop-rule${round.consigne === 'mot' ? ' stroop-rule--switch' : ''}`}>
         {consigneTexte}

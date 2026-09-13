@@ -1,22 +1,17 @@
 import { useRef, useState } from 'react'
-import SetupPanel from '../../components/SetupPanel.jsx'
-import Stepper from '../../components/Stepper.jsx'
 import StudyPhase from '../../components/StudyPhase.jsx'
 import { MOTS_COURANTS, memeMot } from '../../lib/lexique.js'
 import { sample } from '../../lib/random.js'
 
-const REGLAGES_PAR_DEFAUT = { nombre: 7, duree: 15 }
-
-export default function MemoireRappel({ session }) {
-  const [reglages, setReglages] = useState(REGLAGES_PAR_DEFAUT)
-  const [phase, setPhase] = useState('reglages')
-  const [liste, setListe] = useState([])
+export default function MemoireRappel({ config, session }) {
+  const [phase, setPhase] = useState('memorisation')
+  const [liste, setListe] = useState(() => sample(MOTS_COURANTS, config.nombre))
   const [saisie, setSaisie] = useState('')
   const [rappeles, setRappeles] = useState([])
   const champ = useRef(null)
 
   const demarrer = () => {
-    setListe(sample(MOTS_COURANTS, reglages.nombre))
+    setListe(sample(MOTS_COURANTS, config.nombre))
     setRappeles([])
     setSaisie('')
     setPhase('memorisation')
@@ -44,39 +39,10 @@ export default function MemoireRappel({ session }) {
     setPhase('resultats')
   }
 
-  if (phase === 'reglages') {
-    return (
-      <SetupPanel
-        title="Réglages de la liste"
-        description="Choisissez le nombre de mots et le temps de mémorisation. Le patient devra ensuite les restituer de mémoire, dans l’ordre qu’il veut."
-        onStart={demarrer}
-        actionLabel="Afficher la liste"
-      >
-        <Stepper
-          label="Nombre de mots"
-          hint="Repère : l’empan verbal adulte se situe autour de 7 mots."
-          value={reglages.nombre}
-          min={3}
-          max={15}
-          onChange={(nombre) => setReglages({ ...reglages, nombre })}
-        />
-        <Stepper
-          label="Temps de mémorisation"
-          value={reglages.duree}
-          min={5}
-          max={90}
-          step={5}
-          suffix="s"
-          onChange={(duree) => setReglages({ ...reglages, duree })}
-        />
-      </SetupPanel>
-    )
-  }
-
   if (phase === 'memorisation') {
     return (
       <StudyPhase
-        seconds={reglages.duree}
+        seconds={config.duree}
         instruction="Retiens bien ces mots"
         onDone={() => setPhase('rappel')}
       >
@@ -180,9 +146,6 @@ export default function MemoireRappel({ session }) {
       <div className="game-actions">
         <button type="button" className="btn btn--lg" onClick={demarrer}>
           Nouvelle liste
-        </button>
-        <button type="button" className="btn btn--ghost" onClick={() => setPhase('reglages')}>
-          Changer les réglages
         </button>
       </div>
     </div>

@@ -28,7 +28,7 @@ function normalize(meta) {
   return {
     objectives: [],
     materials: [],
-    levels: [],
+    settings: [],
     ages: 'Tous ages',
     duration: '5 min',
     instructions: null,

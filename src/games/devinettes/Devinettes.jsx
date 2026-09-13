@@ -5,17 +5,15 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { shuffle } from '../../lib/random.js'
 import { DEVINETTES, THEMES } from './data.js'
 
-const TOTAL_ROUNDS = 8
-
-function buildDeck(level) {
-  const parTheme = DEVINETTES.filter((item) => item.theme === level)
-  const pool = level === 'melange' || parTheme.length === 0 ? DEVINETTES : parTheme
-  return shuffle(pool).slice(0, TOTAL_ROUNDS)
+function buildDeck(config) {
+  const parTheme = DEVINETTES.filter((item) => item.theme === config.theme)
+  const pool = config.theme === 'melange' || parTheme.length === 0 ? DEVINETTES : parTheme
+  return shuffle(pool).slice(0, config.manches)
 }
 
-export default function Devinettes({ level, session }) {
-  const [deck, setDeck] = useState(() => buildDeck(level))
-  const rounds = useRounds(Math.min(TOTAL_ROUNDS, deck.length))
+export default function Devinettes({ config, session }) {
+  const [deck, setDeck] = useState(() => buildDeck(config))
+  const rounds = useRounds(deck.length)
   const [shown, setShown] = useState(1)
   const [revealed, setRevealed] = useState(false)
 
@@ -31,7 +29,7 @@ export default function Devinettes({ level, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
-    setDeck(buildDeck(level))
+    setDeck(buildDeck(config))
     setShown(1)
     setRevealed(false)
   }

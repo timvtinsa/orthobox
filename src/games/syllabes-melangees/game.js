@@ -21,10 +21,17 @@ export default {
   ],
   instructions:
     'Les syllabes du mot sont présentées dans le désordre. L’enfant les remet dans l’ordre ; un clic sur une syllabe déjà placée la retire.',
-  levels: [
-    { id: '2', label: '2 syllabes', hint: 'Mots courts' },
-    { id: '3', label: '3 syllabes', hint: 'Mots moyens' },
-    { id: '4', label: '4 syllabes', hint: 'Mots longs' },
+  settings: [
+    {
+      id: 'syllabes',
+      type: 'number',
+      label: 'Syllabes par mot',
+      hint: 'Deux syllabes pour les mots courts, quatre pour les mots longs.',
+      min: 2,
+      max: 4,
+      default: 2,
+    },
+    { id: 'manches', type: 'number', label: 'Nombre de mots', min: 4, max: 16, default: 8 },
   ],
   component: lazy(() => import('./SyllabesMelangees.jsx')),
 }

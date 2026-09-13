@@ -1,7 +1,7 @@
 import { Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
-import LevelPicker from '../components/LevelPicker.jsx'
 import Scoreboard from '../components/Scoreboard.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -11,14 +11,14 @@ import NotFoundPage from './NotFoundPage.jsx'
 export default function GamePage() {
   const { gameId } = useParams()
   // La clé remonte toute la page quand on passe d'un jeu à l'autre : sans
-  // cela, le niveau et le score du jeu précédent seraient conservés.
+  // cela, les réglages et le score du jeu précédent seraient conservés.
   return <GameScreen key={gameId} gameId={gameId} />
 }
 
 function GameScreen({ gameId }) {
   const game = getGame(gameId)
-  const [level, setLevel] = useState(game?.levels?.[0]?.id ?? null)
-  // Changer cette clé remonte le jeu : c'est la remise à zéro de la partie.
+  // `null` tant que la partie n'est pas lancée : on est alors sur les réglages.
+  const [config, setConfig] = useState(null)
   const [runKey, setRunKey] = useState(0)
   const session = useGameSession()
 
@@ -27,14 +27,10 @@ function GameScreen({ gameId }) {
   const category = getCategory(game.category)
   const GameComponent = game.component
 
-  const restart = () => {
+  const lancer = (reglages) => {
     session.reset()
+    setConfig(reglages)
     setRunKey((key) => key + 1)
-  }
-
-  const changeLevel = (nextLevel) => {
-    setLevel(nextLevel)
-    restart()
   }
 
   return (
@@ -53,19 +49,40 @@ function GameScreen({ gameId }) {
           <h1 className="game-header__title">{game.title}</h1>
           <p className="muted">{game.tagline}</p>
         </div>
-        <div className="game-header__controls">
-          <LevelPicker levels={game.levels} value={level} onChange={changeLevel} />
-          <Scoreboard session={session} />
-          <button type="button" className="btn btn--ghost" onClick={restart}>
-            Recommencer
-          </button>
-        </div>
+        {config && (
+          <div className="game-header__controls">
+            <Scoreboard session={session} />
+            <button type="button" className="btn btn--ghost" onClick={() => lancer(config)}>
+              Recommencer
+            </button>
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={() => {
+                session.reset()
+                setConfig(null)
+              }}
+            >
+              <Icon name="settings" size={18} filled={false} />
+              Réglages
+            </button>
+          </div>
+        )}
       </header>
 
       <section className="panel game-panel">
-        <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
-          <GameComponent key={`${level}-${runKey}`} level={level} session={session} />
-        </Suspense>
+        {config === null ? (
+          <GameSetup
+            game={game}
+            initial={defaultConfig(game.settings)}
+            onStart={lancer}
+            actionLabel="Démarrer"
+          />
+        ) : (
+          <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
+            <GameComponent key={runKey} config={config} session={session} />
+          </Suspense>
+        )}
       </section>
 
       <details className="game-notes">

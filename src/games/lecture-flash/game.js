@@ -21,10 +21,28 @@ export default {
   ],
   instructions:
     'Le mot n’apparaît qu’une fraction de seconde, puis quatre propositions très ressemblantes sont présentées. Réduire la durée d’affichage augmente la contrainte de traitement.',
-  levels: [
-    { id: 'lent', label: 'Lent', hint: '1,4 s d’affichage' },
-    { id: 'rapide', label: 'Rapide', hint: '0,7 s d’affichage' },
-    { id: 'expert', label: 'Expert', hint: '0,4 s, mots longs' },
+  settings: [
+    {
+      id: 'duree',
+      type: 'number',
+      label: 'Durée d’affichage',
+      hint: 'En dixièmes de seconde : plus c’est court, plus la lecture globale est sollicitée.',
+      min: 2,
+      max: 20,
+      default: 14,
+      suffix: '/10 s',
+    },
+    {
+      id: 'longueur',
+      type: 'choice',
+      label: 'Longueur des mots',
+      default: 'courts',
+      options: [
+        { id: 'courts', label: 'Mots courts', hint: 'Une à deux syllabes.' },
+        { id: 'longs', label: 'Mots longs', hint: 'Trois syllabes et plus.' },
+      ],
+    },
+    { id: 'manches', type: 'number', label: 'Nombre de mots', min: 5, max: 20, default: 10 },
   ],
   component: lazy(() => import('./LectureFlash.jsx')),
 }

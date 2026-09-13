@@ -21,11 +21,20 @@ export default {
   ],
   instructions:
     'Les indices se dévoilent un par un. L’enfant répond à l’oral ; le praticien indique si le mot a été trouvé. Moins il faut d’indices, plus l’accès lexical est efficace.',
-  levels: [
-    { id: 'animaux', label: 'Animaux', hint: 'Vocabulaire concret' },
-    { id: 'objets', label: 'Objets', hint: 'Objets du quotidien' },
-    { id: 'monde', label: 'Lieux et métiers', hint: 'Vocabulaire plus abstrait' },
-    { id: 'melange', label: 'Mélange', hint: 'Tous les thèmes' },
+  settings: [
+    {
+      id: 'theme',
+      type: 'choice',
+      label: 'Thème',
+      default: 'animaux',
+      options: [
+        { id: 'animaux', label: 'Animaux', hint: 'Vocabulaire concret.' },
+        { id: 'objets', label: 'Objets', hint: 'Objets du quotidien.' },
+        { id: 'monde', label: 'Lieux, métiers', hint: 'Vocabulaire plus abstrait.' },
+        { id: 'melange', label: 'Mélange', hint: 'Tous les thèmes.' },
+      ],
+    },
+    { id: 'manches', type: 'number', label: 'Nombre de devinettes', min: 3, max: 12, default: 8 },
   ],
   component: lazy(() => import('./Devinettes.jsx')),
 }

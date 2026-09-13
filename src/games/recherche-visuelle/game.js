@@ -22,10 +22,29 @@ export default {
   ],
   instructions:
     'Un objet cible est affiché au-dessus du décor ; il n’apparaît qu’une seule fois dans la scène. La manche compte comme réussie si l’objet est désigné sans erreur.',
-  levels: [
-    { id: 'calme', label: 'Décor calme', hint: '24 objets alignés' },
-    { id: 'charge', label: 'Décor chargé', hint: '48 objets, tailles variées' },
-    { id: 'dense', label: 'Décor dense', hint: '80 objets, tournés et mêlés' },
+  settings: [
+    {
+      id: 'objets',
+      type: 'number',
+      label: 'Objets dans le décor',
+      hint: 'Plus le décor est dense, plus l’exploration doit être organisée.',
+      min: 12,
+      max: 90,
+      step: 6,
+      default: 24,
+    },
+    {
+      id: 'variations',
+      type: 'choice',
+      label: 'Présentation',
+      default: 'alignes',
+      options: [
+        { id: 'alignes', label: 'Objets alignés', hint: 'Même taille, sans rotation.' },
+        { id: 'varies', label: 'Tailles variées', hint: 'Objets de tailles différentes.' },
+        { id: 'tournes', label: 'Tournés et mêlés', hint: 'Tailles et orientations variables.' },
+      ],
+    },
+    { id: 'manches', type: 'number', label: 'Nombre de recherches', min: 3, max: 12, default: 6 },
   ],
   component: lazy(() => import('./RechercheVisuelle.jsx')),
 }
