@@ -7,8 +7,7 @@ export default {
   tagline: 'Retenir une suite de chiffres, puis la retaper à l’endroit ou à l’envers.',
   category: 'fonctions-executives',
   cover,
-  ages: '6 ans et +',
-  duration: '3 à 5 min',
+  ages: '6 ans et plus',
   keywords: ['empan de chiffres', 'mémoire de travail', 'ordre inverse', 'attention'],
   objectives: [
     'Empan numérique direct et inverse',
@@ -16,18 +15,18 @@ export default {
     'Maintien et manipulation d’une information en mémoire',
   ],
   materials: [
-    'Longueur de la suite, temps d’affichage et sens de restitution réglables avant la partie.',
     'Augmenter la longueur d’un chiffre à chaque réussite permet d’estimer l’empan.',
+    'La restitution se fait au pavé numérique, chiffre par chiffre, et la comparaison est détaillée.',
     'Variante : faire répéter la suite à voix haute pendant la mémorisation.',
   ],
   instructions:
-    'La suite s’affiche pendant le temps choisi, puis disparaît. Le patient la retape sur le pavé numérique, dans le même ordre ou à l’envers selon le réglage.',
+    'La suite s’affiche pendant le temps choisi, puis disparaît. Le patient la retape dans le même ordre, ou à l’envers selon le réglage.',
   settings: [
     {
       id: 'longueur',
       type: 'number',
       label: 'Nombre de chiffres',
-      hint: 'Repère : l’empan direct adulte se situe autour de 6 à 7 chiffres.',
+      hint: 'L’empan direct adulte se situe autour de six à sept chiffres.',
       min: 3,
       max: 10,
       default: 5,
@@ -39,7 +38,7 @@ export default {
       min: 3,
       max: 30,
       default: 8,
-      suffix: 's',
+      unite: 'secondes',
     },
     {
       id: 'sens',
@@ -51,6 +50,7 @@ export default {
         { id: 'inverse', label: 'À l’envers', hint: 'Sollicite davantage la mémoire de travail.' },
       ],
     },
+
   ],
   component: lazy(() => import('./MemoireChiffres.jsx')),
 }

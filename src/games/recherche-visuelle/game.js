@@ -7,8 +7,7 @@ export default {
   tagline: 'Repérer un objet précis au milieu d’un décor encombré.',
   category: 'fonctions-executives',
   cover,
-  ages: '4 ans et +',
-  duration: '5 min',
+  ages: '4 ans et plus',
   keywords: ['recherche visuelle', 'attention sélective', 'balayage', 'exploration'],
   objectives: [
     'Attention visuelle sélective',
@@ -16,12 +15,12 @@ export default {
     'Inhibition des distracteurs',
   ],
   materials: [
-    'Le décor se densifie d’un niveau à l’autre : de 24 à 80 objets, avec rotations et tailles variées.',
+    'Le nombre d’objets et leur présentation se règlent séparément : un décor dense et tourné est bien plus exigeant qu’un décor aligné.',
     'Le temps de recherche moyen et le nombre de clics à côté sont donnés en fin de partie.',
-    'Variante : demander de verbaliser la stratégie (« je regarde ligne par ligne »).',
+    'Variante : demander de verbaliser la stratégie, par exemple « je regarde ligne par ligne ».',
   ],
   instructions:
-    'Un objet cible est affiché au-dessus du décor ; il n’apparaît qu’une seule fois dans la scène. La manche compte comme réussie si l’objet est désigné sans erreur.',
+    'Un objet cible est affiché au dessus du décor, où il n’apparaît qu’une seule fois. La manche compte comme réussie si l’objet est désigné sans erreur.',
   settings: [
     {
       id: 'objets',
@@ -44,7 +43,15 @@ export default {
         { id: 'tournes', label: 'Tournés et mêlés', hint: 'Tailles et orientations variables.' },
       ],
     },
-    { id: 'manches', type: 'number', label: 'Nombre de recherches', min: 3, max: 12, default: 6 },
+    {
+      id: 'manches',
+      type: 'number',
+      label: 'Nombre de recherches',
+      min: 3,
+      max: 12,
+      default: 6,
+    },
+
   ],
   component: lazy(() => import('./RechercheVisuelle.jsx')),
 }

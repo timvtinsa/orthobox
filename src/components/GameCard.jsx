@@ -1,3 +1,6 @@
+/**
+ * Carte d'un jeu dans la galerie : vignette, accroche, objectifs, favori.
+ */
 import { Link } from 'react-router-dom'
 import Icon from './Icon.jsx'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -39,7 +42,6 @@ export default function GameCard({ game, isFavorite, onToggleFavorite }) {
         <div className="game-card__meta">
           <span className="badge badge--category">{category.short}</span>
           <span className="badge">{game.ages}</span>
-          <span className="badge">{game.duration}</span>
         </div>
       </div>
     </article>

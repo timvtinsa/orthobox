@@ -1,11 +1,16 @@
+/**
+ * Le plus grand tas : comparer deux collections de points.
+ *
+ * La taille des points varie à l'intérieur d'une collection, pour que la
+ * surface occupée ne trahisse pas la quantité.
+ */
 import { useEffect, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
-import { randomInt, sample } from '../../lib/random.js'
-
-const GRILLE = 6 // 36 emplacements possibles par collection
+import { placerSurGrille } from '../../lib/disposition.js'
+import { randomInt } from '../../lib/random.js'
 
 const MATERIEL = {
   subitizing: { min: 1, max: 6, ecartMin: 2, duree: null, mixte: false },
@@ -14,24 +19,16 @@ const MATERIEL = {
   transcodage: { min: 2, max: 12, ecartMin: 1, duree: null, mixte: true },
 }
 
-/** Positions aléatoires sans chevauchement : une grille dont on tire des cases. */
-function positions(nombre) {
-  const cases = sample(
-    Array.from({ length: GRILLE * GRILLE }, (_, index) => index),
-    nombre,
-  )
-  return cases.map((index) => {
-    const colonne = index % GRILLE
-    const ligne = Math.floor(index / GRILLE)
-    const jitter = () => (Math.random() - 0.5) * 6
-    return {
+/** Une collection : des points dispersés, de tailles volontairement inégales. */
+function collection(nombre) {
+  return placerSurGrille(nombre, { ratio: 2.2, jitter: 0.55 }).positions.map(
+    (position, index) => ({
       id: index,
-      left: (colonne * 100) / GRILLE + 100 / GRILLE / 2 + jitter(),
-      top: (ligne * 100) / GRILLE + 100 / GRILLE / 2 + jitter(),
+      ...position,
       // Tailles variables : la surface totale ne doit pas trahir la réponse.
       taille: randomInt(16, 30),
-    }
-  })
+    }),
+  )
 }
 
 function buildRound(config) {
@@ -45,8 +42,8 @@ function buildRound(config) {
     duree: materiel.duree,
     // En mode transcodage, un des deux côtés est écrit en chiffres.
     chiffre: materiel.mixte ? (Math.random() < 0.5 ? 'gauche' : 'droite') : null,
-    gauche: { total: gauche, points: positions(gauche) },
-    droite: { total: droite, points: positions(droite) },
+    gauche: { total: gauche, points: collection(gauche) },
+    droite: { total: droite, points: collection(droite) },
   }
 }
 

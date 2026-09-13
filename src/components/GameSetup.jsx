@@ -1,3 +1,9 @@
+/**
+ * Écran de réglages construit à partir des `settings` déclarés par un jeu.
+ *
+ * C'est le seul endroit qui sait traduire une définition de réglage en
+ * contrôle : les jeux se contentent de décrire ce qu'ils attendent.
+ */
 import { useState } from 'react'
 import SetupPanel from './SetupPanel.jsx'
 import Stepper from './Stepper.jsx'
@@ -20,7 +26,7 @@ export default function GameSetup({ game, initial, onStart, actionLabel = 'Déma
 
   return (
     <SetupPanel
-      title={`Réglages — ${game.title}`}
+      title={`Réglages : ${game.title}`}
       description={game.setupHint ?? game.instructions}
       actionLabel={actionLabel}
       onStart={() => onStart(config)}
@@ -31,6 +37,7 @@ export default function GameSetup({ game, initial, onStart, actionLabel = 'Déma
             key={champ.id}
             label={champ.label}
             hint={champ.hint}
+            unite={champ.unite}
             suffix={champ.suffix}
             value={config[champ.id]}
             min={champ.min}

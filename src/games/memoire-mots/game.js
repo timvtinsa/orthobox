@@ -7,27 +7,26 @@ export default {
   tagline: 'Mémoriser une liste, puis reconnaître les mots parmi des mots nouveaux.',
   category: 'fonctions-executives',
   cover,
-  ages: '7 ans et +',
-  duration: '5 min',
+  ages: '7 ans et plus',
   keywords: ['mémoire verbale', 'reconnaissance', 'empan', 'apprentissage'],
   objectives: [
     'Mémoire épisodique verbale',
-    'Reconnaissance et discrimination des faux souvenirs',
-    'Stratégies d’encodage (répétition, catégorisation)',
+    'Reconnaissance et rejet des mots nouveaux',
+    'Stratégies d’encodage : répétition, catégorisation',
   ],
   materials: [
-    'Le nombre de mots et le temps de mémorisation se règlent avant de lancer la partie.',
+    'Le test propose autant de mots nouveaux que de mots de la liste.',
     'Le bilan distingue les mots non reconnus des mots nouveaux pris à tort pour des mots de la liste.',
     'Variante : demander quelle stratégie a été utilisée pour retenir la liste.',
   ],
   instructions:
-    'Une liste de mots est affichée pendant le temps choisi. Ensuite, les mots défilent un par un, mélangés à autant de mots nouveaux : pour chacun, le patient dit s’il figurait dans la liste.',
+    'La liste est affichée pendant le temps choisi, puis les mots défilent un par un, mélangés à des mots nouveaux. Pour chacun, le patient dit s’il figurait dans la liste.',
   settings: [
     {
       id: 'nombre',
       type: 'number',
       label: 'Nombre de mots',
-      hint: 'Repère : 5 à 7 mots pour commencer.',
+      hint: 'Cinq à sept mots pour commencer.',
       min: 3,
       max: 12,
       default: 7,
@@ -41,8 +40,9 @@ export default {
       max: 60,
       step: 5,
       default: 10,
-      suffix: 's',
+      unite: 'secondes',
     },
+
   ],
   component: lazy(() => import('./MemoireMots.jsx')),
 }

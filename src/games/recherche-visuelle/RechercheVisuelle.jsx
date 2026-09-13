@@ -1,9 +1,16 @@
+/**
+ * Cherche et trouve : repérer un objet cible dans un décor encombré.
+ *
+ * La cible n'apparaît qu'une fois, et la manche n'est réussie que si elle est
+ * désignée sans clic à côté.
+ */
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
 import { PICTOS, Picto } from '../../lib/pictos.jsx'
-import { pick, randomInt, sample, shuffle } from '../../lib/random.js'
+import { placerSurGrille } from '../../lib/disposition.js'
+import { pick, randomInt, shuffle } from '../../lib/random.js'
 
 const VARIATIONS = {
   alignes: { rotation: 0, tailleMin: 100, tailleMax: 100 },
@@ -23,31 +30,16 @@ function construireScene(config) {
   const distracteurs = Array.from({ length: config.objets - 1 }, () => pick(autres))
   const objets = shuffle([cible, ...distracteurs])
 
-  const colonnes = Math.ceil(Math.sqrt(objets.length * 1.6))
-  const lignes = Math.ceil(objets.length / colonnes)
-  const cases = sample(
-    Array.from({ length: colonnes * lignes }, (_, index) => index),
-    objets.length,
-  )
+  const { largeurCellule, positions } = placerSurGrille(objets.length)
 
-  const largeur = 100 / colonnes
-  const hauteur = 100 / lignes
-
-  const items = objets.map((picto, index) => {
-    const caseIndex = cases[index]
-    const colonne = caseIndex % colonnes
-    const ligne = Math.floor(caseIndex / colonnes)
-    const jitter = (amplitude) => (Math.random() - 0.5) * amplitude
-    return {
-      key: `${picto.id}-${index}`,
-      picto,
-      estCible: picto.id === cible.id,
-      left: colonne * largeur + largeur / 2 + jitter(largeur * 0.5),
-      top: ligne * hauteur + hauteur / 2 + jitter(hauteur * 0.5),
-      taille: (largeur * randomInt(variation.tailleMin, variation.tailleMax)) / 100,
-      rotation: variation.rotation === 0 ? 0 : randomInt(-variation.rotation, variation.rotation),
-    }
-  })
+  const items = objets.map((picto, index) => ({
+    key: `${picto.id}-${index}`,
+    picto,
+    estCible: picto.id === cible.id,
+    ...positions[index],
+    taille: (largeurCellule * randomInt(variation.tailleMin, variation.tailleMax)) / 100,
+    rotation: variation.rotation === 0 ? 0 : randomInt(-variation.rotation, variation.rotation),
+  }))
 
   return { cible, items }
 }

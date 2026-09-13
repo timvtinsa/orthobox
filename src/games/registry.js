@@ -29,8 +29,7 @@ function normalize(meta) {
     objectives: [],
     materials: [],
     settings: [],
-    ages: 'Tous ages',
-    duration: '5 min',
+    ages: 'Tous âges',
     instructions: null,
     ...meta,
   }

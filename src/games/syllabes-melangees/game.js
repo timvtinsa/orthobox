@@ -7,8 +7,7 @@ export default {
   tagline: 'Reconstruire un mot à partir de ses syllabes mélangées.',
   category: 'langage-ecrit',
   cover,
-  ages: '6 ans et +',
-  duration: '5 min',
+  ages: '6 ans et plus',
   keywords: ['syllabe', 'lecture', 'assemblage', 'combinatoire'],
   objectives: [
     'Conscience syllabique écrite',
@@ -16,11 +15,12 @@ export default {
     'Mémoire de travail verbale',
   ],
   materials: [
+    'Le nombre de syllabes par mot fixe la difficulté : deux pour les mots courts, quatre pour les mots longs.',
+    'Un clic sur une syllabe déjà placée la retire.',
     'Variante : faire lire chaque syllabe à voix haute avant de la placer.',
-    'Variante écrite : recopier le mot reconstruit sur l’ardoise.',
   ],
   instructions:
-    'Les syllabes du mot sont présentées dans le désordre. L’enfant les remet dans l’ordre ; un clic sur une syllabe déjà placée la retire.',
+    'Les syllabes du mot sont présentées dans le désordre. L’enfant les remet dans l’ordre pour reformer le mot.',
   settings: [
     {
       id: 'syllabes',
@@ -31,7 +31,15 @@ export default {
       max: 4,
       default: 2,
     },
-    { id: 'manches', type: 'number', label: 'Nombre de mots', min: 4, max: 16, default: 8 },
+    {
+      id: 'manches',
+      type: 'number',
+      label: 'Nombre de mots',
+      min: 4,
+      max: 16,
+      default: 8,
+    },
+
   ],
   component: lazy(() => import('./SyllabesMelangees.jsx')),
 }

@@ -7,27 +7,26 @@ export default {
   tagline: 'Mémoriser une planche d’images, puis reconnaître celles qui y figuraient.',
   category: 'fonctions-executives',
   cover,
-  ages: '5 ans et +',
-  duration: '5 min',
+  ages: '5 ans et plus',
   keywords: ['mémoire visuelle', 'reconnaissance', 'images', 'encodage'],
   objectives: [
     'Mémoire visuelle à court terme',
     'Reconnaissance visuelle et rejet des images nouvelles',
-    'Double encodage image / mot',
+    'Double encodage image et mot',
   ],
   materials: [
-    'Nombre d’images, temps de mémorisation et affichage des noms se règlent avant la partie.',
-    'Noms masqués : la mémorisation repose davantage sur le visuel que sur le langage.',
+    'Masquer les noms fait reposer la mémorisation sur le visuel plutôt que sur le langage.',
+    'Le test propose autant d’images nouvelles que d’images de la planche.',
     'Variante : faire nommer chaque image à voix haute pendant la mémorisation.',
   ],
   instructions:
-    'Une planche d’images est affichée pendant le temps choisi. Ensuite, les images défilent une par une, mélangées à autant d’images nouvelles : pour chacune, le patient dit si elle figurait sur la planche.',
+    'La planche est affichée pendant le temps choisi, puis les images défilent une par une, mélangées à des images nouvelles. Pour chacune, le patient dit si elle figurait sur la planche.',
   settings: [
     {
       id: 'nombre',
       type: 'number',
       label: 'Nombre d’images',
-      hint: 'Repère : 5 à 7 images pour commencer.',
+      hint: 'Cinq à sept images pour commencer.',
       min: 3,
       max: 12,
       default: 6,
@@ -40,7 +39,7 @@ export default {
       max: 60,
       step: 5,
       default: 10,
-      suffix: 's',
+      unite: 'secondes',
     },
     {
       id: 'noms',
@@ -52,6 +51,7 @@ export default {
         { id: 'sans', label: 'Masqués', hint: 'Mémorisation visuelle, sans appui du langage.' },
       ],
     },
+
   ],
   component: lazy(() => import('./MemoireImages.jsx')),
 }

@@ -7,8 +7,7 @@ export default {
   tagline: 'Ordonner une poignée de nombres, du plus petit au plus grand.',
   category: 'cognition-mathematique',
   cover,
-  ages: '5 ans et +',
-  duration: '5 min',
+  ages: '5 ans et plus',
   keywords: ['ordre', 'comparaison', 'ligne numérique', 'décimaux'],
   objectives: [
     'Comparaison et rangement de nombres',
@@ -16,11 +15,12 @@ export default {
     'Lecture des nombres à deux et trois chiffres, puis des décimaux',
   ],
   materials: [
-    'Variante orale : faire lire chaque nombre à voix haute avant de cliquer.',
-    'Le niveau « décimaux » est utile pour repérer l’erreur classique « 0,9 plus grand que 0,15 ».',
+    'Quatre plages de nombres, dont les décimaux, utiles pour repérer l’erreur classique « 0,9 plus petit que 0,15 ».',
+    'Le sens de rangement et le nombre de nombres par suite se règlent séparément.',
+    'Une suite compte comme réussie si elle est terminée sans aucune erreur.',
   ],
   instructions:
-    'Les nombres sont mélangés : l’enfant clique du plus petit au plus grand (ou l’inverse selon le niveau). Une suite compte comme réussie si elle est terminée sans erreur.',
+    'Les nombres sont mélangés. Le patient clique du plus petit au plus grand, ou l’inverse selon le réglage.',
   settings: [
     {
       id: 'plage',
@@ -44,8 +44,23 @@ export default {
         { id: 'decroissant', label: 'Décroissant', hint: 'Du plus grand au plus petit.' },
       ],
     },
-    { id: 'quantite', type: 'number', label: 'Nombres par suite', min: 4, max: 9, default: 5 },
-    { id: 'manches', type: 'number', label: 'Nombre de suites', min: 3, max: 12, default: 6 },
+    {
+      id: 'quantite',
+      type: 'number',
+      label: 'Nombres par suite',
+      min: 4,
+      max: 9,
+      default: 5,
+    },
+    {
+      id: 'manches',
+      type: 'number',
+      label: 'Nombre de suites',
+      min: 3,
+      max: 12,
+      default: 6,
+    },
+
   ],
   component: lazy(() => import('./ChaineNumerique.jsx')),
 }

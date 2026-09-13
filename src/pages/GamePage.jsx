@@ -1,3 +1,6 @@
+/**
+ * Page d'un jeu : réglages, puis partie, avec le score et le retour aux réglages.
+ */
 import { Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
@@ -109,9 +112,7 @@ function GameScreen({ gameId }) {
               </ul>
             </div>
           )}
-          <p className="muted">
-            Public : {game.ages} · Durée indicative : {game.duration}
-          </p>
+          <p className="muted">Public : {game.ages}</p>
         </div>
       </details>
     </div>

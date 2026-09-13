@@ -7,8 +7,7 @@ export default {
   tagline: 'Mémoriser une liste de mots, puis la restituer de mémoire.',
   category: 'fonctions-executives',
   cover,
-  ages: '7 ans et +',
-  duration: '5 min',
+  ages: '7 ans et plus',
   keywords: ['rappel libre', 'empan', 'mémoire verbale', 'stratégie'],
   objectives: [
     'Rappel libre et empan verbal',
@@ -16,18 +15,18 @@ export default {
     'Repérage des intrusions et des persévérations',
   ],
   materials: [
-    'Nombre de mots et temps de mémorisation réglables avant la partie.',
-    'Le bilan sépare les mots retrouvés, les oublis et les mots ajoutés hors liste (intrusions).',
+    'Le bilan sépare les mots retrouvés, les oublis et les mots ajoutés hors liste.',
+    'L’orthographe et les accents ne sont pas pris en compte dans la comparaison.',
     'Variante : refaire un rappel différé en fin de séance, avec la même liste.',
   ],
   instructions:
-    'La liste est affichée pendant le temps choisi, puis masquée. Le patient restitue les mots dont il se souvient, dans l’ordre qu’il veut ; le praticien les saisit au fur et à mesure.',
+    'La liste est affichée pendant le temps choisi, puis masquée. Le patient restitue les mots dont il se souvient, dans l’ordre qu’il veut, et le praticien les saisit au fur et à mesure.',
   settings: [
     {
       id: 'nombre',
       type: 'number',
       label: 'Nombre de mots',
-      hint: 'Repère : l’empan verbal adulte se situe autour de 7 mots.',
+      hint: 'L’empan verbal adulte se situe autour de sept mots.',
       min: 3,
       max: 15,
       default: 7,
@@ -40,8 +39,9 @@ export default {
       max: 90,
       step: 5,
       default: 15,
-      suffix: 's',
+      unite: 'secondes',
     },
+
   ],
   component: lazy(() => import('./MemoireRappel.jsx')),
 }
