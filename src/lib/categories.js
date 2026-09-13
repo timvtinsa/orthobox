@@ -3,9 +3,9 @@
  * l'affichage (filtres et sections de la galerie).
  *
  * Chaque domaine porte trois couleurs de la palette pastel :
- *   pastel — l'aplat coloré (vignettes, pastilles, éléments de jeu)
- *   ink    — la version foncée, utilisée pour le texte et les bordures
- *   tint   — le fond très clair des badges et des zones de jeu
+ *   pastel : l'aplat coloré (vignettes, pastilles, éléments de jeu)
+ *   ink    : la version foncée, utilisée pour le texte et les bordures
+ *   tint   : le fond très clair des badges et des zones de jeu
  */
 export const CATEGORIES = [
   {

@@ -15,7 +15,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'Orthobox — jeux pour séances d’orthophonie',
+        name: 'Orthobox, jeux pour séances d’orthophonie',
         short_name: 'Orthobox',
         description:
           'Galerie de jeux utilisables en séance d’orthophonie : langage oral, langage écrit, fonctions exécutives et cognition mathématique.',

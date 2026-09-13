@@ -1,3 +1,6 @@
+/**
+ * Cadre commun à toutes les pages : en-tête, navigation, pied de page.
+ */
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import UpdatePrompt from './UpdatePrompt.jsx'
@@ -42,7 +45,7 @@ export default function Layout() {
       </main>
 
       <footer className="app-footer">
-        Orthobox — outil libre pour les séances d’orthophonie. Tout fonctionne hors ligne, aucune
+        Orthobox, outil libre pour les séances d’orthophonie. Tout fonctionne hors ligne, aucune
         donnée patient n’est enregistrée.
       </footer>
 

@@ -1,3 +1,6 @@
+/**
+ * Routes de l'application : galerie, page de jeu, préparation et déroulé d'une séance.
+ */
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import GalleryPage from './pages/GalleryPage.jsx'

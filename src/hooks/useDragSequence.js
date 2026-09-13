@@ -13,7 +13,7 @@ const SEUIL = 6 // pixels avant qu'un appui devienne un glissement
  *
  * Le geste en cours est suivi dans des refs, et non dans l'état React : un
  * glissement rapide peut envoyer déplacement et relâchement dans la même
- * frame, avant tout nouveau rendu — le dépôt serait alors perdu. L'état ne
+ * frame, avant tout nouveau rendu, et le dépôt serait alors perdu. L'état ne
  * sert qu'à l'affichage (fantôme et repère d'insertion).
  *
  * `onDrop({ type, gameId, depuis, vers })` reçoit la position d'insertion.

@@ -1,3 +1,9 @@
+/**
+ * La suite lumineuse : reproduire une séquence de cases allumées.
+ *
+ * La suite s'allonge d'un élément à chaque réussite, ce qui donne l'empan
+ * atteint en fin de partie.
+ */
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
@@ -89,7 +95,7 @@ export default function SequenceMemoire({ config, session }) {
       <GameOver correct={session.correct} total={session.attempts} onReplay={replay}>
         <p className="muted">
           {empan === 0
-            ? 'Aucune suite complète cette fois — on peut repartir plus lentement.'
+            ? 'Aucune suite complète cette fois, on peut repartir plus lentement.'
             : `Empan atteint : ${empan} ${empan > 1 ? 'éléments' : 'élément'}${
                 config.sens === 'inverse' ? ' (ordre inverse)' : ''
               }`}

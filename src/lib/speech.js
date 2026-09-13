@@ -1,7 +1,7 @@
 /**
  * Synthèse vocale (Web Speech API) : facultative, purement locale.
  * Si le navigateur ou le système ne fournit pas de voix française, les jeux
- * restent utilisables — c'est alors le praticien qui lit la consigne.
+ * restent utilisables : c'est alors le praticien qui lit la consigne.
  */
 export function isSpeechAvailable() {
   return typeof window !== 'undefined' && 'speechSynthesis' in window
