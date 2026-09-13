@@ -1,0 +1,29 @@
+{
+  "name": "orthobox",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Boite a outils de jeux pour les seances d'orthophonie (PWA client-side)",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/generate-icons.mjs && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "icons": "node scripts/generate-icons.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-pwa": "^0.20.5"
+  }
+}

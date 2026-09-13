@@ -1,0 +1,52 @@
+/**
+ * Mots découpés en syllabes écrites. Le découpage suit l'usage scolaire
+ * (une voyelle par syllabe, consonnes doubles séparées).
+ */
+export const MOTS = {
+  2: [
+    ['ba', 'teau'],
+    ['ca', 'nard'],
+    ['mai', 'son'],
+    ['la', 'pin'],
+    ['che', 'val'],
+    ['ta', 'pis'],
+    ['sou', 'ris'],
+    ['ca', 'deau'],
+    ['vé', 'lo'],
+    ['jar', 'din'],
+    ['mou', 'ton'],
+    ['sa', 'von'],
+    ['gâ', 'teau'],
+    ['fo', 'rêt'],
+    ['dan', 'ser'],
+    ['pou', 'let'],
+  ],
+  3: [
+    ['cho', 'co', 'lat'],
+    ['pa', 'pil', 'lon'],
+    ['bi', 'be', 'ron'],
+    ['do', 'mi', 'no'],
+    ['ma', 'ga', 'sin'],
+    ['pa', 'ra', 'pluie'],
+    ['ca', 'ra', 'mel'],
+    ['ta', 'bou', 'ret'],
+    ['es', 'car', 'got'],
+    ['ha', 'ri', 'cot'],
+    ['pan', 'ta', 'lon'],
+    ['ba', 'lan', 'çoire'],
+    ['pé', 'li', 'can'],
+    ['ca', 'len', 'drier'],
+  ],
+  4: [
+    ['or', 'di', 'na', 'teur'],
+    ['té', 'lé', 'vi', 'sion'],
+    ['a', 'ni', 'ma', 'teur'],
+    ['an', 'ni', 'ver', 'saire'],
+    ['ha', 'bi', 'ta', 'tion'],
+    ['in', 'for', 'ma', 'tion'],
+    ['cal', 'cu', 'la', 'teur'],
+    ['ré', 'cré', 'a', 'tion'],
+    ['hé', 'li', 'cop', 'tère'],
+    ['ma', 'ga', 'si', 'nier'],
+  ],
+}

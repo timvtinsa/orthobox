@@ -1,0 +1,26 @@
+/** Écran de fin de partie partagé : score, commentaire, relance. */
+export default function GameOver({ correct, total, onReplay, children }) {
+  const ratio = total === 0 ? 0 : correct / total
+  const comment =
+    ratio === 1
+      ? 'Sans faute, bravo !'
+      : ratio >= 0.75
+        ? 'Très bonne série.'
+        : ratio >= 0.5
+          ? 'C’est en bonne voie, on continue ?'
+          : 'On recommence tranquillement ?'
+
+  return (
+    <div className="game-final">
+      <p className="game-round">Partie terminée</p>
+      <p className="game-final__score">
+        {correct} / {total}
+      </p>
+      <p className="muted">{comment}</p>
+      {children}
+      <button type="button" className="btn btn--lg" onClick={onReplay}>
+        Rejouer
+      </button>
+    </div>
+  )
+}
