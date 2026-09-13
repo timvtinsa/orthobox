@@ -9,6 +9,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // ORTHOBOX_NO_PWA=1 : build sans service worker, pour une prévisualisation
+      // hébergée où la mise en cache hors ligne n'a pas lieu d'être.
+      disable: process.env.ORTHOBOX_NO_PWA === '1',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
