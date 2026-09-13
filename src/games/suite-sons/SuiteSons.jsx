@@ -1,8 +1,22 @@
+/**
+ * La suite de sons : mémoire auditive séquentielle.
+ *
+ * Les cartes ne sont montrées qu'après la première écoute, pour que la suite
+ * soit mémorisée à l'oreille et non associée visuellement.
+ */
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
-import { ANIMAUX, SONS, isAudioAvailable, jouerSuite, preparerAudio } from '../../lib/audio.js'
+import {
+  ANIMAUX,
+  SONS,
+  aUnEnregistrement,
+  isAudioAvailable,
+  jouerSuite,
+  prechargerSons,
+  preparerAudio,
+} from '../../lib/audio.js'
 import { Picto } from '../../lib/pictos.jsx'
 import { isSpeechAvailable, speakSequence } from '../../lib/speech.js'
 import { sample, shuffle } from '../../lib/random.js'
@@ -22,11 +36,25 @@ export default function SuiteSons({ config, session }) {
   const [resultat, setResultat] = useState(null)
   const minuterie = useRef(null)
 
-  const parole = config.banque === 'animaux'
+  // Les animaux n'ont pas de bruitage de synthèse : sans fichier audio dans
+  // public/sons/, c'est la voix de l'appareil qui les nomme.
+  const [enregistrements, setEnregistrements] = useState(false)
+  const parole = config.banque === 'animaux' && !enregistrements
   const disponible = parole ? isSpeechAvailable() : isAudioAvailable()
   const reecoutesRestantes = config.reecoutes - Math.max(0, ecoutes - 1)
 
   useEffect(() => () => window.clearTimeout(minuterie.current), [])
+
+  // Un fichier déposé dans public/sons/ remplace le son de synthèse.
+  useEffect(() => {
+    let actif = true
+    prechargerSons(suite).then(() => {
+      if (actif) setEnregistrements(suite.every((son) => aUnEnregistrement(son.id)))
+    })
+    return () => {
+      actif = false
+    }
+  }, [suite])
 
   const ecouter = () => {
     if (enLecture) return
