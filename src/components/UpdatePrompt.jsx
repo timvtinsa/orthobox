@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
 /**
- * Bandeau discret proposé quand une nouvelle version a été téléchargée,
- * et confirmation que l'application est disponible hors ligne.
+ * Discreet banner offered once a new version has been downloaded, and
+ * confirmation that the application is available offline.
  */
 export default function UpdatePrompt() {
   const {
@@ -12,8 +12,8 @@ export default function UpdatePrompt() {
     updateServiceWorker,
   } = useRegisterSW()
 
-  // Le message « disponible hors ligne » est une confirmation : il s'efface
-  // seul pour ne pas masquer le jeu. Celui d'une mise à jour attend un choix.
+  // The "available offline" message is a confirmation: it clears itself so
+  // it never covers the game. An update message waits for a decision.
   useEffect(() => {
     if (!offlineReady || needRefresh) return undefined
     const id = window.setTimeout(() => setOfflineReady(false), 6000)

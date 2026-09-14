@@ -1,7 +1,7 @@
 /**
- * Écran de réglages affiché avant de lancer une partie : le praticien fixe
- * le nombre d'éléments, la durée de mémorisation, etc. avant que le patient
- * ne voie le matériel.
+ * Settings screen shown before a game starts: the practitioner sets the
+ * number of items, the study time and so on, before the patient sees any of
+ * the material.
  */
 export default function SetupPanel({ title, description, children, actionLabel, onStart }) {
   return (

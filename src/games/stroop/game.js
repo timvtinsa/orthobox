@@ -5,7 +5,7 @@ export default {
   id: 'stroop',
   title: 'Encre ou mot ?',
   tagline: 'Répondre sur la couleur de l’encre malgré ce que le mot raconte.',
-  category: 'fonctions-executives',
+  category: 'executive-functions',
   cover,
   ages: '7 ans et plus',
   keywords: ['stroop', 'inhibition', 'flexibilité', 'attention'],
@@ -23,18 +23,18 @@ export default {
     'Un nom de couleur est écrit dans une encre différente. Il faut répondre selon la consigne affichée au dessus du mot.',
   settings: [
     {
-      id: 'consigne',
+      id: 'rule',
       type: 'choice',
       label: 'Consigne',
-      default: 'encre',
+      default: 'ink',
       options: [
-        { id: 'echauffement', label: 'Échauffement', hint: 'Un essai sur deux est congruent.' },
-        { id: 'encre', label: 'Couleur de l’encre', hint: 'Toujours la couleur de l’encre.' },
-        { id: 'flexible', label: 'Consigne qui change', hint: 'Tantôt l’encre, tantôt le mot écrit.' },
+        { id: 'warmup', label: 'Échauffement', hint: 'Un essai sur deux est congruent.' },
+        { id: 'ink', label: 'Couleur de l’encre', hint: 'Toujours la couleur de l’encre.' },
+        { id: 'switching', label: 'Consigne qui change', hint: 'Tantôt l’encre, tantôt le mot écrit.' },
       ],
     },
     {
-      id: 'manches',
+      id: 'rounds',
       type: 'number',
       label: 'Nombre d’essais',
       min: 5,

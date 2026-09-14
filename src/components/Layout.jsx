@@ -1,5 +1,5 @@
 /**
- * Cadre commun à toutes les pages : en-tête, navigation, pied de page.
+ * Shell shared by every page: header, navigation, footer.
  */
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -10,7 +10,7 @@ import ModeSwitch from './ModeSwitch.jsx'
 export default function Layout() {
   const { pathname } = useLocation()
 
-  // Chaque changement de page repart du haut (utile sur tablette en séance).
+  // Every page change scrolls back to the top, which matters on a tablet.
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [pathname])
@@ -33,7 +33,7 @@ export default function Layout() {
             <NavLink to="/" end className="app-nav__link">
               Galerie
             </NavLink>
-            <NavLink to="/seance" className="app-nav__link app-nav__link--seance">
+            <NavLink to="/session" className="app-nav__link app-nav__link--session">
               Séance
             </NavLink>
           </nav>

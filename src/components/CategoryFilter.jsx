@@ -1,5 +1,5 @@
 /**
- * Filtres par domaine, avec le nombre de jeux de chacun.
+ * Domain filters, each with its number of games.
  */
 import { CATEGORIES, categoryStyle } from '../lib/categories.js'
 

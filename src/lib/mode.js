@@ -1,28 +1,28 @@
 /**
- * Mode d'affichage : « adulte » ou « enfant ».
+ * Display mode: `adult` or `child`.
  *
- * Le mode adulte est l'interface sobre par défaut. Le mode enfant y ajoute un
- * compagnon animé qui réagit aux réponses et des animations de réussite ; il
- * ne change ni les couleurs, ni la disposition, ni le contenu des jeux, de
- * sorte qu'un même exercice reste comparable d'un mode à l'autre.
+ * Adult mode is the plain default interface. Child mode adds an animated
+ * companion reacting to answers, plus success animations. It changes neither
+ * colours, nor layout, nor game content, so the same exercise stays
+ * comparable across modes.
  *
- * Le choix est conservé dans le navigateur : le praticien retrouve le mode
- * utilisé lors de la séance précédente.
+ * The choice is kept in the browser, so the practitioner finds the mode used
+ * during the previous appointment.
  */
 import { readJson, writeJson } from './storage.js'
 
-const CLE = 'mode'
+const KEY = 'mode'
 
 export const MODES = [
-  { id: 'adulte', label: 'Adulte' },
-  { id: 'enfant', label: 'Enfant' },
+  { id: 'adult', label: 'Adulte' },
+  { id: 'child', label: 'Enfant' },
 ]
 
-export function lireMode() {
-  const valeur = readJson(CLE, 'adulte')
-  return MODES.some((mode) => mode.id === valeur) ? valeur : 'adulte'
+export function readMode() {
+  const value = readJson(KEY, 'adult')
+  return MODES.some((mode) => mode.id === value) ? value : 'adult'
 }
 
-export function ecrireMode(mode) {
-  writeJson(CLE, mode)
+export function writeMode(mode) {
+  writeJson(KEY, mode)
 }

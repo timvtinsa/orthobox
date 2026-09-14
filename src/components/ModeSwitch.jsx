@@ -1,35 +1,35 @@
 /**
- * Interrupteur entre le mode adulte et le mode enfant.
+ * Toggle between adult mode and child mode.
  *
- * Un seul bouton bascule d'un mode à l'autre : les deux libellés restent
- * visibles pour que l'état courant se lise sans avoir à interpréter la
- * position du curseur, et l'état est porté par `aria-checked`.
+ * A single button flips modes: both labels stay visible so the current state
+ * reads without having to interpret the knob position, and the state itself
+ * is carried by `aria-checked`.
  */
 import { useMode } from './ModeProvider.jsx'
 
 export default function ModeSwitch() {
-  const { mode, estEnfant, changerMode } = useMode()
+  const { mode, isChild, changeMode } = useMode()
 
   return (
     <div className="mode-switch">
-      <span className={`mode-switch__label${estEnfant ? '' : ' mode-switch__label--actif'}`}>
+      <span className={`mode-switch__label${isChild ? '' : ' mode-switch__label--on'}`}>
         Adulte
       </span>
       <button
         type="button"
         role="switch"
-        aria-checked={estEnfant}
+        aria-checked={isChild}
         aria-label="Mode enfant"
-        className="mode-switch__piste"
-        onClick={() => changerMode(estEnfant ? 'adulte' : 'enfant')}
+        className="mode-switch__track"
+        onClick={() => changeMode(isChild ? 'adult' : 'child')}
       >
-        <span className="mode-switch__curseur" />
+        <span className="mode-switch__knob" />
       </button>
-      <span className={`mode-switch__label${estEnfant ? ' mode-switch__label--actif' : ''}`}>
+      <span className={`mode-switch__label${isChild ? ' mode-switch__label--on' : ''}`}>
         Enfant
       </span>
       <span className="visually-hidden">
-        Mode actuel : {mode === 'enfant' ? 'enfant' : 'adulte'}
+        Mode actuel : {mode === 'child' ? 'enfant' : 'adulte'}
       </span>
     </div>
   )

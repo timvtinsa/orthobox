@@ -1,139 +1,146 @@
-# Ajouter un jeu
+# Adding a game
 
-Chaque jeu est autonome dans son dossier. Aucune liste centrale à modifier :
-`src/games/registry.js` détecte les jeux au build via `import.meta.glob`.
+Every game is self-contained in its folder. There is no central list to edit:
+`src/games/registry.js` discovers games at build time through
+`import.meta.glob`.
 
 ```
 src/games/
-  mon-jeu/
-    game.js        <- fiche descriptive (obligatoire)
-    cover.svg      <- vignette de la carte (obligatoire)
-    MonJeu.jsx     <- le composant React du jeu
-    data.js        <- (optionnel) le matériel du jeu
+  my-game/
+    game.js        <- descriptive manifest (required)
+    cover.svg      <- the card cover (required)
+    MyGame.jsx     <- the React component of the game
+    data.js        <- (optional) the material of the game
 ```
 
-## 1. La fiche `game.js`
+The code is written in English; every string shown to the user, and all game
+material, is written in French.
+
+## 1. The `game.js` manifest
 
 ```js
 import { lazy } from 'react'
 import cover from './cover.svg'
 
 export default {
-  id: 'mon-jeu',                      // identique au nom du dossier
+  id: 'my-game',                      // identical to the folder name
   title: 'Mon jeu',
   tagline: 'Une phrase qui dit ce qu’on travaille.',
-  category: 'langage-oral',           // voir src/lib/categories.js
-  cover,                              // vignette SVG du dossier
+  category: 'oral-language',          // see src/lib/categories.js
+  cover,                              // SVG cover from the folder
   ages: '5 ans et plus',
-  keywords: ['phonologie'],           // utilisés par la recherche
+  keywords: ['phonologie'],           // used by the search box
   objectives: ['Discrimination auditive', 'Attention'],
   materials: ['Variante : faire répéter le mot avant de répondre.'],
   instructions: 'Consigne affichée dans le bloc « Consignes et objectifs ».',
   settings: [
     {
-      id: 'niveau',                   // type 'choice' : options exclusives
+      id: 'level',                    // type 'choice': exclusive options
       type: 'choice',
       label: 'Niveau',
-      default: 'facile',
+      default: 'easy',
       options: [
-        { id: 'facile', label: 'Facile', hint: '3 propositions' },
-        { id: 'moyen', label: 'Moyen', hint: '4 propositions' },
+        { id: 'easy', label: 'Facile', hint: '3 propositions' },
+        { id: 'medium', label: 'Moyen', hint: '4 propositions' },
       ],
     },
-    {                                 // type 'number' : réglage à gros boutons
-      id: 'manches',
+    {                                 // type 'number': large-button stepper
+      id: 'rounds',
       type: 'number',
       label: 'Nombre de questions',
       min: 5,
       max: 20,
       step: 1,
       default: 10,
-      suffix: 's',                    // facultatif
+      suffix: 's',                    // optional
       hint: 'Affiché sous le réglage.',
     },
   ],
-  component: lazy(() => import('./MonJeu.jsx')),
+  component: lazy(() => import('./MyGame.jsx')),
 }
 ```
 
-Les réglages sont présentés avant la partie, sur un écran commun à tous les
-jeux : le praticien règle, puis appuie sur « Démarrer ». Un jeu sans réglage
-déclare `settings: []`.
+Settings are presented before the game, on a screen shared by every game: the
+practitioner adjusts them, then presses « Démarrer ». A game without any
+setting declares `settings: []`.
 
-Champs obligatoires : `id`, `title`, `tagline`, `category`, `cover`, `component`.
-Le registre échoue au démarrage si un champ manque, si la catégorie est
-inconnue, ou si `id` ne correspond pas au nom du dossier.
+Required fields: `id`, `title`, `tagline`, `category`, `cover`, `component`.
+The registry fails at startup when a field is missing, when the category is
+unknown, or when `id` does not match the folder name.
 
-Les quatre catégories disponibles sont `langage-oral`, `langage-ecrit`,
-`fonctions-executives` et `cognition-mathematique`.
+The four available categories are `oral-language`, `written-language`,
+`executive-functions` and `math-cognition`.
 
-## 2. Le composant
+Identifiers (`id` of the game, of a setting, of an option) are in English;
+`title`, `tagline`, `label`, `hint`, `objectives`, `materials` and
+`instructions` are the French texts shown on screen.
 
-Il reçoit deux props fournies par la page de jeu :
+## 2. The component
 
-- `config` : un objet `{ <id du réglage>: valeur }` construit à partir des
-  `settings` déclarés. Le jeu peut s’y fier, les valeurs par défaut sont
-  toujours renseignées ;
-- `session` : `{ correct, attempts, streak, bestStreak, register(isCorrect), reset() }`.
-  Appeler `session.register(true | false)` à chaque réponse alimente le score
-  affiché dans l’en-tête.
+It receives two props provided by the game page:
 
-« Démarrer » et « Recommencer » remontent le composant : l’état initial peut
-donc être calculé directement dans `useState(...)` à partir de `config`.
+- `config`: an object `{ <setting id>: value }` built from the declared
+  `settings`. A game can rely on it, the defaults are always filled in;
+- `session`: `{ correct, attempts, streak, bestStreak, register(isCorrect), reset() }`.
+  Calling `session.register(true | false)` on every answer feeds the score
+  shown in the header.
 
-Le jeu est aussi utilisé tel quel dans le **mode séance**, où le praticien
-passe au jeu suivant quand il le décide : ne comptez pas sur une fin de partie
-pour transmettre le score, appelez `session.register()` au fil des réponses.
+« Démarrer » and « Recommencer » remount the component: the initial state can
+therefore be computed directly in `useState(...)` from `config`.
 
-C'est également `session.register()` qui fait réagir la mascotte du **mode
-enfant** : un jeu qui appelle cette fonction à chaque réponse en bénéficie
-sans rien ajouter, et n'a pas à savoir quel mode est actif.
+The game is also used as is in **session mode**, where the practitioner moves
+to the next game whenever they decide to: do not rely on an end screen to hand
+over the score, call `session.register()` as the answers come.
 
-## 3. La vignette `cover.svg`
+`session.register()` is also what makes the **child mode** mascot react: a game
+calling it on every answer benefits from it without adding anything, and never
+has to know which mode is active.
 
-Un SVG en `viewBox="0 0 320 200"`, sans texte, qui évoque la mécanique du jeu :
-un aplat de fond dans la teinte claire du domaine, puis des formes dans les
-couleurs de la palette (`src/lib/categories.js`). Pas d'emoji ni d'icône
-générique : la vignette doit rester reconnaissable en petit dans la galerie.
+## 3. The `cover.svg` file
 
-## 4. Briques partagées
+An SVG in `viewBox="0 0 320 200"`, without text, evoking the mechanics of the
+game: a flat background in the light tint of the domain, then shapes in the
+palette colours (`src/lib/categories.js`). No emoji, no generic icon: the cover
+must stay recognisable small in the gallery.
 
-- `components/Feedback.jsx` : ligne « Bravo » ou « Presque »
-- `components/GameOver.jsx` : écran de fin, score et bouton « Rejouer »
-- `components/SpeakButton.jsx` : lecture vocale d’un mot, si une voix est disponible
-- `components/GameSetup.jsx` : écran de réglages bâti depuis `settings`
-  (`SetupPanel`, `Stepper` et `SwitchGroup` en sont les briques)
-- `components/StudyPhase.jsx` : phase de mémorisation avec compte à rebours
-- `components/Icon.jsx` : jeu d’icônes SVG (étoile, haut-parleur, flèche)
-- `hooks/useRounds.js` : avancement en manches
-- `hooks/useCountdown.js` : compte à rebours
-- `hooks/useAnswerLock.js` : verrou anti double-clic sur les réponses
-- `lib/random.js` : `shuffle`, `sample`, `pick`, `randomInt`
-- `lib/lexique.js` : mots fréquents, suites de chiffres, comparaison souple
-- `lib/pictos.jsx` : 32 pictogrammes dessinés, réutilisables
-- `lib/audio.js` : bruitages, fichier audio s'il existe, synthèse sinon
-- `lib/disposition.js` : placement d'éléments sans chevauchement
-- `components/ChoixMultiple.jsx` : propositions à choix unique, avec correction
-- classes CSS communes : `.game-board`, `.game-prompt`, `.choice-grid`,
+## 4. Shared building blocks
+
+- `components/Feedback.jsx`: the « Bravo » or « Presque » line
+- `components/GameOver.jsx`: end screen, score and « Rejouer » button
+- `components/SpeakButton.jsx`: reads a word aloud, when a voice is available
+- `components/GameSetup.jsx`: settings screen built from `settings`
+  (`SetupPanel`, `Stepper` and `SwitchGroup` are its building blocks)
+- `components/StudyPhase.jsx`: memorisation phase with a countdown
+- `components/Icon.jsx`: the SVG icon set (star, speaker, arrow)
+- `components/MultipleChoice.jsx`: single-answer options, with correction
+- `hooks/useRounds.js`: progress in rounds
+- `hooks/useCountdown.js`: countdown
+- `hooks/useAnswerLock.js`: double-click guard on answers
+- `lib/random.js`: `shuffle`, `sample`, `pick`, `randomInt`
+- `lib/lexicon.js`: frequent words, digit sequences, lenient comparison
+- `lib/pictograms.jsx`: 32 drawn pictograms, reusable
+- `lib/audio.js`: sound effects, an audio file when one exists, synthesis otherwise
+- `lib/layout.js`: placing items without overlap
+- shared CSS classes: `.game-board`, `.game-prompt`, `.choice-grid`,
   `.choice` (+ `--correct`, `--wrong`, `--dim`), `.game-actions`, `.token`,
   `.setup`, `.field`, `.word-list`, `.picture-grid`, `.quiz`, `.scene`
 
-Respecter ces briques garde les jeux cohérents entre eux et lisibles sur
-tablette : cibles tactiles d’au moins 44 px, contrastes suffisants, et aucune
-information portée par la seule couleur.
+Honouring these blocks keeps the games consistent with one another and
+readable on a tablet: touch targets of at least 44 px, sufficient contrast, and
+no information carried by colour alone.
 
-### Jeux paramétrables
+### Games with adjustable material
 
-Un jeu dont le matériel se règle (nombre d’éléments, durée d’affichage)
-déclare `levels: []` et ouvre sur un `SetupPanel` : le praticien fixe les
-réglages **avant** que le patient ne voie le matériel. Le déroulé habituel est
-`réglages → mémorisation → test → résultats`, avec deux sorties : relancer avec
-les mêmes réglages, ou revenir aux réglages.
+A game whose material is adjustable (number of items, display time) declares
+those values in `settings`: the practitioner fixes them **before** the patient
+sees the material. The usual flow is `settings → memorisation → test →
+results`, with two ways out: replaying with the same settings, or going back to
+the settings.
 
-## 5. Vérifier
+## 5. Checking
 
 ```
-npm run dev     # le jeu apparaît dans sa section dès l’enregistrement du fichier
+npm run dev     # the game shows up in its section as soon as the file is saved
 npm run lint
 npm run build
 ```

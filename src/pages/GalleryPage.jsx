@@ -1,5 +1,5 @@
 /**
- * Galerie : tous les jeux, filtrables par domaine, par mot-clé et par favori.
+ * Gallery: every game, filtered by domain, keyword and favourite.
  */
 import { useMemo, useState } from 'react'
 import CategoryFilter from '../components/CategoryFilter.jsx'

@@ -1,52 +1,63 @@
-# Orthobox, repères pour Claude
+# Orthobox, notes for Claude
 
-Application React + Vite, entièrement client-side, utilisée en séance
-d'orthophonie. Voir `ARCHITECTURE.md` pour la structure du code,
-`src/games/README.md` pour le contrat d'un jeu, `README.md` pour la
-présentation générale.
+A React + Vite application, fully client-side, used during speech therapy
+sessions. See `ARCHITECTURE.md` for the code structure, `src/games/README.md`
+for the contract of a game, `README.md` for the general presentation.
 
-## Prévisualisation, à faire à chaque changement
+## Language
 
-L'utilisateur attend **un lien de prévisualisation à jour à la fin de chaque
-série de modifications**, sans avoir à le demander.
+**Code and repository in English, interface in French.**
+
+- English: identifiers, comments, documentation, commit messages, branch and
+  pull request titles, workflow names, file and folder names, CSS classes,
+  setting and option ids.
+- French: everything the user reads on screen, the game material (words,
+  sentences, stories, riddles, pictogram and sound labels) and the texts of a
+  `game.js` manifest (`title`, `tagline`, `label`, `hint`, `objectives`,
+  `materials`, `instructions`).
+
+## Preview, on every change
+
+The user expects **an up-to-date preview link at the end of every batch of
+changes**, without having to ask for it.
 
 ```bash
-npm run build:preview      # build sans service worker + dist-preview/page.html + files.json
+npm run build:preview      # build without a service worker + dist-preview/page.html + files.json
 ```
 
-Publier ensuite `dist-preview/page.html` en artefact, avec `root: dist-preview`
-et la correspondance `dist-preview/files.json` (les entrées à `null` retirent
-les fichiers devenus inutiles). **Republier toujours le même chemin de fichier
-pour conserver la même URL** ; si l'URL a été perdue, la retrouver via la liste
-des artefacts plutôt que d'en créer un nouveau.
+Then publish `dist-preview/page.html` as an artifact, with `root: dist-preview`
+and the mapping from `dist-preview/files.json` (entries set to `null` remove
+files that are no longer needed). **Always republish the same file path to keep
+the same URL**; if the URL has been lost, find it again through the artifact
+list rather than creating a new one.
 
-## Messages de commit
+## Commit messages
 
-Format **Conventional Commits** : `type(portée): résumé à l'impératif`.
+**Conventional Commits** format: `type(scope): imperative summary`.
 
 ```
-feat(jeux): ajouter le tri des formes
-fix(seance): corriger la barre de progression
-refactor(audio): extraire la synthèse des bruitages
-docs: initier ARCHITECTURE.md
+feat(games): add shape sorting
+fix(session): fix the progress bar
+refactor(audio): extract the sound synthesis
+docs: start ARCHITECTURE.md
 ```
 
-Types utilisés : `feat`, `fix`, `refactor`, `docs`, `style`, `chore`, `perf`.
-Portées courantes : `jeux`, `seance`, `galerie`, `audio`, `ui`, `pwa`, `build`.
-Résumé en français, sans point final, 72 caractères au plus. Le corps explique
-le pourquoi, pas le comment.
+Types in use: `feat`, `fix`, `refactor`, `docs`, `style`, `chore`, `perf`.
+Common scopes: `games`, `session`, `gallery`, `audio`, `ui`, `pwa`, `build`.
+Summary in English, no final full stop, 72 characters at most. The body
+explains the why, not the how.
 
-Ce format n'est pas cosmétique : release-please en déduit la version publiée
-et le contenu du changelog. Un `feat` donne une version mineure, un `fix` un
-correctif, un `!` après la portée une version majeure.
+This format is not cosmetic: release-please derives the published version and
+the changelog content from it. A `feat` gives a minor version, a `fix` a patch,
+a `!` after the scope a major version.
 
 ## Branches
 
-Les branches de travail partent de `integ`, la branche d'intégration. `main`
-ne reçoit que ce qui est prêt à être publié, et déclenche alors la pull
-request de release.
+Working branches start from `integ`, the integration branch. `main` only
+receives what is ready to be published, and then triggers the release pull
+request.
 
-## Avant de livrer
+## Before delivering
 
 ```bash
 npm run lint
@@ -54,26 +65,23 @@ npm test
 npm run build
 ```
 
-Vérifier les changements d'interface dans un vrai navigateur (Chromium est
-préinstallé, `executablePath: '/opt/pw-browsers/chromium'`), en desktop **et**
-en tablette (1024×768 et 768×1024) : l'application est utilisée sur tablette.
+Check interface changes in a real browser (Chromium is preinstalled,
+`executablePath: '/opt/pw-browsers/chromium'`), in desktop **and** tablet
+(1024×768 and 768×1024): the application is used on tablets.
 
 ## Conventions
 
-- Toute l'interface est en français, accentuée, y compris le matériel des jeux.
-- Pas d'emoji dans l'interface : icônes SVG (`src/components/Icon.jsx`),
-  vignettes dessinées (`src/games/<id>/cover.svg`), pictogrammes
-  (`src/lib/pictos.jsx`).
-- Palette pastel et polices embarquées : ne pas charger de ressource distante,
-  l'application doit fonctionner hors ligne.
-- Cibles tactiles d'au moins 44 px, aucune information portée par la seule
-  couleur.
-- Pas de tiret cadratin dans les textes de l'application : deux points,
-  virgule ou parenthèses.
-- Pas d'estimation de durée sur les jeux : elle dépend du patient.
-- Tout jeu déclare ses paramètres dans `settings` (`game.js`) : le cadre
-  affiche l'écran de réglages et ne lance la partie qu'au « Démarrer ».
-- Les jeux doivent rester utilisables dans le mode séance : le score passe par
-  `session.register()`, jamais par un écran de fin.
-- Le mode enfant n'ajoute que des encouragements : il ne modifie ni le
-  matériel, ni les réglages, ni le calcul du score. Un jeu ne lit pas le mode.
+- The whole interface is in French, accented, game material included.
+- No emoji in the interface: SVG icons (`src/components/Icon.jsx`), drawn
+  covers (`src/games/<id>/cover.svg`), pictograms (`src/lib/pictograms.jsx`).
+- Pastel palette and embedded fonts: never load a remote resource, the
+  application has to work offline.
+- Touch targets of at least 44 px, no information carried by colour alone.
+- No em dash in the texts of the application: colon, comma or parentheses.
+- No duration estimate on the games: it depends on the patient.
+- Every game declares its parameters in `settings` (`game.js`): the frame
+  displays the settings screen and only starts the game on « Démarrer ».
+- Games must stay usable in session mode: the score goes through
+  `session.register()`, never through an end screen.
+- Child mode only adds encouragement: it changes neither the material, nor the
+  settings, nor the score computation. A game never reads the mode.

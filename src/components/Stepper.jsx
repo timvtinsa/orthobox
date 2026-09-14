@@ -1,17 +1,17 @@
 /**
- * Réglage numérique à gros boutons, pensé pour l'usage tactile.
+ * Numeric setting with large buttons, meant for touch use.
  *
- * `unite` met en forme la valeur sans changer ce qui est stocké :
- *   'secondes'  ->  « 10 s »
- *   'dixiemes'  ->  « 1,4 s » (la valeur reste en dixièmes de seconde)
- * Sinon, la valeur est affichée telle quelle, suivie de `suffix` s'il existe.
+ * `unit` formats the value without changing what is stored:
+ *   'seconds' -> "10 s"
+ *   'tenths'  -> "1,4 s" (the value stays in tenths of a second)
+ * Otherwise the value is shown as is, followed by `suffix` when present.
  */
-export function formaterValeur(valeur, unite, suffix) {
-  if (unite === 'secondes') return `${valeur} s`
-  if (unite === 'dixiemes') {
-    return `${(valeur / 10).toLocaleString('fr-FR', { minimumFractionDigits: 1 })} s`
+export function formatValue(value, unit, suffix) {
+  if (unit === 'seconds') return `${value} s`
+  if (unit === 'tenths') {
+    return `${(value / 10).toLocaleString('fr-FR', { minimumFractionDigits: 1 })} s`
   }
-  return suffix ? `${valeur} ${suffix}` : `${valeur}`
+  return suffix ? `${value} ${suffix}` : `${value}`
 }
 
 export default function Stepper({
@@ -21,7 +21,7 @@ export default function Stepper({
   min,
   max,
   step = 1,
-  unite,
+  unit,
   suffix,
   onChange,
 }) {
@@ -42,7 +42,7 @@ export default function Stepper({
         >
           −
         </button>
-        <output className="stepper__value">{formaterValeur(value, unite, suffix)}</output>
+        <output className="stepper__value">{formatValue(value, unit, suffix)}</output>
         <button
           type="button"
           className="stepper__btn"

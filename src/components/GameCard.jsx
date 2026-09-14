@@ -1,5 +1,5 @@
 /**
- * Carte d'un jeu dans la galerie : vignette, accroche, objectifs, favori.
+ * A game card in the gallery: cover, tagline, objectives, favourite toggle.
  */
 import { Link } from 'react-router-dom'
 import Icon from './Icon.jsx'
@@ -26,7 +26,7 @@ export default function GameCard({ game, isFavorite, onToggleFavorite }) {
 
       <div className="game-card__body">
         <h3 className="game-card__title">
-          <Link to={`/jeux/${game.id}`} className="game-card__link">
+          <Link to={`/games/${game.id}`} className="game-card__link">
             {game.title}
           </Link>
         </h3>

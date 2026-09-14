@@ -1,15 +1,17 @@
 /**
- * Les quatre domaines de la galerie. L'ordre défini ici est celui de
- * l'affichage (filtres et sections de la galerie).
+ * The four domains of the gallery. The order defined here drives the display
+ * (filters and gallery sections).
  *
- * Chaque domaine porte trois couleurs de la palette pastel :
- *   pastel : l'aplat coloré (vignettes, pastilles, éléments de jeu)
- *   ink    : la version foncée, utilisée pour le texte et les bordures
- *   tint   : le fond très clair des badges et des zones de jeu
+ * Each domain carries three colours from the pastel palette:
+ *   pastel : the coloured fill (covers, dots, game pieces)
+ *   ink    : the darker variant, used for text and borders
+ *   tint   : the very light background of badges and play areas
+ *
+ * Labels and descriptions are in French: they are shown to the practitioner.
  */
 export const CATEGORIES = [
   {
-    id: 'langage-oral',
+    id: 'oral-language',
     label: 'Langage oral',
     short: 'Oral',
     description: 'Phonologie, lexique, évocation, compréhension et expression à l’oral.',
@@ -18,7 +20,7 @@ export const CATEGORIES = [
     tint: '#fdede7',
   },
   {
-    id: 'langage-ecrit',
+    id: 'written-language',
     label: 'Langage écrit',
     short: 'Écrit',
     description: 'Lecture, conscience syllabique, compréhension écrite et fluence.',
@@ -27,7 +29,7 @@ export const CATEGORIES = [
     tint: '#eaf4ee',
   },
   {
-    id: 'fonctions-executives',
+    id: 'executive-functions',
     label: 'Fonctions exécutives',
     short: 'Exécutif',
     description: 'Inhibition, mémoire de travail, attention, flexibilité et recherche visuelle.',
@@ -36,7 +38,7 @@ export const CATEGORIES = [
     tint: '#f0ecfa',
   },
   {
-    id: 'cognition-mathematique',
+    id: 'math-cognition',
     label: 'Cognition mathématique',
     short: 'Maths',
     description: 'Sens du nombre, estimation, chaîne numérique et calcul.',
@@ -58,7 +60,7 @@ export function isCategoryId(id) {
   return BY_ID.has(id)
 }
 
-/** Variables CSS d'un domaine, à poser sur un conteneur. */
+/** CSS custom properties for a domain, to set on a container. */
 export function categoryStyle(category) {
   if (!category) return undefined
   return {

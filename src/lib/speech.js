@@ -1,7 +1,8 @@
 /**
- * Synthèse vocale (Web Speech API) : facultative, purement locale.
- * Si le navigateur ou le système ne fournit pas de voix française, les jeux
- * restent utilisables : c'est alors le praticien qui lit la consigne.
+ * Speech synthesis (Web Speech API): optional, and entirely local.
+ *
+ * When the browser or the system provides no French voice, games stay usable:
+ * the practitioner then reads the prompt aloud.
  */
 export function isSpeechAvailable() {
   return typeof window !== 'undefined' && 'speechSynthesis' in window
@@ -16,7 +17,7 @@ function findFrenchVoice() {
   return frenchVoice
 }
 
-/** Prononce un texte en français. `rate` inférieur à 1 ralentit l'énoncé. */
+/** Speaks a French text. A `rate` below 1 slows the delivery down. */
 export function speak(text, { rate = 0.95 } = {}) {
   if (!isSpeechAvailable()) return false
   try {
@@ -34,38 +35,38 @@ export function speak(text, { rate = 0.95 } = {}) {
 }
 
 /**
- * Prononce une suite de mots l'un après l'autre, avec une pause entre chaque.
- * Utilisé quand aucun bruitage n'existe pour le matériel (noms d'animaux).
- * `onFin` est appelé une fois le dernier mot prononcé.
+ * Speaks a list of words one after another, with a pause in between. Used
+ * when no recording exists for the material (animal names). `onDone` fires
+ * once the last word has been spoken.
  */
-export function speakSequence(mots, { pause = 700, onFin } = {}) {
-  if (!isSpeechAvailable() || mots.length === 0) {
-    onFin?.()
+export function speakSequence(words, { pause = 700, onDone } = {}) {
+  if (!isSpeechAvailable() || words.length === 0) {
+    onDone?.()
     return false
   }
   window.speechSynthesis.cancel()
-  const voix = findFrenchVoice()
+  const voice = findFrenchVoice()
 
-  const direre = (index) => {
-    if (index >= mots.length) {
-      onFin?.()
+  const sayFrom = (index) => {
+    if (index >= words.length) {
+      onDone?.()
       return
     }
-    const utterance = new window.SpeechSynthesisUtterance(mots[index])
+    const utterance = new window.SpeechSynthesisUtterance(words[index])
     utterance.lang = 'fr-FR'
     utterance.rate = 0.95
-    if (voix) utterance.voice = voix
-    utterance.onend = () => window.setTimeout(() => direre(index + 1), pause)
-    // Si la synthèse échoue, on n'immobilise pas le jeu.
-    utterance.onerror = () => window.setTimeout(() => direre(index + 1), pause)
+    if (voice) utterance.voice = voice
+    utterance.onend = () => window.setTimeout(() => sayFrom(index + 1), pause)
+    // A failed utterance must not freeze the game.
+    utterance.onerror = () => window.setTimeout(() => sayFrom(index + 1), pause)
     window.speechSynthesis.speak(utterance)
   }
 
-  direre(0)
+  sayFrom(0)
   return true
 }
 
-// La liste des voix arrive de façon asynchrone sur certains navigateurs.
+// The voice list arrives asynchronously in some browsers.
 if (isSpeechAvailable()) {
   window.speechSynthesis.addEventListener?.('voiceschanged', () => {
     frenchVoice = undefined

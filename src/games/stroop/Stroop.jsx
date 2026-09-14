@@ -1,8 +1,8 @@
 /**
- * Encre ou mot ? : épreuve de Stroop.
+ * Ink or word? A Stroop task.
  *
- * Le temps de réponse est mesuré à chaque essai : c'est lui, autant que le
- * score, qui révèle le coût de l'inhibition.
+ * Response time is measured on every trial: it reveals the cost of inhibition
+ * just as much as the score does.
  */
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
@@ -11,46 +11,46 @@ import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { pick, shuffle } from '../../lib/random.js'
 
-const COULEURS = [
-  { id: 'rouge', label: 'ROUGE', hex: '#d0342c' },
-  { id: 'bleu', label: 'BLEU', hex: '#2d5fd0' },
-  { id: 'vert', label: 'VERT', hex: '#1f8a4c' },
-  { id: 'jaune', label: 'JAUNE', hex: '#c98a00' },
+const COLORS = [
+  { id: 'red', label: 'ROUGE', hex: '#d0342c' },
+  { id: 'blue', label: 'BLEU', hex: '#2d5fd0' },
+  { id: 'green', label: 'VERT', hex: '#1f8a4c' },
+  { id: 'yellow', label: 'JAUNE', hex: '#c98a00' },
 ]
 
 function buildRound(config) {
-  const mot = pick(COULEURS)
-  // À l'échauffement, un essai sur deux est congruent (mot et encre identiques).
-  const congruent = config.consigne === 'echauffement' ? Math.random() < 0.5 : false
-  const encre = congruent ? mot : pick(COULEURS.filter((couleur) => couleur.id !== mot.id))
-  const consigne = config.consigne === 'flexible' ? pick(['encre', 'mot']) : 'encre'
+  const word = pick(COLORS)
+  // During warmup, every other trial is congruent (word and ink match).
+  const congruent = config.rule === 'warmup' ? Math.random() < 0.5 : false
+  const ink = congruent ? word : pick(COLORS.filter((color) => color.id !== word.id))
+  const prompt = config.rule === 'switching' ? pick(['ink', 'word']) : 'ink'
   return {
-    mot,
-    encre,
-    consigne,
-    attendu: consigne === 'encre' ? encre.id : mot.id,
-    options: shuffle(COULEURS),
+    word,
+    ink,
+    prompt,
+    expected: prompt === 'ink' ? ink.id : word.id,
+    options: shuffle(COLORS),
   }
 }
 
 export default function Stroop({ config, session }) {
-  const rounds = useRounds(config.manches)
+  const rounds = useRounds(config.rounds)
   const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
-  const temps = useRef([])
-  const debut = useRef(performance.now())
+  const times = useRef([])
+  const start = useRef(performance.now())
 
-  // Le chronomètre repart à l'affichage de chaque nouvelle manche.
+  // The stopwatch restarts when each new round is displayed.
   useEffect(() => {
-    debut.current = performance.now()
+    start.current = performance.now()
   }, [round])
 
-  const answer = (couleurId) => {
+  const answer = (colorId) => {
     if (!lock.take()) return
-    const isCorrect = couleurId === round.attendu
-    temps.current.push(performance.now() - debut.current)
-    setPicked(couleurId)
+    const isCorrect = colorId === round.expected
+    times.current.push(performance.now() - start.current)
+    setPicked(colorId)
     session.register(isCorrect)
   }
 
@@ -65,25 +65,25 @@ export default function Stroop({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    temps.current = []
+    times.current = []
     setRound(buildRound(config))
     setPicked(null)
   }
 
   if (rounds.isOver) {
-    const moyenne =
-      temps.current.length > 0
-        ? temps.current.reduce((sum, value) => sum + value, 0) / temps.current.length / 1000
+    const average =
+      times.current.length > 0
+        ? times.current.reduce((sum, value) => sum + value, 0) / times.current.length / 1000
         : 0
     return (
       <GameOver correct={session.correct} total={session.attempts} onReplay={replay}>
-        <p className="muted">Temps de réponse moyen : {moyenne.toFixed(2)} s</p>
+        <p className="muted">Temps de réponse moyen : {average.toFixed(2)} s</p>
       </GameOver>
     )
   }
 
-  const consigneTexte =
-    round.consigne === 'encre'
+  const promptText =
+    round.prompt === 'ink'
       ? 'Clique sur la COULEUR DE L’ENCRE'
       : 'Clique sur la couleur ÉCRITE (lis le mot)'
 
@@ -92,32 +92,32 @@ export default function Stroop({ config, session }) {
       <p className="game-round">
         Essai {rounds.round + 1} sur {rounds.total}
       </p>
-      <p className={`stroop-rule${round.consigne === 'mot' ? ' stroop-rule--switch' : ''}`}>
-        {consigneTexte}
+      <p className={`stroop-rule${round.prompt === 'word' ? ' stroop-rule--switch' : ''}`}>
+        {promptText}
       </p>
 
-      <div className="stroop-word" style={{ color: round.encre.hex }}>
-        {round.mot.label}
+      <div className="stroop-word" style={{ color: round.ink.hex }}>
+        {round.word.label}
       </div>
 
       <div className="choice-grid">
-        {round.options.map((couleur) => {
+        {round.options.map((color) => {
           let modifier = ''
           if (picked) {
-            if (couleur.id === round.attendu) modifier = ' choice--correct'
-            else if (couleur.id === picked) modifier = ' choice--wrong'
+            if (color.id === round.expected) modifier = ' choice--correct'
+            else if (color.id === picked) modifier = ' choice--wrong'
             else modifier = ' choice--dim'
           }
           return (
             <button
-              key={couleur.id}
+              key={color.id}
               type="button"
               className={`choice stroop-swatch${modifier}`}
               disabled={Boolean(picked)}
-              onClick={() => answer(couleur.id)}
+              onClick={() => answer(color.id)}
             >
-              <span className="stroop-swatch__dot" style={{ background: couleur.hex }} />
-              {couleur.label.toLowerCase()}
+              <span className="stroop-swatch__dot" style={{ background: color.hex }} />
+              {color.label.toLowerCase()}
             </button>
           )
         })}
@@ -125,7 +125,7 @@ export default function Stroop({ config, session }) {
 
       {picked && (
         <>
-          <Feedback status={picked === round.attendu ? 'correct' : 'wrong'} />
+          <Feedback status={picked === round.expected ? 'correct' : 'wrong'} />
           <div className="game-actions">
             <button type="button" className="btn btn--lg" onClick={goNext}>
               Essai suivant

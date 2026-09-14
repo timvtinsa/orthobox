@@ -1,28 +1,28 @@
 /**
- * Écran de réglages construit à partir des `settings` déclarés par un jeu.
+ * Settings screen built from the `settings` a game declares.
  *
- * C'est le seul endroit qui sait traduire une définition de réglage en
- * contrôle : les jeux se contentent de décrire ce qu'ils attendent.
+ * This is the only place that turns a setting definition into a control:
+ * games merely describe what they expect.
  */
 import { useState } from 'react'
 import SetupPanel from './SetupPanel.jsx'
 import Stepper from './Stepper.jsx'
 import SwitchGroup from './SwitchGroup.jsx'
 
-/** Valeurs par défaut déclarées par un jeu dans sa fiche `game.js`. */
+/** Default values declared by a game in its `game.js` manifest. */
 export function defaultConfig(settings = []) {
-  return Object.fromEntries(settings.map((champ) => [champ.id, champ.default]))
+  return Object.fromEntries(settings.map((field) => [field.id, field.default]))
 }
 
 /**
- * Écran de réglages commun à tous les jeux : le praticien ajuste les
- * paramètres déclarés par le jeu, puis lance la partie. Rien n'est affiché
- * au patient avant l'appui sur « Démarrer ».
+ * Settings screen shared by every game: the practitioner adjusts the values a
+ * game declares, then starts it. Nothing is shown to the patient before the
+ * « Démarrer » button is pressed.
  */
 export default function GameSetup({ game, initial, onStart, actionLabel = 'Démarrer' }) {
   const [config, setConfig] = useState(() => initial ?? defaultConfig(game.settings))
 
-  const modifier = (id, valeur) => setConfig((current) => ({ ...current, [id]: valeur }))
+  const update = (id, value) => setConfig((current) => ({ ...current, [id]: value }))
 
   return (
     <SetupPanel
@@ -31,28 +31,28 @@ export default function GameSetup({ game, initial, onStart, actionLabel = 'Déma
       actionLabel={actionLabel}
       onStart={() => onStart(config)}
     >
-      {game.settings.map((champ) =>
-        champ.type === 'number' ? (
+      {game.settings.map((field) =>
+        field.type === 'number' ? (
           <Stepper
-            key={champ.id}
-            label={champ.label}
-            hint={champ.hint}
-            unite={champ.unite}
-            suffix={champ.suffix}
-            value={config[champ.id]}
-            min={champ.min}
-            max={champ.max}
-            step={champ.step ?? 1}
-            onChange={(valeur) => modifier(champ.id, valeur)}
+            key={field.id}
+            label={field.label}
+            hint={field.hint}
+            unit={field.unit}
+            suffix={field.suffix}
+            value={config[field.id]}
+            min={field.min}
+            max={field.max}
+            step={field.step ?? 1}
+            onChange={(value) => update(field.id, value)}
           />
         ) : (
           <SwitchGroup
-            key={champ.id}
-            label={champ.label}
-            hint={champ.options.find((option) => option.id === config[champ.id])?.hint ?? champ.hint}
-            value={config[champ.id]}
-            options={champ.options}
-            onChange={(valeur) => modifier(champ.id, valeur)}
+            key={field.id}
+            label={field.label}
+            hint={field.options.find((option) => option.id === config[field.id])?.hint ?? field.hint}
+            value={config[field.id]}
+            options={field.options}
+            onChange={(value) => update(field.id, value)}
           />
         ),
       )}

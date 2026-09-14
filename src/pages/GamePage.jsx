@@ -1,9 +1,10 @@
 /**
- * Page d'un jeu : réglages, puis partie, avec le score et le retour aux réglages.
+ * Game page: settings first, then the game itself, with the score and a way
+ * back to the settings.
  */
 import { Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import CompagnonDeJeu from '../components/CompagnonDeJeu.jsx'
+import GameCompanion from '../components/GameCompanion.jsx'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
 import Scoreboard from '../components/Scoreboard.jsx'
@@ -14,14 +15,14 @@ import NotFoundPage from './NotFoundPage.jsx'
 
 export default function GamePage() {
   const { gameId } = useParams()
-  // La clé remonte toute la page quand on passe d'un jeu à l'autre : sans
-  // cela, les réglages et le score du jeu précédent seraient conservés.
+  // The key remounts the whole page when moving from one game to another:
+  // without it, the previous game's settings and score would carry over.
   return <GameScreen key={gameId} gameId={gameId} />
 }
 
 function GameScreen({ gameId }) {
   const game = getGame(gameId)
-  // `null` tant que la partie n'est pas lancée : on est alors sur les réglages.
+  // `null` until the game starts, which means the settings screen is showing.
   const [config, setConfig] = useState(null)
   const [runKey, setRunKey] = useState(0)
   const session = useGameSession()
@@ -31,9 +32,9 @@ function GameScreen({ gameId }) {
   const category = getCategory(game.category)
   const GameComponent = game.component
 
-  const lancer = (reglages) => {
+  const start = (settings) => {
     session.reset()
-    setConfig(reglages)
+    setConfig(settings)
     setRunKey((key) => key + 1)
   }
 
@@ -56,7 +57,7 @@ function GameScreen({ gameId }) {
         {config && (
           <div className="game-header__controls">
             <Scoreboard session={session} />
-            <button type="button" className="btn btn--ghost" onClick={() => lancer(config)}>
+            <button type="button" className="btn btn--ghost" onClick={() => start(config)}>
               Recommencer
             </button>
             <button
@@ -79,7 +80,7 @@ function GameScreen({ gameId }) {
           <GameSetup
             game={game}
             initial={defaultConfig(game.settings)}
-            onStart={lancer}
+            onStart={start}
             actionLabel="Démarrer"
           />
         ) : (
@@ -89,7 +90,7 @@ function GameScreen({ gameId }) {
         )}
       </section>
 
-      {config && <CompagnonDeJeu session={session} />}
+      {config && <GameCompanion session={session} />}
 
       <details className="game-notes">
         <summary>Consignes et objectifs</summary>

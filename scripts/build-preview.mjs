@@ -1,15 +1,15 @@
 /**
- * Build de prévisualisation.
+ * Preview build.
  *
- * Produit dans `dist-preview/` un build sans service worker (inutile, voire
- * gênant, pour une page de prévisualisation hébergée) et prépare :
- *   - `page.html` : la page sans <html>/<head>/<body>, avec les chemins
- *     d'assets relatifs, telle que l'attend l'hébergement de prévisualisation ;
- *   - `files.json` : la correspondance « chemin publié → fichier source »,
- *     à passer à l'outil de publication.
+ * Produces in `dist-preview/` a build without a service worker (useless, even
+ * harmful, for a hosted preview page) and prepares:
+ *   - `page.html`: the page without <html>/<head>/<body>, with relative asset
+ *     paths, as the preview hosting expects it;
+ *   - `files.json`: the « published path -> source file » mapping to hand over
+ *     to the publishing tool.
  *
- * Les fichiers d'une version précédente qui ne sont plus référencés sont
- * listés avec la valeur `null`, ce qui demande leur suppression en ligne.
+ * Files from a previous version that are no longer referenced are listed with
+ * the value `null`, which asks for their removal online.
  *
  *   npm run build:preview
  */
@@ -18,38 +18,38 @@ import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from '
 import { join, relative, resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const RACINE = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const SORTIE = join(RACINE, 'dist-preview')
-const MANIFESTE = join(SORTIE, 'files.json')
-const EXCLUS = new Set(['index.html', 'page.html', 'files.json'])
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const OUTPUT = join(ROOT, 'dist-preview')
+const MANIFEST = join(OUTPUT, 'files.json')
+const EXCLUDED = new Set(['index.html', 'page.html', 'files.json'])
 
-function lister(dossier) {
-  return readdirSync(dossier).flatMap((nom) => {
-    const chemin = join(dossier, nom)
-    return statSync(chemin).isDirectory() ? lister(chemin) : [chemin]
+function list(directory) {
+  return readdirSync(directory).flatMap((name) => {
+    const path = join(directory, name)
+    return statSync(path).isDirectory() ? list(path) : [path]
   })
 }
 
-// Les fichiers publiés lors du build précédent, pour repérer les orphelins.
-const precedents = existsSync(MANIFESTE)
-  ? Object.entries(JSON.parse(readFileSync(MANIFESTE, 'utf8')))
-      .filter(([, source]) => source !== null) // les retraits déjà faits ne sont pas rejoués
-      .map(([chemin]) => chemin)
+// Files published by the previous build, used to spot orphans.
+const previous = existsSync(MANIFEST)
+  ? Object.entries(JSON.parse(readFileSync(MANIFEST, 'utf8')))
+      .filter(([, source]) => source !== null) // removals already done are not replayed
+      .map(([path]) => path)
   : []
 
 execFileSync('npx', ['vite', 'build', '--outDir', 'dist-preview', '--emptyOutDir'], {
-  cwd: RACINE,
+  cwd: ROOT,
   stdio: 'inherit',
   env: { ...process.env, ORTHOBOX_NO_PWA: '1' },
 })
 
-const index = readFileSync(join(SORTIE, 'index.html'), 'utf8')
+const index = readFileSync(join(OUTPUT, 'index.html'), 'utf8')
 const css = index.match(/href="\.\/(assets\/[^"]+\.css)"/)?.[1]
 const js = index.match(/src="\.\/(assets\/[^"]+\.js)"/)?.[1]
-if (!css || !js) throw new Error('Feuille de style ou script introuvable dans index.html')
+if (!css || !js) throw new Error('Stylesheet or script not found in index.html')
 
 writeFileSync(
-  join(SORTIE, 'page.html'),
+  join(OUTPUT, 'page.html'),
   `<title>Orthobox</title>
 <meta name="description" content="Galerie de jeux pour les séances d’orthophonie : langage oral, langage écrit, fonctions exécutives, cognition mathématique." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -59,17 +59,17 @@ writeFileSync(
 `,
 )
 
-const actuels = lister(SORTIE)
-  .map((chemin) => relative(SORTIE, chemin).split(/[\\/]/).join('/'))
-  .filter((chemin) => !EXCLUS.has(chemin))
+const current = list(OUTPUT)
+  .map((path) => relative(OUTPUT, path).split(/[\\/]/).join('/'))
+  .filter((path) => !EXCLUDED.has(path))
   .sort()
 
-const fichiers = Object.fromEntries(actuels.map((chemin) => [chemin, chemin]))
-const orphelins = precedents.filter((chemin) => !fichiers[chemin])
-for (const chemin of orphelins) fichiers[chemin] = null
+const files = Object.fromEntries(current.map((path) => [path, path]))
+const orphans = previous.filter((path) => !files[path])
+for (const path of orphans) files[path] = null
 
-writeFileSync(MANIFESTE, JSON.stringify(fichiers, null, 2))
+writeFileSync(MANIFEST, JSON.stringify(files, null, 2))
 
-console.log(`\npage : dist-preview/page.html`)
-console.log(`fichiers : ${actuels.length} à publier, ${orphelins.length} à retirer`)
-console.log(`correspondance : dist-preview/files.json`)
+console.log(`\npage: dist-preview/page.html`)
+console.log(`files: ${current.length} to publish, ${orphans.length} to remove`)
+console.log(`mapping: dist-preview/files.json`)

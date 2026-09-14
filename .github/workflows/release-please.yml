@@ -1,10 +1,10 @@
-# Publication automatique, à chaque arrivée sur main.
+# Automated publishing, on every landing on main.
 #
-# release-please lit les messages de commit (Conventional Commits), en déduit
-# la version suivante et maintient une pull request de release contenant le
-# CHANGELOG et le numéro de version. Le tag et la release GitHub ne sont créés
-# qu'au moment où cette pull request est fusionnée : la publication reste donc
-# un geste volontaire, tout en étant entièrement calculée.
+# release-please reads the commit messages (Conventional Commits), derives the
+# next version from them and maintains a release pull request holding the
+# CHANGELOG and the version number. The tag and the GitHub release are only
+# created when that pull request is merged: publishing stays a deliberate act,
+# while being entirely computed.
 name: Release
 
 on:
@@ -18,10 +18,10 @@ permissions:
 
 jobs:
   release:
-    name: Préparer et publier la release
+    name: Prepare and publish the release
     runs-on: ubuntu-latest
     steps:
-      - name: Calculer la version et le changelog
+      - name: Compute the version and the changelog
         id: release
         uses: googleapis/release-please-action@v5
         with:
@@ -29,28 +29,28 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-      # Les étapes suivantes ne s'exécutent qu'au moment où la pull request de
-      # release vient d'être fusionnée, c'est-à-dire quand le tag a été créé.
-      - name: Récupérer le dépôt
+      # The steps below only run right after the release pull request has been
+      # merged, that is once the tag has been created.
+      - name: Check out the repository
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v5
 
-      - name: Installer Node
+      - name: Set up Node
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
 
-      - name: Installer les dépendances
+      - name: Install dependencies
         if: ${{ steps.release.outputs.release_created }}
         run: npm ci
 
-      - name: Construire l'application
+      - name: Build the application
         if: ${{ steps.release.outputs.release_created }}
         run: npm run build
 
-      - name: Joindre le build à la release
+      - name: Attach the build to the release
         if: ${{ steps.release.outputs.release_created }}
         run: |
           tag='${{ steps.release.outputs.tag_name }}'

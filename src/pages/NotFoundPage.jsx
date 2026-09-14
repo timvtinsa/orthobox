@@ -1,5 +1,5 @@
 /**
- * Page affichée pour une adresse inconnue.
+ * Page shown for an unknown address.
  */
 import { Link } from 'react-router-dom'
 

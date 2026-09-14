@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react'
 
 /**
- * Déroulement en manches : `round` (0-based), fin de partie et relance.
- * Les jeux gèrent leur contenu, ce hook ne gère que l'avancement.
+ * Round tracking: current round (0-based), end of game and restart.
+ *
+ * Games own their content; this hook only tracks progress.
  */
 export function useRounds(total) {
   const [round, setRound] = useState(0)

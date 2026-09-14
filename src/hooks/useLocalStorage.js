@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { readJson, writeJson } from '../lib/storage.js'
 
-/** `useState` persisté dans le localStorage (favoris, préférences…). */
+/** `useState` persisted to localStorage (favourites, preferences). */
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => readJson(key, initialValue))
 

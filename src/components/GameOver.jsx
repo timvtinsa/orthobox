@@ -1,15 +1,15 @@
-import Confettis from './Confettis.jsx'
-import Mascotte from './Mascotte.jsx'
+import Confetti from './Confetti.jsx'
+import Mascot from './Mascot.jsx'
 import { useMode } from './ModeProvider.jsx'
 
 /**
- * Écran de fin de partie partagé : score, commentaire, relance.
+ * Shared end-of-game screen: score, comment, replay.
  *
- * En mode enfant, la mascotte vient saluer le résultat, et les confettis
- * sont réservés aux parties réussies pour qu'ils gardent leur valeur.
+ * In child mode the mascot comes to greet the result, and confetti is kept
+ * for successful games so that it keeps its meaning.
  */
 export default function GameOver({ correct, total, onReplay, children }) {
-  const { estEnfant } = useMode()
+  const { isChild } = useMode()
   const ratio = total === 0 ? 0 : correct / total
   const comment =
     ratio === 1
@@ -20,13 +20,13 @@ export default function GameOver({ correct, total, onReplay, children }) {
           ? 'C’est en bonne voie, on continue ?'
           : 'On recommence tranquillement ?'
 
-  const reussi = total > 0 && ratio >= 0.5
+  const succeeded = total > 0 && ratio >= 0.5
 
   return (
     <div className="game-final">
-      {estEnfant && reussi && <Confettis />}
-      {estEnfant && (
-        <Mascotte humeur={reussi ? 'bravo' : 'encore'} taille={132} className="mascotte--final" />
+      {isChild && succeeded && <Confetti />}
+      {isChild && (
+        <Mascot mood={succeeded ? 'cheer' : 'tryAgain'} size={132} className="mascot--final" />
       )}
       <p className="game-round">Partie terminée</p>
       <p className="game-final__score">

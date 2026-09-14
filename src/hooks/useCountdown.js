@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * Compte à rebours en secondes. `running` à false met en pause,
- * `onExpire` est appelé une seule fois lorsque le temps atteint zéro.
+ * Countdown in seconds. Setting `running` to false pauses it, and `onExpire`
+ * fires exactly once when the timer reaches zero.
  */
 export function useCountdown(seconds, { running = true, onExpire } = {}) {
   const [remaining, setRemaining] = useState(seconds)

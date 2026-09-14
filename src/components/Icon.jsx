@@ -1,6 +1,6 @@
 /**
- * Jeu d'icônes maison (SVG), pour ne dépendre d'aucune police d'icônes
- * ni d'emoji : le rendu reste identique sur tous les postes.
+ * In-house SVG icon set, so the application depends on no icon font and no
+ * emoji: the rendering stays identical on every machine.
  */
 const PATHS = {
   star: (

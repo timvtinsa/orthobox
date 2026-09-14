@@ -1,17 +1,17 @@
-# Polices embarquées
+# Embedded fonts
 
-Les deux familles sont embarquées dans le dépôt (et non chargées depuis un CDN)
-pour que l'application reste entièrement fonctionnelle hors ligne.
+Both families are embedded in the repository (rather than loaded from a CDN) so
+the application stays fully functional offline.
 
-| Fichier | Famille | Usage | Licence |
+| File | Family | Use | Licence |
 | --- | --- | --- | --- |
-| `Nunito-variable.woff2` | Nunito (variable, 400–800) | Interface : titres, boutons, textes courants | SIL Open Font License 1.1 |
-| `AtkinsonHyperlegible-regular.woff2` / `-bold.woff2` | Atkinson Hyperlegible | Matériel de lecture des jeux (mots, syllabes, chiffres) | SIL Open Font License 1.1 |
+| `Nunito-variable.woff2` | Nunito (variable, 400–800) | Interface: headings, buttons, running text | SIL Open Font License 1.1 |
+| `AtkinsonHyperlegible-regular.woff2` / `-bold.woff2` | Atkinson Hyperlegible | Reading material of the games (words, syllables, digits) | SIL Open Font License 1.1 |
 
-Atkinson Hyperlegible a été conçue par le Braille Institute pour maximiser la
-lisibilité : les formes de `b/d/p/q`, `I/l/1` et `O/0` sont différenciées, ce qui
-évite d'introduire une difficulté visuelle dans le matériel proposé au patient.
+Atkinson Hyperlegible was designed by the Braille Institute to maximise
+legibility: the shapes of `b/d/p/q`, `I/l/1` and `O/0` are told apart, which
+avoids introducing a visual difficulty into the material shown to the patient.
 
-Les deux familles sont distribuées sous la SIL Open Font License 1.1
-(<https://scripts.sil.org/OFL>), qui autorise leur redistribution avec le projet.
-Seul le sous-ensemble latin est embarqué.
+Both families are distributed under the SIL Open Font License 1.1
+(<https://scripts.sil.org/OFL>), which allows redistributing them with the
+project. Only the Latin subset is embedded.

@@ -1,9 +1,9 @@
 /**
- * Registre des jeux.
+ * Game registry.
  *
- * Pour ajouter un jeu il suffit de créer `src/games/<id>/game.js` : le fichier
- * est détecté automatiquement au build, aucune liste centrale à mettre à jour.
- * Voir `src/games/README.md` pour le contrat complet.
+ * Adding a game only takes creating `src/games/<id>/game.js`: the file is
+ * picked up automatically at build time, with no central list to update.
+ * See `src/games/README.md` for the full contract.
  */
 import { isCategoryId } from '../lib/categories.js'
 
@@ -49,7 +49,7 @@ if (duplicates.length > 0) {
   throw new Error(`Identifiants de jeux en double : ${[...new Set(duplicates)].join(', ')}`)
 }
 
-/** Tous les jeux, triés par titre (ordre alphabétique français). */
+/** Every game, sorted by title (French alphabetical order). */
 export const GAMES = collected.sort((a, b) => a.title.localeCompare(b.title, 'fr'))
 
 const BY_ID = new Map(GAMES.map((game) => [game.id, game]))
@@ -62,7 +62,7 @@ export function getGamesByCategory(categoryId) {
   return GAMES.filter((game) => game.category === categoryId)
 }
 
-/** Recherche simple sur le titre, l'accroche, les objectifs et les mots-clés. */
+/** Plain search over title, tagline, objectives and keywords. */
 export function searchGames(games, query) {
   const needle = normalizeText(query)
   if (!needle) return games
@@ -74,7 +74,7 @@ export function searchGames(games, query) {
   })
 }
 
-/** Minuscules et sans accents, pour que « executif » trouve « exécutif ». */
+/** Lowercased and stripped of accents, so « executif » finds « exécutif ». */
 export function normalizeText(value) {
   return (value ?? '')
     .toString()

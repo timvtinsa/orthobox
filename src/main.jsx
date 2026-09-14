@@ -7,11 +7,11 @@ import './styles/fonts.css'
 import './styles/global.css'
 import './styles/gallery.css'
 import './styles/game.css'
-import './styles/mode-enfant.css'
+import './styles/child-mode.css'
 
-// HashRouter : l'application doit pouvoir être déposée telle quelle sur n'importe
-// quel hébergement statique (GitHub Pages, Netlify, intranet du cabinet), sans
-// configuration de réécriture d'URL.
+// HashRouter: the application must be droppable as is on any static host
+// (GitHub Pages, Netlify, a practice intranet), with no URL rewriting rule to
+// configure.
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ModeProvider>

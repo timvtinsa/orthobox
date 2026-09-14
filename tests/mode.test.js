@@ -1,26 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { installerStockage, retirerStockage } from './faux-stockage.js'
-import { MODES, ecrireMode, lireMode } from '../src/lib/mode.js'
+import { installStorage, removeStorage } from './fake-storage.js'
+import { MODES, readMode, writeMode } from '../src/lib/mode.js'
 
-describe('mode d’affichage', () => {
-  beforeEach(() => installerStockage())
-  afterEach(retirerStockage)
+describe('display mode', () => {
+  beforeEach(() => installStorage())
+  afterEach(removeStorage)
 
-  it('démarre en mode adulte', () => {
-    expect(lireMode()).toBe('adulte')
+  it('starts in adult mode', () => {
+    expect(readMode()).toBe('adult')
   })
 
-  it('conserve le mode choisi', () => {
-    ecrireMode('enfant')
-    expect(lireMode()).toBe('enfant')
+  it('keeps the chosen mode', () => {
+    writeMode('child')
+    expect(readMode()).toBe('child')
   })
 
-  it('ignore une valeur inconnue', () => {
-    window.localStorage.setItem('orthobox:mode', '"martien"')
-    expect(lireMode()).toBe('adulte')
+  it('ignores an unknown value', () => {
+    window.localStorage.setItem('orthobox:mode', '"martian"')
+    expect(readMode()).toBe('adult')
   })
 
-  it('propose exactement deux modes', () => {
-    expect(MODES.map((mode) => mode.id)).toEqual(['adulte', 'enfant'])
+  it('offers exactly two modes', () => {
+    expect(MODES.map((mode) => mode.id)).toEqual(['adult', 'child'])
   })
 })

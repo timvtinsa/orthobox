@@ -1,13 +1,17 @@
 import { useCallback, useMemo, useState } from 'react'
 
 /**
- * État de score commun à tous les jeux : réussites, essais, série en cours.
- * Le jeu appelle `register(true|false)`, le cadre affiche le résultat.
+ * Score state shared by every game: correct answers, attempts, current streak.
+ *
+ * A game calls `register(true | false)`, the surrounding frame displays the
+ * result. `lastAnswer` and `answerCount` drive the child-mode companion: the
+ * counter lets the animation replay even on two correct answers in a row,
+ * where the state itself would not change.
  */
-const VIDE = { correct: 0, attempts: 0, streak: 0, bestStreak: 0, dernier: null, evenement: 0 }
+const EMPTY = { correct: 0, attempts: 0, streak: 0, bestStreak: 0, lastAnswer: null, answerCount: 0 }
 
 export function useGameSession() {
-  const [state, setState] = useState(VIDE)
+  const [state, setState] = useState(EMPTY)
 
   const register = useCallback((isCorrect) => {
     setState((previous) => {
@@ -17,17 +21,14 @@ export function useGameSession() {
         attempts: previous.attempts + 1,
         streak,
         bestStreak: Math.max(previous.bestStreak, streak),
-        // `dernier` et `evenement` servent au compagnon du mode enfant :
-        // le compteur permet de rejouer l'animation même sur deux bonnes
-        // réponses de suite, où `dernier` ne change pas.
-        dernier: isCorrect ? 'correct' : 'wrong',
-        evenement: previous.evenement + 1,
+        lastAnswer: isCorrect ? 'correct' : 'wrong',
+        answerCount: previous.answerCount + 1,
       }
     })
   }, [])
 
   const reset = useCallback(() => {
-    setState(VIDE)
+    setState(EMPTY)
   }, [])
 
   return useMemo(() => ({ ...state, register, reset }), [state, register, reset])

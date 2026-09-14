@@ -1,12 +1,12 @@
 /**
- * Routes de l'application : galerie, page de jeu, préparation et déroulé d'une séance.
+ * Application routes: gallery, game page, session planning and session run.
  */
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import GalleryPage from './pages/GalleryPage.jsx'
 import GamePage from './pages/GamePage.jsx'
-import SeancePage from './pages/SeancePage.jsx'
-import SeanceRunPage from './pages/SeanceRunPage.jsx'
+import SessionBuilderPage from './pages/SessionBuilderPage.jsx'
+import SessionRunPage from './pages/SessionRunPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
 export default function App() {
@@ -14,9 +14,9 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<GalleryPage />} />
-        <Route path="jeux/:gameId" element={<GamePage />} />
-        <Route path="seance" element={<SeancePage />} />
-        <Route path="seance/jouer" element={<SeanceRunPage />} />
+        <Route path="games/:gameId" element={<GamePage />} />
+        <Route path="session" element={<SessionBuilderPage />} />
+        <Route path="session/run" element={<SessionRunPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

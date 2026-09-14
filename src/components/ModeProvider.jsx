@@ -1,33 +1,33 @@
 /**
- * Contexte du mode d'affichage, partagé par toute l'application.
+ * Display mode context, shared across the whole application.
  *
- * Le mode est aussi posé sur l'élément racine (`data-mode`), ce qui permet à
- * la feuille de style d'ajuster ce qui doit l'être sans que chaque composant
- * ait à lire le contexte.
+ * The mode is also written on the root element (`data-mode`), so the
+ * stylesheet can adjust what it needs to without every component having to
+ * read the context.
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ecrireMode, lireMode } from '../lib/mode.js'
+import { readMode, writeMode } from '../lib/mode.js'
 
-const ModeContext = createContext({ mode: 'adulte', estEnfant: false, changerMode: () => {} })
+const ModeContext = createContext({ mode: 'adult', isChild: false, changeMode: () => {} })
 
 export function ModeProvider({ children }) {
-  const [mode, setMode] = useState(lireMode)
+  const [mode, setMode] = useState(readMode)
 
   useEffect(() => {
     document.documentElement.dataset.mode = mode
   }, [mode])
 
-  const changerMode = useCallback((prochain) => {
-    setMode(prochain)
-    ecrireMode(prochain)
+  const changeMode = useCallback((next) => {
+    setMode(next)
+    writeMode(next)
   }, [])
 
-  const valeur = useMemo(
-    () => ({ mode, estEnfant: mode === 'enfant', changerMode }),
-    [mode, changerMode],
+  const value = useMemo(
+    () => ({ mode, isChild: mode === 'child', changeMode }),
+    [mode, changeMode],
   )
 
-  return <ModeContext.Provider value={valeur}>{children}</ModeContext.Provider>
+  return <ModeContext.Provider value={value}>{children}</ModeContext.Provider>
 }
 
 export function useMode() {

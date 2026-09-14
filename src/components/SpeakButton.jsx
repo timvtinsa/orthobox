@@ -1,7 +1,7 @@
 import Icon from './Icon.jsx'
 import { isSpeechAvailable, speak } from '../lib/speech.js'
 
-/** Bouton de lecture vocale : prononce un mot ou une consigne. */
+/** Speech button: reads a word or a prompt aloud. */
 export default function SpeakButton({ text, label = 'Écouter', className = '' }) {
   if (!isSpeechAvailable()) return null
 

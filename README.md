@@ -1,224 +1,225 @@
 # Orthobox
 
-Galerie de jeux courts, utilisables tels quels pendant une séance
-d’orthophonie. Application web **100 % client-side** (aucun serveur, aucune
-donnée patient), installable comme **PWA**, utilisable **hors ligne** et pensée
-pour la tablette.
+A gallery of short games, usable as they are during a speech therapy session.
+A **100% client-side** web application (no server, no patient data),
+installable as a **PWA**, usable **offline** and designed for tablets.
 
-Les jeux sont classés en quatre domaines :
+The interface and all game material are in French, since the application is
+built for French-speaking practitioners. The code, the documentation and the
+repository itself are in English.
 
-| Domaine | Ce qu’on y travaille |
+Games are filed under four domains:
+
+| Domain | What it works on |
 | --- | --- |
-| Langage oral | Phonologie, lexique, évocation, compréhension et expression à l’oral |
-| Langage écrit | Lecture, conscience syllabique, compréhension écrite, fluence |
-| Fonctions exécutives | Inhibition, mémoire de travail, attention, flexibilité, recherche visuelle |
-| Cognition mathématique | Sens du nombre, estimation, chaîne numérique, calcul |
+| Langage oral (oral language) | Phonology, lexicon, word finding, oral comprehension and expression |
+| Langage écrit (written language) | Reading, syllabic awareness, written comprehension, fluency |
+| Fonctions exécutives (executive functions) | Inhibition, working memory, attention, flexibility, visual search |
+| Cognition mathématique (math cognition) | Number sense, estimation, number chain, calculation |
 
-## Les 20 jeux
+## The 20 games
 
-**Langage oral**
+**Oral language**
 
-| Jeu | Principe |
+| Game | Principle |
 | --- | --- |
-| L’intrus sonore | Repérer le mot qui ne partage pas l’attaque ou la rime des autres |
-| Qui suis-je ? | Retrouver un mot à partir d’indices progressifs (évocation lexicale) |
-| La suite de sons | Écouter une suite de bruitages, puis remettre les cartes dans l’ordre |
+| L’intrus sonore | Spot the word that shares neither the onset nor the rhyme of the others |
+| Qui suis-je ? | Find a word from progressive clues (lexical retrieval) |
+| La suite de sons | Listen to a series of sounds, then put the cards back in order |
 
-**Langage écrit**
+**Written language**
 
-| Jeu | Principe |
+| Game | Principle |
 | --- | --- |
-| Le mot en morceaux | Reconstruire un mot à partir de ses syllabes mélangées |
-| La phrase à trous | Choisir le mot manquant : sens, mots de liaison ou accords |
-| Lecture flash | Identifier un mot affiché très brièvement parmi des leurres proches |
-| L’histoire et les détails | Lire une histoire, puis répondre à un QCM sur ses détails |
+| Le mot en morceaux | Rebuild a word from its scrambled syllables |
+| La phrase à trous | Pick the missing word: meaning, connectors or agreement |
+| Lecture flash | Identify a word shown very briefly, among close lures |
+| L’histoire et les détails | Read a story, then answer multiple-choice questions on its details |
 
-**Fonctions exécutives**
+**Executive functions**
 
-| Jeu | Principe |
+| Game | Principle |
 | --- | --- |
-| Encre ou mot ? | Stroop : répondre sur la couleur de l’encre, consigne parfois inversée |
-| La suite lumineuse | Reproduire une suite de cases, à l’endroit ou à l’envers |
-| Cherche et trouve | Repérer un objet précis dans un décor de 24 à 80 objets |
-| La liste de mots | Mémoriser une liste, puis reconnaître les mots parmi des mots nouveaux |
-| La planche d’images | Même principe, avec des images |
-| Le rappel de liste | Mémoriser une liste, puis la restituer de mémoire |
-| La suite de chiffres | Retenir une suite de chiffres, la retaper à l’endroit ou à l’envers |
-| Le jeu des paires | Memory : retrouver les paires d’images, en 3 niveaux |
-| Le tri des formes | Classer des objets par couleur, par forme, ou selon une règle qui change |
+| Encre ou mot ? | Stroop: answer on the ink colour, with the rule sometimes flipped |
+| La suite lumineuse | Reproduce a sequence of cells, forward or backward |
+| Cherche et trouve | Spot a given object in a scene of 24 to 80 objects |
+| La liste de mots | Memorise a list, then recognise its words among new ones |
+| La planche d’images | Same principle, with pictures |
+| Le rappel de liste | Memorise a list, then recall it freely |
+| La suite de chiffres | Hold a digit sequence, then type it forward or backward |
+| Le jeu des paires | Concentration: find the picture pairs, at three levels |
+| Le tri des formes | Sort objects by colour, by shape, or following a changing rule |
 
-**Cognition mathématique**
+**Math cognition**
 
-| Jeu | Principe |
+| Game | Principle |
 | --- | --- |
-| Le plus grand tas | Comparer deux collections (subitizing, estimation, transcodage) |
-| Range les nombres | Ordonner des nombres, y compris décimaux |
-| Le calcul éclair | Trouver le résultat d'une opération parmi quatre propositions |
-| Compter la monnaie | Composer un montant exact avec des pièces et des billets |
+| Le plus grand tas | Compare two collections (subitizing, estimation, transcoding) |
+| Range les nombres | Order numbers, decimals included |
+| Le calcul éclair | Find the result of an operation among four options |
+| Compter la monnaie | Make up an exact amount with coins and notes |
 
-**Tous les jeux s’ouvrent sur un écran de réglages** : nombre de manches,
-matériel, durées et options se fixent avant d’appuyer sur « Démarrer », donc
-avant que le patient ne voie quoi que ce soit. Chaque jeu affiche ensuite un
-score de séance et un bloc « Consignes et objectifs » rappelant ce qui est
-travaillé et les variantes possibles.
+**Every game opens on a settings screen**: number of rounds, material,
+durations and options are set before pressing « Démarrer », hence before the
+patient sees anything. Each game then shows a session score and a « Consignes
+et objectifs » block recalling what is being worked on and the possible
+variations.
 
-Aucune durée n’est annoncée pour les jeux : le nombre de manches est réglable,
-et le rythme dépend du patient.
+No duration is announced for a game: the number of rounds is adjustable, and
+the pace depends on the patient.
 
-## Mode adulte et mode enfant
+## Adult mode and child mode
 
-Un interrupteur dans l’en-tête bascule entre deux modes, et le choix est
-conservé d’une séance à l’autre.
+A switch in the header flips between two modes, and the choice is kept from
+one session to the next.
 
-- **Adulte** : l’interface sobre, sans animation superflue.
-- **Enfant** : un petit renard accompagne la partie. Il sourit et saute quand
-  la réponse est juste, prend un air désolé et encourage quand elle est
-  fausse, et la fin d’une partie réussie déclenche des confettis.
+- **Adult**: a sober interface, without superfluous animation.
+- **Child**: a little fox joins in. It smiles and jumps on a correct answer,
+  looks sorry and encourages on a wrong one, and a successful game ends with
+  confetti.
 
-Le mode enfant ne change ni le contenu des jeux, ni les réglages, ni la façon
-de compter les points : un même exercice reste comparable d’un mode à l’autre.
-Toutes les animations se désactivent si le système demande de réduire les
-animations.
+Child mode changes neither the content of the games, nor the settings, nor the
+way points are counted: the same exercise stays comparable across modes. Every
+animation is disabled when the system asks for reduced motion.
 
-## Le mode séance
+## Session mode
 
-Le bouton **Séance** ouvre un plan de travail : on compose une suite de jeux en
-les glissant depuis la liste (au doigt comme à la souris), on la réordonne par
-glissement ou avec les flèches, et chaque étape garde ses propres réglages. La
-séance est conservée dans le navigateur d’une fois sur l’autre.
+The **Séance** button opens a worksheet: games are composed into a sequence by
+dragging them from the catalogue on the right (by finger as well as by mouse),
+the sequence is reordered by dragging or with the arrows, and every step keeps
+its own settings. The session is kept in the browser from one time to the
+next.
 
-Au lancement, les jeux s’enchaînent dans l’ordre : une barre indique où l’on en
-est, et le passage au jeu suivant se fait quand le praticien le décide. À la
-fin, un **récapitulatif** reprend le score de chaque jeu, son taux de réussite
-et le total de la séance, imprimable et non enregistré.
+Once started, games follow one another in order: a bar shows where you are,
+and moving to the next game happens when the practitioner decides so. At the
+end, a **summary** lists the score of every game, its success rate and the
+session total, printable and never stored.
 
-## Démarrer
+## Getting started
 
 ```bash
 npm install
-npm run dev       # développement (http://localhost:5173)
-npm run build     # build de production dans dist/
-npm run preview   # prévisualiser le build
+npm run dev       # development (http://localhost:5173)
+npm run build     # production build in dist/
+npm run preview   # preview the build
 npm run lint
-npm test          # tests unitaires (Vitest)
+npm test          # unit tests (Vitest)
 ```
 
-`npm run build` régénère au passage les icônes PNG de la PWA
-(`npm run icons` pour les régénérer seules). `ORTHOBOX_NO_PWA=1` produit un
-build sans service worker, utile pour une prévisualisation hébergée.
+`npm run build` also regenerates the PWA PNG icons (`npm run icons` to
+regenerate them alone). `ORTHOBOX_NO_PWA=1` produces a build without a service
+worker, useful for a hosted preview.
 
-## Intégration continue
+## Continuous integration
 
-| Fichier | Rôle |
+| File | Role |
 | --- | --- |
-| `.github/workflows/ci.yml` | lint, tests et build sur `main`, `integ` et chaque pull request |
-| `.github/workflows/release-please.yml` | calcul de version, changelog, tag et release |
+| `.github/workflows/ci.yml` | lint, tests and build on `main`, `integ` and every pull request |
+| `.github/workflows/release-please.yml` | version computation, changelog, tag and release |
 
-Le dépôt suit trois niveaux : les branches de travail partent de `integ`,
-`integ` sert de branche d’intégration, et `main` ne reçoit que ce qui est prêt
-à être publié.
+The repository follows three levels: working branches start from `integ`,
+`integ` is the integration branch, and `main` only receives what is ready to
+be published.
 
-### Versions et changelog
+### Versions and changelog
 
-La version n’est jamais choisie à la main. Les messages de commit suivent la
-convention [Conventional Commits](https://www.conventionalcommits.org/fr/), et
-[release-please](https://github.com/googleapis/release-please) en déduit la
-version suivante : `fix` donne un correctif, `feat` une version mineure, un
-`!` ou un `BREAKING CHANGE` une version majeure.
+The version is never picked by hand. Commit messages follow the
+[Conventional Commits](https://www.conventionalcommits.org/) convention, and
+[release-please](https://github.com/googleapis/release-please) derives the next
+version from them: `fix` gives a patch, `feat` a minor version, a `!` or a
+`BREAKING CHANGE` a major version.
 
-Concrètement, à chaque arrivée sur `main` :
+Concretely, on every landing on `main`:
 
-1. release-please ouvre ou met à jour une pull request de release, qui
-   contient le `CHANGELOG.md` mis à jour et la nouvelle version dans
-   `package.json` ;
-2. fusionner cette pull request crée le **tag** et la **release GitHub**, puis
-   le build y est joint en archive.
+1. release-please opens or updates a release pull request, holding the updated
+   `CHANGELOG.md` and the new version in `package.json`;
+2. merging that pull request creates the **tag** and the **GitHub release**,
+   then the build is attached to it as an archive.
 
-La publication reste donc un geste volontaire, tout en étant entièrement
-calculée à partir de l’historique.
+Publishing therefore stays a deliberate act, while being entirely computed
+from the history.
 
-## Déploiement
+## Deployment
 
-Le build est une application statique : le contenu de `dist/` se dépose tel
-quel sur n’importe quel hébergement (GitHub Pages, Netlify, intranet du
-cabinet, clé USB). La base est relative et la navigation utilise un routeur à
-fragment (`#/jeux/...`), donc aucune réécriture d’URL n’est nécessaire, y
-compris dans un sous-répertoire.
+The build is a static application: the contents of `dist/` can be dropped as
+they are on any hosting (GitHub Pages, Netlify, a practice intranet, a USB
+stick). The base is relative and navigation uses a hash router
+(`#/games/...`), so no URL rewriting is needed, including in a subdirectory.
 
-Au premier chargement, le service worker met l’application en cache : les
-séances suivantes fonctionnent sans connexion.
+On first load, the service worker caches the application: the following
+sessions work without a connection.
 
-## Parti pris visuel
+## Visual choices
 
-- **Palette pastel** : quatre teintes de domaine (pêche, sauge, lavande, sable)
-  sur un neutre chaud, chacune déclinée en version foncée réservée au texte
-  pour garder des contrastes lisibles :
+- **Pastel palette**: four domain tints (peach, sage, lavender, sand) over a
+  warm neutral, each with a darker variant reserved for text so contrast stays
+  readable:
   [coolors.co/f6bdab-b9d8c2-cdc3ec-f4dfa8-a8c8ec](https://coolors.co/f6bdab-b9d8c2-cdc3ec-f4dfa8-a8c8ec).
-- **Deux typographies**, embarquées dans le dépôt pour rester disponibles hors
-  ligne : *Nunito* pour l’interface, *Atkinson Hyperlegible* pour le matériel
-  lu par le patient. Cette dernière différencie `b/d/p/q` et `I/l/1`, ce qui
-  évite d’ajouter une difficulté visuelle au matériel
-  (voir `src/assets/fonts/README.md`).
-- **Sons** : les bruitages de « La suite de sons » sont fabriqués par
-  l’application (Web Audio), sans aucun fichier audio embarqué. Déposer des
-  MP3 dans `public/sons/` les remplace automatiquement, sans toucher au code
-  (voir `public/sons/README.md`).
-- **Aucune icône emoji** : chaque jeu a sa vignette SVG dessinée
-  (`src/games/<id>/cover.svg`), et l’interface utilise un jeu d’icônes maison.
-  Les jeux d’images reposent sur 24 pictogrammes dessinés (`src/lib/pictos.jsx`).
-- **Tablette d’abord** : cibles tactiles d’au moins 44 px, mises en page qui se
-  réorganisent en paysage comme en portrait, plateaux dimensionnés pour rester
-  visibles sans défiler.
+- **Two typefaces**, embedded in the repository so they stay available
+  offline: *Nunito* for the interface, *Atkinson Hyperlegible* for the material
+  read by the patient. The latter tells `b/d/p/q` and `I/l/1` apart, which
+  avoids adding a visual difficulty to the material
+  (see `src/assets/fonts/README.md`).
+- **Sounds**: the sound effects of « La suite de sons » are synthesised by the
+  application (Web Audio), with no embedded audio file. Dropping MP3 files in
+  `public/sounds/` replaces them automatically, without touching the code
+  (see `public/sounds/README.md`).
+- **No emoji icon**: every game has its own drawn SVG cover
+  (`src/games/<id>/cover.svg`), and the interface uses a hand-made icon set.
+  The picture games rely on 24 drawn pictograms (`src/lib/pictograms.jsx`).
+- **Tablet first**: touch targets of at least 44 px, layouts that reflow in
+  landscape as well as in portrait, boards sized to stay visible without
+  scrolling.
 
 ## Documentation
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) : structure du code et décisions techniques
-- [`src/games/README.md`](src/games/README.md) : contrat à respecter pour un jeu
-- [`public/sons/README.md`](public/sons/README.md) : brancher ses propres bruitages
-- [`src/assets/fonts/README.md`](src/assets/fonts/README.md) : polices et licences
+- [`ARCHITECTURE.md`](ARCHITECTURE.md): code structure and technical decisions
+- [`src/games/README.md`](src/games/README.md): the contract a game must honour
+- [`public/sounds/README.md`](public/sounds/README.md): plugging in your own sound effects
+- [`src/assets/fonts/README.md`](src/assets/fonts/README.md): fonts and licences
 
-## Ajouter un jeu
+## Adding a game
 
-L’architecture est modulaire : un jeu = un dossier. Le registre
-(`src/games/registry.js`) détecte les jeux au build via `import.meta.glob`,
-il n’y a **aucune liste centrale à mettre à jour**.
+The architecture is modular: one game equals one folder. The registry
+(`src/games/registry.js`) discovers games at build time through
+`import.meta.glob`, so there is **no central list to update**.
 
 ```
-src/games/mon-jeu/
-  game.js        # fiche : titre, domaine, réglages, objectifs, composant
-  cover.svg      # vignette de la carte
-  MonJeu.jsx     # le composant React du jeu
-  data.js        # (optionnel) le matériel du jeu
+src/games/my-game/
+  game.js        # manifest: title, domain, settings, objectives, component
+  cover.svg      # the card cover
+  MyGame.jsx     # the React component of the game
+  data.js        # (optional) the material of the game
 ```
 
-Le contrat complet (props reçues, briques réutilisables, classes CSS
-communes) est décrit dans [`src/games/README.md`](src/games/README.md).
+The full contract (props received, reusable building blocks, shared CSS
+classes) is described in [`src/games/README.md`](src/games/README.md).
 
-## Organisation du code
+## Code layout
 
 ```
 src/
-  assets/fonts/  polices embarquées (Nunito, Atkinson Hyperlegible)
-  components/    cadre commun : cartes, filtres, score, réglages, PWA
-  games/         un dossier par jeu + le registre
+  assets/fonts/  embedded fonts (Nunito, Atkinson Hyperlegible)
+  components/    shared frame: cards, filters, score, settings, PWA
+  games/         one folder per game, plus the registry
   hooks/         useGameSession, useRounds, useCountdown, useAnswerLock,
-                 useDragSequence (glisser-déposer tactile)
-  lib/           domaines, tirage aléatoire, stockage local, lexique,
-                 pictogrammes, synthèse vocale, bruitages, séance
-  pages/         galerie, page de jeu, séance (préparation et déroulé)
-  styles/        polices, styles globaux, galerie, page de jeu
-scripts/         génération des icônes PWA (PNG, sans dépendance)
+                 useDragSequence (touch-capable drag and drop)
+  lib/           categories, random draws, local storage, lexicon,
+                 pictograms, speech synthesis, sound effects, session plan
+  pages/         gallery, game page, session (builder and run)
+  styles/        fonts, global styles, gallery, game page
+scripts/         PWA icon generation (PNG, no dependency)
 ```
 
-## Technique
+## Technical notes
 
-- React 18 + Vite 5, `vite-plugin-pwa` (Workbox) pour le hors-ligne
-- Chargement paresseux : chaque jeu est un chunk séparé
-- Aucune donnée envoyée : seuls les favoris sont stockés dans le navigateur
-- Lecture vocale facultative via l’API Web Speech du poste
+- React 18 + Vite 5, `vite-plugin-pwa` (Workbox) for offline use
+- Lazy loading: every game is a separate chunk
+- No data sent anywhere: only favourites are stored in the browser
+- Optional speech synthesis through the device Web Speech API
 
-## Cadre d’usage
+## Scope of use
 
-Ces jeux sont des supports de rééducation : ils ne constituent ni un test
-étalonné ni un outil de diagnostic. Le choix du jeu, du niveau et
-l’interprétation des réponses relèvent du praticien.
+These games are rehabilitation material: they are neither a standardised test
+nor a diagnostic tool. Choosing the game, the level and interpreting the
+answers are up to the practitioner.

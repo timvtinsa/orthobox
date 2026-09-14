@@ -1,9 +1,9 @@
 import { useCountdown } from '../hooks/useCountdown.js'
 
 /**
- * Phase de mémorisation : le matériel est affiché pendant une durée fixée,
- * avec un compte à rebours visible, puis la main passe à la phase de test.
- * Le bouton « J'ai fini » permet d'écourter sans attendre.
+ * Study phase: the material is shown for a set time, with a visible
+ * countdown, then the test phase takes over. The "I'm done" button cuts the
+ * wait short.
  */
 export default function StudyPhase({ seconds, instruction, onDone, children }) {
   const remaining = useCountdown(seconds, { onExpire: onDone })

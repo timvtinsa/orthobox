@@ -982,17 +982,17 @@
   opacity: 1;
 }
 
-.digit--vide {
+.digit--empty {
   color: var(--ink-faint);
   background: var(--surface-alt);
 }
 
-.digit--juste {
+.digit--correct {
   background: var(--success-tint);
   color: var(--success);
 }
 
-.digit--faux {
+.digit--wrong {
   background: var(--danger-tint);
   color: var(--danger);
 }
@@ -1046,8 +1046,8 @@
   gap: clamp(6px, 1.4vw, 12px);
   /* Colonnes fractionnaires : les cartes rétrécissent au lieu de déborder,
      et la grille ne dépasse jamais la largeur disponible. */
-  grid-template-columns: repeat(var(--colonnes, 3), minmax(0, 1fr));
-  width: min(100%, calc(var(--colonnes, 3) * 132px));
+  grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+  width: min(100%, calc(var(--columns, 3) * 132px));
   margin-inline: auto;
 }
 
@@ -1073,12 +1073,12 @@
   cursor: default;
 }
 
-.memory-card--trouvee {
+.memory-card--found {
   border-color: var(--success);
   background: var(--success-tint);
 }
 
-.memory-card__dos {
+.memory-card__back {
   width: 46%;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -1088,7 +1088,7 @@
 
 /* --- Tri des formes ------------------------------------------------ */
 
-.tri-reserve {
+.sorting-tray {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -1100,7 +1100,7 @@
   width: 100%;
 }
 
-.tri-objet {
+.sorting-item {
   display: grid;
   place-items: center;
   min-width: 64px;
@@ -1113,23 +1113,23 @@
   transition: border-color 0.15s ease, transform 0.1s ease;
 }
 
-.tri-objet:hover {
+.sorting-item:hover {
   transform: translateY(-2px);
 }
 
-.tri-objet--choisi {
+.sorting-item--selected {
   border-color: var(--category);
   transform: translateY(-4px);
 }
 
-.tri-bacs {
+.sorting-bins {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
   width: 100%;
 }
 
-.tri-bac {
+.sorting-bin {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1144,30 +1144,30 @@
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.tri-bac:disabled {
+.sorting-bin:disabled {
   cursor: default;
   opacity: 0.75;
 }
 
-.tri-bac--actif {
+.sorting-bin--active {
   border-color: var(--category-pastel);
 }
 
-.tri-bac--actif:hover {
+.sorting-bin--active:hover {
   border-style: solid;
   background: var(--category-tint);
 }
 
-.tri-bac--erreur {
+.sorting-bin--error {
   border-color: var(--danger);
   background: var(--danger-tint);
 }
 
-.tri-bac__titre {
+.sorting-bin__title {
   font-size: 0.95rem;
 }
 
-.tri-bac__compte {
+.sorting-bin__count {
   font-variant-numeric: tabular-nums;
   color: var(--ink-soft);
   font-size: 0.9rem;
@@ -1184,14 +1184,14 @@
 
 /* --- Suite de sons -------------------------------------------------- */
 
-.ordre-slot {
+.order-row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.ordre-case {
+.order-slot {
   position: relative;
   display: grid;
   place-items: center;
@@ -1202,19 +1202,19 @@
   background: var(--surface-alt);
 }
 
-.ordre-case--juste {
+.order-slot--correct {
   border-style: solid;
   border-color: var(--success);
   background: var(--success-tint);
 }
 
-.ordre-case--faux {
+.order-slot--wrong {
   border-style: solid;
   border-color: var(--danger);
   background: var(--danger-tint);
 }
 
-.ordre-case__rang {
+.order-slot__rank {
   position: absolute;
   top: -10px;
   left: -10px;
@@ -1229,7 +1229,7 @@
   font-weight: 800;
 }
 
-.son-carte {
+.sound-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1244,24 +1244,24 @@
   transition: border-color 0.15s ease, transform 0.1s ease;
 }
 
-.son-carte:hover:not(:disabled) {
+.sound-card:hover:not(:disabled) {
   border-color: var(--category-pastel);
   transform: translateY(-2px);
 }
 
-.son-carte--placee {
+.sound-card--placed {
   opacity: 0.35;
   cursor: default;
 }
 
-.son-carte__label {
+.sound-card__label {
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
 
 /* --- Déroulement d'une séance --------------------------------------- */
 
-.seance-barre {
+.session-bar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px 20px;
@@ -1273,18 +1273,18 @@
   box-shadow: var(--shadow-sm);
 }
 
-.seance-barre__texte {
+.session-bar__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-.seance-barre__titre {
+.session-bar__title {
   font-size: 1.2rem;
 }
 
-.seance-barre__jalons {
+.session-bar__steps {
   grid-column: 1 / -1;
   list-style: none;
   margin: 0;
@@ -1294,14 +1294,14 @@
   gap: 6px;
 }
 
-.jalon {
+.progress-step {
   display: flex;
   align-items: center;
   gap: 6px;
   flex: 1 1 32px;
 }
 
-.jalon::after {
+.progress-step::after {
   content: '';
   flex: 1;
   height: 4px;
@@ -1309,11 +1309,11 @@
   background: var(--surface-alt);
 }
 
-.jalon:last-child::after {
+.progress-step:last-child::after {
   display: none;
 }
 
-.jalon__pastille {
+.progress-step__dot {
   flex: none;
   width: 30px;
   height: 30px;
@@ -1327,22 +1327,22 @@
   font-variant-numeric: tabular-nums;
 }
 
-.jalon--fait .jalon__pastille {
+.progress-step--done .progress-step__dot {
   background: var(--category-pastel);
   color: var(--category);
 }
 
-.jalon--fait::after {
+.progress-step--done::after {
   background: var(--category-pastel);
 }
 
-.jalon--encours .jalon__pastille {
+.progress-step--current .progress-step__dot {
   background: var(--category);
   color: #fff;
   box-shadow: 0 0 0 4px var(--category-tint);
 }
 
-.seance-barre__actions {
+.session-bar__actions {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1350,7 +1350,7 @@
   justify-content: flex-end;
 }
 
-.seance-note {
+.session-note {
   text-align: center;
   margin: 0 auto;
 }
@@ -1362,43 +1362,43 @@
   background: var(--surface);
 }
 
-.recap-table {
+.summary-table {
   width: 100%;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
 }
 
-.recap-table th,
-.recap-table td {
+.summary-table th,
+.summary-table td {
   padding: 14px 18px;
   text-align: left;
   border-bottom: 1px solid var(--line);
 }
 
-.recap-table thead th {
+.summary-table thead th {
   font-size: 0.82rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
 
-.recap-table tbody tr:last-child th,
-.recap-table tbody tr:last-child td {
+.summary-table tbody tr:last-child th,
+.summary-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.recap-table__nombre {
+.summary-table__number {
   white-space: nowrap;
 }
 
-.recap-taux {
+.summary-rate {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   font-weight: 700;
 }
 
-.recap-taux__jauge {
+.summary-rate__bar {
   width: 90px;
   height: 10px;
   border-radius: 999px;
@@ -1406,7 +1406,7 @@
   overflow: hidden;
 }
 
-.recap-taux__valeur {
+.summary-rate__fill {
   display: block;
   height: 100%;
   border-radius: inherit;
@@ -1414,11 +1414,11 @@
 }
 
 @media (max-width: 700px) {
-  .seance-barre {
+  .session-bar {
     grid-template-columns: 1fr;
   }
 
-  .seance-barre__actions {
+  .session-bar__actions {
     justify-content: flex-start;
   }
 }
@@ -1439,15 +1439,15 @@
     border: none;
   }
 
-  .recap-table th,
-  .recap-table td {
+  .summary-table th,
+  .summary-table td {
     padding: 8px 10px;
   }
 }
 
 /* --- Calcul éclair -------------------------------------------------- */
 
-.calcul-enonce {
+.math-prompt {
   margin: 0;
   font-family: var(--font-reading);
   font-size: clamp(2.2rem, 1.4rem + 4vw, 3.4rem);
@@ -1455,18 +1455,18 @@
   font-variant-numeric: tabular-nums;
 }
 
-.calcul-enonce__egal {
+.math-prompt__equals {
   color: var(--ink-faint);
 }
 
-.choice--nombre {
+.choice--number {
   font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
   font-variant-numeric: tabular-nums;
 }
 
 /* --- La monnaie ------------------------------------------------------ */
 
-.porte-monnaie {
+.wallet {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -1480,27 +1480,27 @@
   background: var(--surface-alt);
 }
 
-.porte-monnaie--correct {
+.wallet--correct {
   border-color: var(--success);
   background: var(--success-tint);
 }
 
-.porte-monnaie--wrong {
+.wallet--wrong {
   border-color: var(--danger);
   background: var(--danger-tint);
 }
 
-.monnaie-total {
+.money-total {
   margin: 0;
   font-size: 1.2rem;
   font-variant-numeric: tabular-nums;
 }
 
-.monnaie-total__ecart {
+.money-total__gap {
   color: var(--danger);
 }
 
-.tiroir {
+.coin-drawer {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -1508,7 +1508,7 @@
   width: 100%;
 }
 
-.piece-btn {
+.coin-btn {
   display: grid;
   place-items: center;
   min-width: 48px;
@@ -1521,17 +1521,17 @@
   transition: transform 0.1s ease;
 }
 
-.piece-btn:hover:not(:disabled) {
+.coin-btn:hover:not(:disabled) {
   transform: translateY(-3px);
 }
 
-.piece-btn:disabled {
+.coin-btn:disabled {
   cursor: default;
 }
 
 /* --- Phrase à trous --------------------------------------------------- */
 
-.phrase-trou {
+.gap-sentence {
   margin: 0;
   max-width: 46ch;
   font-family: var(--font-reading);
@@ -1539,7 +1539,7 @@
   line-height: 1.7;
 }
 
-.trou {
+.gap {
   display: inline-block;
   min-width: 6ch;
   padding: 0 10px;
@@ -1550,6 +1550,6 @@
   color: var(--category);
 }
 
-.trou--rempli {
+.gap--filled {
   border-bottom-style: solid;
 }

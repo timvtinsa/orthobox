@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
 /**
- * Bouton « Installer » base sur l'evenement `beforeinstallprompt`.
- * Absent des navigateurs qui ne le proposent pas (iOS notamment),
- * et masqué si l'application tourne déjà en mode autonome.
+ * « Installer » button, built on the `beforeinstallprompt` event.
+ * Absent from browsers that do not offer it (iOS in particular), and hidden
+ * when the application already runs standalone.
  */
 export default function InstallButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)

@@ -1,40 +1,40 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { installerStockage, retirerStockage } from './faux-stockage.js'
+import { installStorage, removeStorage } from './fake-storage.js'
 import { readJson, writeJson } from '../src/lib/storage.js'
 
-describe('stockage local', () => {
-  afterEach(retirerStockage)
+describe('local storage', () => {
+  afterEach(removeStorage)
 
-  it('relit ce qui a été écrit', () => {
-    installerStockage()
-    writeJson('essai', { a: 1 })
-    expect(readJson('essai', null)).toEqual({ a: 1 })
+  it('reads back what was written', () => {
+    installStorage()
+    writeJson('probe', { a: 1 })
+    expect(readJson('probe', null)).toEqual({ a: 1 })
   })
 
-  it('préfixe les clés pour ne pas écraser celles d’une autre application', () => {
-    const stockage = installerStockage()
-    writeJson('favoris', ['stroop'])
-    expect(stockage.getItem('orthobox:favoris')).toBe('["stroop"]')
+  it('prefixes keys so another application is never overwritten', () => {
+    const storage = installStorage()
+    writeJson('favorites', ['stroop'])
+    expect(storage.getItem('orthobox:favorites')).toBe('["stroop"]')
   })
 
-  it('rend la valeur de repli quand la clé est absente', () => {
-    installerStockage()
-    expect(readJson('jamais-ecrit', 'repli')).toBe('repli')
+  it('returns the fallback when the key is missing', () => {
+    installStorage()
+    expect(readJson('never-written', 'fallback')).toBe('fallback')
   })
 
-  it('résiste à un contenu illisible', () => {
-    const stockage = installerStockage()
-    stockage.setItem('orthobox:casse', '{ pas du json')
-    expect(readJson('casse', [])).toEqual([])
+  it('survives unreadable content', () => {
+    const storage = installStorage()
+    storage.setItem('orthobox:broken', '{ not json')
+    expect(readJson('broken', [])).toEqual([])
   })
 
-  it('ne lève pas quand le stockage est refusé', () => {
-    installerStockage({ enEchec: true })
-    expect(writeJson('essai', 1)).toBe(false)
+  it('does not throw when storage is refused', () => {
+    installStorage({ failing: true })
+    expect(writeJson('probe', 1)).toBe(false)
   })
 
-  it('ne lève pas quand le stockage est absent', () => {
-    expect(readJson('essai', 'repli')).toBe('repli')
-    expect(writeJson('essai', 1)).toBe(false)
+  it('does not throw when storage is missing altogether', () => {
+    expect(readJson('probe', 'fallback')).toBe('fallback')
+    expect(writeJson('probe', 1)).toBe(false)
   })
 })

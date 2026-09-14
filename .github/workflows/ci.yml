@@ -1,5 +1,5 @@
-# Contrôle continu : tout ce qui arrive sur une branche d'intégration ou par
-# une pull request doit passer le lint, les tests et le build.
+# Continuous integration: anything landing on an integration branch or coming
+# through a pull request must pass lint, tests and build.
 name: CI
 
 on:
@@ -9,7 +9,7 @@ on:
     branches: [main, integ]
   workflow_dispatch:
 
-# Une seule exécution par branche : un nouveau push annule la précédente.
+# One run per branch: a new push cancels the previous one.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -18,20 +18,20 @@ permissions:
   contents: read
 
 jobs:
-  verifier:
-    name: Lint, tests et build
+  verify:
+    name: Lint, tests and build
     runs-on: ubuntu-latest
     steps:
-      - name: Récupérer le dépôt
+      - name: Check out the repository
         uses: actions/checkout@v5
 
-      - name: Installer Node
+      - name: Set up Node
         uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
 
-      - name: Installer les dépendances
+      - name: Install dependencies
         run: npm ci
 
       - name: Lint
@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Conserver le build
+      - name: Keep the build
         uses: actions/upload-artifact@v5
         with:
           name: dist

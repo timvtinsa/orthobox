@@ -2,13 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// Base relative : l'application est purement client-side et peut donc être servie
-// depuis n'importe quel sous-répertoire (GitHub Pages, Netlify, clé USB…).
+// Relative base: the application is purely client-side, so it can be served
+// from any subdirectory (GitHub Pages, Netlify, a USB stick…).
 export default defineConfig({
   base: './',
   test: {
-    // Les tests portent sur la logique : données des jeux, tirages, séance.
-    // Les vérifications d'interface se font dans un vrai navigateur.
+    // Tests cover the logic: game data, draws, session plan.
+    // Interface checks are done in a real browser.
     include: ['tests/**/*.test.js'],
     environment: 'node',
     restoreMocks: true,
@@ -16,8 +16,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      // ORTHOBOX_NO_PWA=1 : build sans service worker, pour une prévisualisation
-      // hébergée où la mise en cache hors ligne n'a pas lieu d'être.
+      // ORTHOBOX_NO_PWA=1: build without a service worker, for a hosted
+      // preview where offline caching makes no sense.
       disable: process.env.ORTHOBOX_NO_PWA === '1',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'],

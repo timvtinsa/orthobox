@@ -11,13 +11,13 @@
       "draft": false,
       "prerelease": false,
       "changelog-sections": [
-        { "type": "feat", "section": "Nouveautés" },
-        { "type": "fix", "section": "Corrections" },
-        { "type": "perf", "section": "Performances" },
-        { "type": "refactor", "section": "Refontes internes", "hidden": false },
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug fixes" },
+        { "type": "perf", "section": "Performance" },
+        { "type": "refactor", "section": "Internal refactors", "hidden": false },
         { "type": "docs", "section": "Documentation", "hidden": false },
-        { "type": "style", "section": "Présentation", "hidden": true },
-        { "type": "chore", "section": "Maintenance", "hidden": true },
+        { "type": "style", "section": "Styling", "hidden": true },
+        { "type": "chore", "section": "Chores", "hidden": true },
         { "type": "test", "section": "Tests", "hidden": true }
       ]
     }

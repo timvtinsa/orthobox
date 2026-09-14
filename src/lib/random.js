@@ -1,4 +1,4 @@
-/** Petites aides de tirage aléatoire, partagées par tous les jeux. */
+/** Small random helpers shared by every game. */
 
 export function randomInt(min, max) {
   return min + Math.floor(Math.random() * (max - min + 1))
@@ -8,7 +8,7 @@ export function pick(items) {
   return items[Math.floor(Math.random() * items.length)]
 }
 
-/** Mélange (Fisher-Yates) sans muter le tableau source. */
+/** Fisher-Yates shuffle, without mutating the source array. */
 export function shuffle(items) {
   const copy = [...items]
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -18,14 +18,14 @@ export function shuffle(items) {
   return copy
 }
 
-/** n éléments distincts tirés au hasard (au plus items.length). */
+/** n distinct items drawn at random (at most items.length). */
 export function sample(items, n) {
   return shuffle(items).slice(0, Math.min(n, items.length))
 }
 
 /**
- * Comme `sample`, mais en évitant autant que possible les éléments déjà vus.
- * Utile pour ne pas reproposer le même item deux manches de suite.
+ * Like `sample`, but avoids already seen items when possible, so the same
+ * material is not proposed twice in a row.
  */
 export function sampleAvoiding(items, n, avoid = []) {
   const avoidSet = new Set(avoid)

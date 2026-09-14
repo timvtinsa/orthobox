@@ -1,107 +1,106 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-const SEUIL = 6 // pixels avant qu'un appui devienne un glissement
+const THRESHOLD = 6 // pixels before a press becomes a drag
 
 /**
- * Glisser-déposer maison, en Pointer Events : fonctionne à la souris comme au
- * doigt (le glisser-déposer HTML5 natif ignore le tactile, et l'application
- * est utilisée sur tablette).
+ * Hand-rolled drag and drop, on Pointer Events: works with a mouse as well as
+ * a finger (native HTML5 drag and drop ignores touch, and the application is
+ * used on tablets).
  *
- * Deux gestes sont gérés :
- *  - déposer un jeu de la galerie dans la séance (`type: 'ajout'`) ;
- *  - déplacer une étape déjà présente (`type: 'deplacement'`).
+ * Two gestures are handled:
+ *  - dropping a game from the catalogue into the session (`type: 'add'`);
+ *  - moving a step that is already in the plan (`type: 'move'`).
  *
- * Le geste en cours est suivi dans des refs, et non dans l'état React : un
- * glissement rapide peut envoyer déplacement et relâchement dans la même
- * frame, avant tout nouveau rendu, et le dépôt serait alors perdu. L'état ne
- * sert qu'à l'affichage (fantôme et repère d'insertion).
+ * The gesture in flight is tracked in refs rather than in React state: a fast
+ * drag can fire move and release within the same frame, before any re-render,
+ * and the drop would then be lost. State only drives the display (the ghost
+ * and the insertion marker).
  *
- * `onDrop({ type, gameId, depuis, vers })` reçoit la position d'insertion.
+ * `onDrop({ type, gameId, from, to })` receives the insertion position.
  */
 export function useDragSequence({ onDrop }) {
   const [drag, setDrag] = useState(null)
-  const [cible, setCible] = useState(null)
+  const [target, setTarget] = useState(null)
   const zone = useRef(null)
-  const elements = useRef(new Map())
-  const depart = useRef(null)
+  const items = useRef(new Map())
+  const origin = useRef(null)
   const dragRef = useRef(null)
-  const cibleRef = useRef(null)
+  const targetRef = useRef(null)
 
-  const enregistrerElement = useCallback((index, element) => {
-    if (element) elements.current.set(index, element)
-    else elements.current.delete(index)
+  const registerItem = useCallback((index, element) => {
+    if (element) items.current.set(index, element)
+    else items.current.delete(index)
   }, [])
 
-  /** Position d'insertion déduite de l'ordonnée du pointeur. */
-  const calculerCible = useCallback((y) => {
-    const entrees = [...elements.current.entries()].sort((a, b) => a[0] - b[0])
-    for (const [index, element] of entrees) {
+  /** Insertion position derived from the pointer's vertical position. */
+  const computeTarget = useCallback((y) => {
+    const entries = [...items.current.entries()].sort((a, b) => a[0] - b[0])
+    for (const [index, element] of entries) {
       const rect = element.getBoundingClientRect()
       if (y < rect.top + rect.height / 2) return index
     }
-    return entrees.length
+    return entries.length
   }, [])
 
-  const commencer = (event, charge) => {
-    // Bouton principal uniquement, pour ne pas gêner le menu contextuel.
+  const start = (event, payload) => {
+    // Primary button only, so the context menu keeps working.
     if (event.button !== undefined && event.button > 0) return
-    depart.current = { x: event.clientX, y: event.clientY, charge }
+    origin.current = { x: event.clientX, y: event.clientY, payload }
   }
 
   useEffect(() => {
-    const bouger = (event) => {
-      if (!depart.current) return
+    const move = (event) => {
+      if (!origin.current) return
       const distance = Math.hypot(
-        event.clientX - depart.current.x,
-        event.clientY - depart.current.y,
+        event.clientX - origin.current.x,
+        event.clientY - origin.current.y,
       )
-      if (!dragRef.current && distance < SEUIL) return
+      if (!dragRef.current && distance < THRESHOLD) return
 
-      dragRef.current = { ...depart.current.charge, x: event.clientX, y: event.clientY }
+      dragRef.current = { ...origin.current.payload, x: event.clientX, y: event.clientY }
       setDrag(dragRef.current)
 
       const rect = zone.current?.getBoundingClientRect()
-      const marge = 40 // tolérance autour de la zone de dépôt
-      const dansLaZone =
+      const margin = 40 // tolerance around the drop zone
+      const insideZone =
         rect &&
-        event.clientX >= rect.left - marge &&
-        event.clientX <= rect.right + marge &&
-        event.clientY >= rect.top - marge &&
-        event.clientY <= rect.bottom + marge
-      cibleRef.current = dansLaZone ? calculerCible(event.clientY) : null
-      setCible(cibleRef.current)
+        event.clientX >= rect.left - margin &&
+        event.clientX <= rect.right + margin &&
+        event.clientY >= rect.top - margin &&
+        event.clientY <= rect.bottom + margin
+      targetRef.current = insideZone ? computeTarget(event.clientY) : null
+      setTarget(targetRef.current)
       event.preventDefault?.()
     }
 
-    const relacher = () => {
-      const encours = dragRef.current
-      const arrivee = cibleRef.current
-      if (encours && arrivee !== null) {
+    const release = () => {
+      const current = dragRef.current
+      const landing = targetRef.current
+      if (current && landing !== null) {
         onDrop({
-          type: encours.type,
-          gameId: encours.gameId,
-          depuis: encours.depuis,
-          // Retirer l'élément décale les positions suivantes.
-          vers:
-            encours.type === 'deplacement' && arrivee > encours.depuis ? arrivee - 1 : arrivee,
+          type: current.type,
+          gameId: current.gameId,
+          from: current.from,
+          // Removing the item shifts every position after it.
+          to: current.type === 'move' && landing > current.from ? landing - 1 : landing,
         })
       }
-      depart.current = null
+      origin.current = null
       dragRef.current = null
-      cibleRef.current = null
+      targetRef.current = null
       setDrag(null)
-      setCible(null)
+      setTarget(null)
     }
 
-    window.addEventListener('pointermove', bouger, { passive: false })
-    window.addEventListener('pointerup', relacher)
-    window.addEventListener('pointercancel', relacher)
+    window.addEventListener('pointermove', move, { passive: false })
+    window.addEventListener('pointerup', release)
+    window.addEventListener('pointercancel', release)
     return () => {
-      window.removeEventListener('pointermove', bouger)
-      window.removeEventListener('pointerup', relacher)
-      window.removeEventListener('pointercancel', relacher)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', release)
+      window.removeEventListener('pointercancel', release)
     }
-  }, [calculerCible, onDrop])
+  }, [computeTarget, onDrop])
 
-  return { drag, cible, zone, commencer, enregistrerElement }
+  return { drag, target, zone, start, registerItem }
 }

@@ -1,33 +1,33 @@
 /**
- * Banque de bruitages.
+ * Sound bank.
  *
- * Deux sources, dans cet ordre de priorité :
+ * Two sources, in order of priority:
  *
- * 1. Un fichier audio déposé dans `public/sons/<id>.mp3`. Rien d'autre à
- *    faire : le fichier est détecté au premier usage, mis en cache, et
- *    remplace le son de synthèse. Voir `public/sons/README.md`.
- * 2. À défaut, un bruitage fabriqué par l'application (Web Audio). Aucun
- *    fichier n'est embarqué dans le dépôt : l'application reste légère et
- *    fonctionne hors ligne, au prix de sons stylisés.
+ * 1. An audio file dropped into `public/sounds/<id>.mp3`. Nothing else to do:
+ *    the file is detected on first use, cached, and replaces the synthesised
+ *    sound. See `public/sounds/README.md`.
+ * 2. Otherwise, a sound effect built by the application (Web Audio). No audio
+ *    file ships with the repository: the application stays small and works
+ *    offline, at the cost of stylised sounds.
  *
- * Le reste de l'application ne connaît que `SONS`, `jouerSuite` et
- * `prechargerSons` : la provenance du son ne change rien aux jeux.
+ * The rest of the application only knows about `SOUNDS`, `playSequence` and
+ * `preloadSounds`: where a sound comes from makes no difference to the games.
  */
 
-// --- Contexte audio ---------------------------------------------------
+// --- Audio context ----------------------------------------------------
 
-let contexte
+let context
 let reverb
 
 function ctx() {
-  if (!contexte) {
-    const AudioContexte = window.AudioContext || window.webkitAudioContext
-    if (!AudioContexte) return null
-    contexte = new AudioContexte()
+  if (!context) {
+    const AudioCtor = window.AudioContext || window.webkitAudioContext
+    if (!AudioCtor) return null
+    context = new AudioCtor()
   }
-  // Les navigateurs suspendent le contexte tant qu'aucun geste n'a eu lieu.
-  if (contexte.state === 'suspended') contexte.resume()
-  return contexte
+  // Browsers keep the context suspended until a user gesture happens.
+  if (context.state === 'suspended') context.resume()
+  return context
 }
 
 export function isAudioAvailable() {
@@ -35,396 +35,395 @@ export function isAudioAvailable() {
 }
 
 /**
- * Petite réverbération : une réponse impulsionnelle synthétique suffit à
- * sortir les sons du rendu « bip de synthétiseur » en leur donnant une pièce.
+ * A small reverb: a synthetic impulse response is enough to pull the sounds
+ * out of the "synthesiser beep" register by placing them in a room.
  */
-function reverbération(audio) {
+function reverbNode(audio) {
   if (reverb) return reverb
-  const duree = 1.1
-  const longueur = Math.floor(audio.sampleRate * duree)
-  const impulsion = audio.createBuffer(2, longueur, audio.sampleRate)
-  for (let canal = 0; canal < 2; canal += 1) {
-    const donnees = impulsion.getChannelData(canal)
-    for (let i = 0; i < longueur; i += 1) {
-      // Bruit qui décroît : réflexions de plus en plus faibles.
-      donnees[i] = (Math.random() * 2 - 1) * (1 - i / longueur) ** 2.6
+  const duration = 1.1
+  const length = Math.floor(audio.sampleRate * duration)
+  const impulse = audio.createBuffer(2, length, audio.sampleRate)
+  for (let channel = 0; channel < 2; channel += 1) {
+    const data = impulse.getChannelData(channel)
+    for (let i = 0; i < length; i += 1) {
+      // Decaying noise: reflections fade out over time.
+      data[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 2.6
     }
   }
-  const convolution = audio.createConvolver()
-  convolution.buffer = impulsion
-  const niveau = audio.createGain()
-  niveau.gain.value = 0.22
-  convolution.connect(niveau).connect(audio.destination)
-  reverb = convolution
+  const convolver = audio.createConvolver()
+  convolver.buffer = impulse
+  const level = audio.createGain()
+  level.gain.value = 0.22
+  convolver.connect(level).connect(audio.destination)
+  reverb = convolver
   return reverb
 }
 
-/** Sortie commune : un peu de pièce sur chaque son, pour les homogénéiser. */
-function sortie(audio, source, { espace = 0.5 } = {}) {
-  const direct = audio.createGain()
-  direct.gain.value = 1
-  source.connect(direct).connect(audio.destination)
-  if (espace > 0) {
-    const envoi = audio.createGain()
-    envoi.gain.value = espace
-    source.connect(envoi).connect(reverbération(audio))
+/** Shared output: a touch of room on every sound, to even them out. */
+function output(audio, source, { room = 0.5 } = {}) {
+  const dry = audio.createGain()
+  dry.gain.value = 1
+  source.connect(dry).connect(audio.destination)
+  if (room > 0) {
+    const send = audio.createGain()
+    send.gain.value = room
+    source.connect(send).connect(reverbNode(audio))
   }
 }
 
-// --- Briques de synthèse ----------------------------------------------
+// --- Synthesis building blocks ----------------------------------------
 
 /**
- * Partiel sinusoïdal avec enveloppe percussive. Un instrument réel sonne par
- * l'empilement de plusieurs partiels non harmoniques, d'où le paramètre
- * `rapport` utilisé par les cloches et le verre.
+ * A sine partial with a percussive envelope. Real instruments sound through a
+ * stack of inharmonic partials, hence the `ratios` parameter used by the
+ * bells and the glass.
  */
-function partiel(audio, { debut, duree, frequence, volume, glissando, type = 'sine', espace }) {
-  const oscillateur = audio.createOscillator()
+function partial(audio, { start, duration, frequency, volume, glide, type = 'sine', room }) {
+  const oscillator = audio.createOscillator()
   const gain = audio.createGain()
-  oscillateur.type = type
-  oscillateur.frequency.setValueAtTime(frequence, debut)
-  if (glissando) {
-    oscillateur.frequency.exponentialRampToValueAtTime(Math.max(20, glissando), debut + duree)
+  oscillator.type = type
+  oscillator.frequency.setValueAtTime(frequency, start)
+  if (glide) {
+    oscillator.frequency.exponentialRampToValueAtTime(Math.max(20, glide), start + duration)
   }
-  gain.gain.setValueAtTime(0.0001, debut)
-  gain.gain.exponentialRampToValueAtTime(volume, debut + 0.008)
-  gain.gain.exponentialRampToValueAtTime(0.0001, debut + duree)
-  oscillateur.connect(gain)
-  sortie(audio, gain, { espace })
-  oscillateur.start(debut)
-  oscillateur.stop(debut + duree + 0.05)
+  gain.gain.setValueAtTime(0.0001, start)
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.008)
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration)
+  oscillator.connect(gain)
+  output(audio, gain, { room })
+  oscillator.start(start)
+  oscillator.stop(start + duration + 0.05)
 }
 
-/** Bruit filtré : tout ce qui n'est pas tonal (eau, souffle, chocs, foule). */
-function bruit(audio, {
-  debut,
-  duree,
-  frequence = 1200,
+/** Filtered noise: everything that is not tonal (water, air, knocks, crowd). */
+function noise(audio, {
+  start,
+  duration,
+  frequency = 1200,
   q = 1,
   volume = 0.2,
   type = 'bandpass',
-  attaque = 0.004,
-  balayage,
+  attack = 0.004,
+  sweep,
 }) {
-  const echantillons = Math.max(1, Math.floor(audio.sampleRate * duree))
-  const tampon = audio.createBuffer(1, echantillons, audio.sampleRate)
-  const donnees = tampon.getChannelData(0)
-  for (let i = 0; i < echantillons; i += 1) donnees[i] = Math.random() * 2 - 1
+  const samples = Math.max(1, Math.floor(audio.sampleRate * duration))
+  const buffer = audio.createBuffer(1, samples, audio.sampleRate)
+  const data = buffer.getChannelData(0)
+  for (let i = 0; i < samples; i += 1) data[i] = Math.random() * 2 - 1
 
   const source = audio.createBufferSource()
-  source.buffer = tampon
-  const filtre = audio.createBiquadFilter()
-  filtre.type = type
-  filtre.frequency.setValueAtTime(frequence, debut)
-  if (balayage) filtre.frequency.exponentialRampToValueAtTime(balayage, debut + duree)
-  filtre.Q.value = q
+  source.buffer = buffer
+  const filter = audio.createBiquadFilter()
+  filter.type = type
+  filter.frequency.setValueAtTime(frequency, start)
+  if (sweep) filter.frequency.exponentialRampToValueAtTime(sweep, start + duration)
+  filter.Q.value = q
 
   const gain = audio.createGain()
-  gain.gain.setValueAtTime(0.0001, debut)
-  gain.gain.linearRampToValueAtTime(volume, debut + attaque)
-  gain.gain.exponentialRampToValueAtTime(0.0001, debut + duree)
+  gain.gain.setValueAtTime(0.0001, start)
+  gain.gain.linearRampToValueAtTime(volume, start + attack)
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration)
 
-  source.connect(filtre).connect(gain)
-  sortie(audio, gain)
-  source.start(debut)
-  source.stop(debut + duree)
+  source.connect(filter).connect(gain)
+  output(audio, gain)
+  source.start(start)
+  source.stop(start + duration)
 }
 
-/** Corps métallique : partiels non harmoniques, longue extinction. */
-function metal(audio, { debut, frequence, duree, volume = 0.14, rapports }) {
-  rapports.forEach((rapport, index) => {
-    partiel(audio, {
-      debut,
-      duree: duree * (1 - index * 0.12),
-      frequence: frequence * rapport,
+/** Metallic body: inharmonic partials with a long decay. */
+function metal(audio, { start, frequency, duration, volume = 0.14, ratios }) {
+  ratios.forEach((ratio, index) => {
+    partial(audio, {
+      start,
+      duration: duration * (1 - index * 0.12),
+      frequency: frequency * ratio,
       volume: volume / (index + 1),
-      espace: 0.8,
+      room: 0.8,
     })
   })
 }
 
-// --- Banque de sons ----------------------------------------------------
+// --- Sound bank -------------------------------------------------------
 
 /**
- * Chaque entrée déclare son identifiant (qui sert aussi de nom de fichier
- * audio facultatif), son intitulé, le pictogramme de sa carte, sa durée
- * approximative et sa recette de synthèse.
+ * Each entry declares its identifier (which doubles as the optional audio
+ * file name), the label shown to the patient, the pictogram of its card, an
+ * approximate duration and its synthesis recipe.
  */
-export const SONS = [
+export const SOUNDS = [
   {
-    id: 'sonnette',
+    id: 'doorbell',
     label: 'la sonnette',
-    picto: 'cloche',
-    duree: 1.6,
-    jouer: (audio, t) => {
-      metal(audio, { debut: t, frequence: 784, duree: 1.1, rapports: [1, 2.01, 2.99, 4.2] })
-      metal(audio, { debut: t + 0.42, frequence: 587, duree: 1.3, rapports: [1, 2.01, 2.99, 4.2] })
+    pictogram: 'bell',
+    duration: 1.6,
+    play: (audio, t) => {
+      metal(audio, { start: t, frequency: 784, duration: 1.1, ratios: [1, 2.01, 2.99, 4.2] })
+      metal(audio, { start: t + 0.42, frequency: 587, duration: 1.3, ratios: [1, 2.01, 2.99, 4.2] })
     },
   },
   {
-    id: 'telephone',
+    id: 'phone',
     label: 'le téléphone',
-    picto: 'telephone',
-    duree: 1.7,
-    jouer: (audio, t) => {
-      // Deux salves de trilles, comme une sonnerie de téléphone fixe.
-      for (const depart of [t, t + 0.95]) {
+    pictogram: 'phone',
+    duration: 1.7,
+    play: (audio, t) => {
+      // Two bursts of trills, like a landline ringing.
+      for (const burst of [t, t + 0.95]) {
         for (let i = 0; i < 8; i += 1) {
-          const debut = depart + i * 0.055
-          partiel(audio, { debut, duree: 0.05, frequence: 1180, volume: 0.11, espace: 0.3 })
-          partiel(audio, { debut, duree: 0.05, frequence: 1540, volume: 0.08, espace: 0.3 })
+          const start = burst + i * 0.055
+          partial(audio, { start, duration: 0.05, frequency: 1180, volume: 0.11, room: 0.3 })
+          partial(audio, { start, duration: 0.05, frequency: 1540, volume: 0.08, room: 0.3 })
         }
       }
     },
   },
   {
-    id: 'horloge',
+    id: 'clock',
     label: 'l’horloge',
-    picto: 'montre',
-    duree: 1.8,
-    jouer: (audio, t) => {
+    pictogram: 'watch',
+    duration: 1.8,
+    play: (audio, t) => {
       for (let i = 0; i < 5; i += 1) {
-        const debut = t + i * 0.4
-        // Tic plus clair que le tac : c'est ce contraste qui fait l'horloge.
-        bruit(audio, {
-          debut,
-          duree: 0.035,
-          frequence: i % 2 === 0 ? 3200 : 2100,
+        // The tick is brighter than the tock: that contrast makes the clock.
+        noise(audio, {
+          start: t + i * 0.4,
+          duration: 0.035,
+          frequency: i % 2 === 0 ? 3200 : 2100,
           q: 14,
           volume: 0.35,
-          attaque: 0.001,
+          attack: 0.001,
         })
       }
     },
   },
   {
-    id: 'klaxon',
+    id: 'horn',
     label: 'le klaxon',
-    picto: 'voiture',
-    duree: 1.1,
-    jouer: (audio, t) => {
-      // Un klaxon est un accord de deux notes proches, plein d'harmoniques.
-      for (const frequence of [370, 440]) {
-        partiel(audio, { debut: t, duree: 0.85, frequence, volume: 0.1, type: 'sawtooth' })
-        partiel(audio, { debut: t, duree: 0.85, frequence: frequence * 2, volume: 0.05, type: 'sawtooth' })
+    pictogram: 'car',
+    duration: 1.1,
+    play: (audio, t) => {
+      // A car horn is a chord of two close notes, rich in harmonics.
+      for (const frequency of [370, 440]) {
+        partial(audio, { start: t, duration: 0.85, frequency, volume: 0.1, type: 'sawtooth' })
+        partial(audio, { start: t, duration: 0.85, frequency: frequency * 2, volume: 0.05, type: 'sawtooth' })
       }
     },
   },
   {
-    id: 'eau',
+    id: 'water',
     label: 'l’eau qui coule',
-    picto: 'nuage',
-    duree: 1.8,
-    jouer: (audio, t) => {
-      bruit(audio, {
-        debut: t,
-        duree: 1.6,
-        frequence: 900,
-        balayage: 1400,
+    pictogram: 'cloud',
+    duration: 1.8,
+    play: (audio, t) => {
+      noise(audio, {
+        start: t,
+        duration: 1.6,
+        frequency: 900,
+        sweep: 1400,
         q: 0.8,
         volume: 0.13,
-        attaque: 0.25,
+        attack: 0.25,
       })
-      // Quelques gouttes par-dessus le filet d'eau.
-      for (const retard of [0.15, 0.62, 1.05, 1.35]) {
-        partiel(audio, {
-          debut: t + retard,
-          duree: 0.16,
-          frequence: 1400 + Math.random() * 700,
-          glissando: 420,
+      // A few drops on top of the running water.
+      for (const delay of [0.15, 0.62, 1.05, 1.35]) {
+        partial(audio, {
+          start: t + delay,
+          duration: 0.16,
+          frequency: 1400 + Math.random() * 700,
+          glide: 420,
           volume: 0.16,
-          espace: 0.9,
+          room: 0.9,
         })
       }
     },
   },
   {
-    id: 'verre',
+    id: 'glass',
     label: 'le verre qui tinte',
-    picto: 'tasse',
-    duree: 1.6,
-    jouer: (audio, t) => {
-      metal(audio, { debut: t, frequence: 2093, duree: 1.4, volume: 0.1, rapports: [1, 2.76, 5.4] })
+    pictogram: 'cup',
+    duration: 1.6,
+    play: (audio, t) => {
+      metal(audio, { start: t, frequency: 2093, duration: 1.4, volume: 0.1, ratios: [1, 2.76, 5.4] })
     },
   },
   {
-    id: 'tambour',
+    id: 'drum',
     label: 'le tambour',
-    picto: 'tambour',
-    duree: 1.3,
-    jouer: (audio, t) => {
+    pictogram: 'drum',
+    duration: 1.3,
+    play: (audio, t) => {
       for (let i = 0; i < 3; i += 1) {
-        const debut = t + i * 0.32
-        partiel(audio, { debut, duree: 0.3, frequence: 180, glissando: 55, volume: 0.4 })
-        bruit(audio, { debut, duree: 0.18, frequence: 400, q: 0.6, volume: 0.18, type: 'lowpass' })
+        const start = t + i * 0.32
+        partial(audio, { start, duration: 0.3, frequency: 180, glide: 55, volume: 0.4 })
+        noise(audio, { start, duration: 0.18, frequency: 400, q: 0.6, volume: 0.18, type: 'lowpass' })
       }
     },
   },
   {
-    id: 'sifflet',
+    id: 'whistle',
     label: 'le sifflet',
-    picto: 'sifflet',
-    duree: 1.1,
-    jouer: (audio, t) => {
-      // Le souffle très résonant fait le sifflet ; le vibrato le rend vivant.
-      bruit(audio, { debut: t, duree: 0.85, frequence: 2350, q: 22, volume: 0.4 })
-      bruit(audio, { debut: t, duree: 0.85, frequence: 3900, q: 18, volume: 0.16 })
+    pictogram: 'whistle',
+    duration: 1.1,
+    play: (audio, t) => {
+      // Highly resonant breath is what makes a whistle sound like one.
+      noise(audio, { start: t, duration: 0.85, frequency: 2350, q: 22, volume: 0.4 })
+      noise(audio, { start: t, duration: 0.85, frequency: 3900, q: 18, volume: 0.16 })
     },
   },
   {
-    id: 'porte',
+    id: 'knock',
     label: 'les coups à la porte',
-    picto: 'maison',
-    duree: 1.2,
-    jouer: (audio, t) => {
-      for (const retard of [0, 0.3, 0.58]) {
-        bruit(audio, {
-          debut: t + retard,
-          duree: 0.16,
-          frequence: 220,
-          balayage: 90,
+    pictogram: 'house',
+    duration: 1.2,
+    play: (audio, t) => {
+      for (const delay of [0, 0.3, 0.58]) {
+        noise(audio, {
+          start: t + delay,
+          duration: 0.16,
+          frequency: 220,
+          sweep: 90,
           q: 1.6,
           volume: 0.45,
-          attaque: 0.002,
+          attack: 0.002,
         })
-        partiel(audio, { debut: t + retard, duree: 0.14, frequence: 120, glissando: 60, volume: 0.2 })
+        partial(audio, { start: t + delay, duration: 0.14, frequency: 120, glide: 60, volume: 0.2 })
       }
     },
   },
   {
-    id: 'applaudissements',
+    id: 'applause',
     label: 'les applaudissements',
-    picto: 'cadeau',
-    duree: 1.7,
-    jouer: (audio, t) => {
-      // Une foule, c'est beaucoup de claquements courts répartis au hasard.
+    pictogram: 'gift',
+    duration: 1.7,
+    play: (audio, t) => {
+      // A crowd is many short claps scattered at random.
       for (let i = 0; i < 44; i += 1) {
-        bruit(audio, {
-          debut: t + Math.random() * 1.5,
-          duree: 0.05,
-          frequence: 1400 + Math.random() * 1800,
+        noise(audio, {
+          start: t + Math.random() * 1.5,
+          duration: 0.05,
+          frequency: 1400 + Math.random() * 1800,
           q: 1.1,
           volume: 0.07 + Math.random() * 0.06,
-          attaque: 0.001,
+          attack: 0.001,
         })
       }
     },
   },
   {
-    id: 'cloche',
+    id: 'bell',
     label: 'la cloche de l’église',
-    picto: 'cloche',
-    duree: 2.4,
-    jouer: (audio, t) => {
-      metal(audio, { debut: t, frequence: 420, duree: 2.2, volume: 0.16, rapports: [0.5, 1, 1.19, 2.4, 3.1] })
-      metal(audio, { debut: t + 1.1, frequence: 420, duree: 1.8, volume: 0.12, rapports: [0.5, 1, 1.19, 2.4] })
+    pictogram: 'bell',
+    duration: 2.4,
+    play: (audio, t) => {
+      metal(audio, { start: t, frequency: 420, duration: 2.2, volume: 0.16, ratios: [0.5, 1, 1.19, 2.4, 3.1] })
+      metal(audio, { start: t + 1.1, frequency: 420, duration: 1.8, volume: 0.12, ratios: [0.5, 1, 1.19, 2.4] })
     },
   },
   {
-    id: 'moteur',
+    id: 'engine',
     label: 'le moteur',
-    picto: 'voiture',
-    duree: 1.8,
-    jouer: (audio, t) => {
-      const oscillateur = audio.createOscillator()
+    pictogram: 'car',
+    duration: 1.8,
+    play: (audio, t) => {
+      const oscillator = audio.createOscillator()
       const gain = audio.createGain()
-      const filtre = audio.createBiquadFilter()
-      oscillateur.type = 'sawtooth'
-      oscillateur.frequency.setValueAtTime(52, t)
-      oscillateur.frequency.linearRampToValueAtTime(78, t + 0.7)
-      oscillateur.frequency.linearRampToValueAtTime(64, t + 1.6)
-      filtre.type = 'lowpass'
-      filtre.frequency.setValueAtTime(420, t)
-      filtre.Q.value = 6
+      const filter = audio.createBiquadFilter()
+      oscillator.type = 'sawtooth'
+      oscillator.frequency.setValueAtTime(52, t)
+      oscillator.frequency.linearRampToValueAtTime(78, t + 0.7)
+      oscillator.frequency.linearRampToValueAtTime(64, t + 1.6)
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(420, t)
+      filter.Q.value = 6
       gain.gain.setValueAtTime(0.0001, t)
       gain.gain.linearRampToValueAtTime(0.3, t + 0.15)
       gain.gain.setValueAtTime(0.3, t + 1.3)
       gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.7)
-      oscillateur.connect(filtre).connect(gain)
-      sortie(audio, gain, { espace: 0.2 })
-      oscillateur.start(t)
-      oscillateur.stop(t + 1.8)
-      bruit(audio, { debut: t, duree: 1.7, frequence: 300, q: 0.5, volume: 0.05, type: 'lowpass', attaque: 0.2 })
+      oscillator.connect(filter).connect(gain)
+      output(audio, gain, { room: 0.2 })
+      oscillator.start(t)
+      oscillator.stop(t + 1.8)
+      noise(audio, { start: t, duration: 1.7, frequency: 300, q: 0.5, volume: 0.05, type: 'lowpass', attack: 0.2 })
     },
   },
 ]
 
-/** Les animaux n'ont pas de recette de synthèse crédible : voix ou fichier. */
-export const ANIMAUX = [
-  { id: 'chat', label: 'le chat', picto: 'chat' },
-  { id: 'chien', label: 'le chien', picto: 'chien' },
-  { id: 'oiseau', label: 'l’oiseau', picto: 'oiseau' },
-  { id: 'vache', label: 'la vache', picto: 'vache' },
-  { id: 'cheval', label: 'le cheval', picto: 'cheval' },
+/** Animals have no convincing synthesis: audio file, or spoken name. */
+export const ANIMALS = [
+  { id: 'cat', label: 'le chat', pictogram: 'cat' },
+  { id: 'dog', label: 'le chien', pictogram: 'dog' },
+  { id: 'bird', label: 'l’oiseau', pictogram: 'bird' },
+  { id: 'cow', label: 'la vache', pictogram: 'cow' },
+  { id: 'horse', label: 'le cheval', pictogram: 'horse' },
 ]
 
-// --- Fichiers audio facultatifs ---------------------------------------
+// --- Optional audio files ---------------------------------------------
 
-/** id -> AudioBuffer, ou `null` si aucun fichier n'accompagne ce son. */
-const echantillons = new Map()
+/** id -> AudioBuffer, or `null` when no file accompanies that sound. */
+const samples = new Map()
 
-const chemin = (id) => `${import.meta.env.BASE_URL}sons/${id}.mp3`
+const filePath = (id) => `${import.meta.env.BASE_URL}sounds/${id}.mp3`
 
 /**
- * Cherche `public/sons/<id>.mp3`. L'absence de fichier est le cas normal :
- * on retient le résultat pour ne pas retenter à chaque manche.
+ * Looks for `public/sounds/<id>.mp3`. A missing file is the normal case, so
+ * the outcome is remembered to avoid retrying on every round.
  */
-async function chargerEchantillon(id) {
-  if (echantillons.has(id)) return echantillons.get(id)
+async function loadSample(id) {
+  if (samples.has(id)) return samples.get(id)
   const audio = ctx()
   if (!audio) return null
   try {
-    const reponse = await fetch(chemin(id))
-    if (!reponse.ok) throw new Error('absent')
-    const donnees = await reponse.arrayBuffer()
-    const tampon = await audio.decodeAudioData(donnees)
-    echantillons.set(id, tampon)
-    return tampon
+    const response = await fetch(filePath(id))
+    if (!response.ok) throw new Error('missing')
+    const data = await response.arrayBuffer()
+    const buffer = await audio.decodeAudioData(data)
+    samples.set(id, buffer)
+    return buffer
   } catch {
-    echantillons.set(id, null)
+    samples.set(id, null)
     return null
   }
 }
 
-/** Vrai si un fichier audio accompagne ce son (après préchargement). */
-export function aUnEnregistrement(id) {
-  return Boolean(echantillons.get(id))
+/** True when an audio file backs this sound (after preloading). */
+export function hasRecording(id) {
+  return Boolean(samples.get(id))
 }
 
-/** Charge à l'avance les fichiers d'une liste de sons, si présents. */
-export async function prechargerSons(sons) {
-  await Promise.all(sons.map((son) => chargerEchantillon(son.id)))
+/** Preloads the files backing a list of sounds, when they exist. */
+export async function preloadSounds(sounds) {
+  await Promise.all(sounds.map((sound) => loadSample(sound.id)))
 }
 
-function jouerEchantillon(audio, tampon, debut) {
+function playSample(audio, buffer, start) {
   const source = audio.createBufferSource()
-  source.buffer = tampon
-  sortie(audio, source, { espace: 0.15 })
-  source.start(debut)
-  return tampon.duration
+  source.buffer = buffer
+  output(audio, source, { room: 0.15 })
+  source.start(start)
+  return buffer.duration
 }
 
 /**
- * Joue une suite de sons, espacés de `intervalle` secondes.
- * Renvoie la durée totale en secondes, ou 0 si l'audio est indisponible.
+ * Plays a sequence of sounds, `gap` seconds apart.
+ * Returns the total duration in seconds, or 0 when audio is unavailable.
  */
-export function jouerSuite(sons, { intervalle = 0.45 } = {}) {
+export function playSequence(sounds, { gap = 0.45 } = {}) {
   const audio = ctx()
   if (!audio) return 0
-  let curseur = audio.currentTime + 0.15
-  for (const son of sons) {
-    const tampon = echantillons.get(son.id)
-    if (tampon) {
-      curseur += jouerEchantillon(audio, tampon, curseur) + intervalle
-    } else if (son.jouer) {
-      son.jouer(audio, curseur)
-      curseur += son.duree + intervalle
+  let cursor = audio.currentTime + 0.15
+  for (const sound of sounds) {
+    const buffer = samples.get(sound.id)
+    if (buffer) {
+      cursor += playSample(audio, buffer, cursor) + gap
+    } else if (sound.play) {
+      sound.play(audio, cursor)
+      cursor += sound.duration + gap
     }
   }
-  return curseur - audio.currentTime
+  return cursor - audio.currentTime
 }
 
-/** Réveille le contexte audio sur un geste de l'utilisateur. */
-export function preparerAudio() {
+/** Wakes the audio context up on a user gesture. */
+export function primeAudio() {
   ctx()
 }

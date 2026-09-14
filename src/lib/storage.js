@@ -1,8 +1,9 @@
 /**
- * Persistance locale (localStorage). Tout reste sur le poste du praticien :
- * aucune donnée ne quitte le navigateur.
- * Chaque accès est protégé : navigation privée, stockage bloqué ou quota
- * plein ne doivent jamais casser l'application.
+ * Local persistence (localStorage). Everything stays on the practitioner's
+ * machine: no data ever leaves the browser.
+ *
+ * Every access is guarded: private browsing, blocked storage or a full quota
+ * must never break the application.
  */
 const PREFIX = 'orthobox:'
 

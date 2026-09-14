@@ -1,8 +1,8 @@
 /**
- * Score de la partie en cours, affiché dans l'en-tête du jeu.
+ * Score of the current game, shown in the game header.
  *
- * Reste masqué tant qu'aucune réponse n'a été donnée, pour ne pas afficher
- * un « 0 / 0 » au patient avant même de commencer.
+ * Stays hidden until an answer has been given, so the patient is not shown a
+ * "0 / 0" before even starting.
  */
 export default function Scoreboard({ session }) {
   if (session.attempts === 0) return null

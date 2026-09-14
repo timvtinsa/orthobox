@@ -1,4 +1,4 @@
-/** Choix entre quelques options exclusives (2 à 4). */
+/** A choice between a few exclusive options (2 to 4). */
 export default function SwitchGroup({ label, hint, value, options, onChange }) {
   const id = `switch-${label.replace(/\s+/g, '-').toLowerCase()}`
 

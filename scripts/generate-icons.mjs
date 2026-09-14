@@ -1,7 +1,7 @@
 /**
- * Genere les icones PNG de la PWA sans dependance externe.
- * Un mini encodeur PNG (zlib + CRC32) suffit : les icones sont des formes
- * simples dessinees par code, donc reproductibles et versionnables.
+ * Generates the PWA PNG icons without any external dependency.
+ * A tiny PNG encoder (zlib + CRC32) is enough: the icons are simple shapes
+ * drawn by code, hence reproducible and easy to version.
  */
 import { deflateSync } from 'node:zlib'
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -35,7 +35,7 @@ function chunk(type, data) {
   return Buffer.concat([length, body, crc])
 }
 
-/** @param {Uint8Array} rgba pixels RGBA, taille size*size*4 */
+/** @param {Uint8Array} rgba RGBA pixels, size*size*4 bytes */
 function encodePng(rgba, size) {
   const stride = size * 4
   const raw = Buffer.alloc((stride + 1) * size)
@@ -58,7 +58,7 @@ function encodePng(rgba, size) {
 
 const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t))
 const clamp01 = (v) => Math.min(1, Math.max(0, v))
-/** Anti-aliasing : 1 dedans, 0 dehors, transition sur ~1,5px. */
+/** Anti-aliasing: 1 inside, 0 outside, transition over ~1.5px. */
 const cover = (distance) => clamp01(0.5 - distance / 1.5)
 
 function roundedRectDistance(x, y, size, radius) {
@@ -71,9 +71,9 @@ function roundedRectDistance(x, y, size, radius) {
 
 function drawIcon(size, { maskable = false } = {}) {
   const px = new Uint8Array(size * size * 4)
-  const s = size / 512 // echelle : le dessin est pense sur une grille 512
+  const s = size / 512 // scale: the drawing is designed on a 512 grid
   const radius = maskable ? size / 2 : size * 0.22
-  // Zone sure d'une icone maskable : 80 % centraux -> on reduit le motif.
+  // Safe zone of a maskable icon: the central 80%, so the motif is scaled down.
   const scale = maskable ? 0.78 : 1
   const top = [0x5b, 0x74, 0xe8]
   const bottom = [0x35, 0x3f, 0xa8]
@@ -91,7 +91,7 @@ function drawIcon(size, { maskable = false } = {}) {
       if (bg <= 0) continue
       const color = mix(top, bottom, y / size)
 
-      // Bulle de parole : ellipse + queue triangulaire.
+      // Speech bubble: ellipse plus a triangular tail.
       const ex = (x + 0.5 - cxBubble) / rxBubble
       const ey = (y + 0.5 - cyBubble) / ryBubble
       const ellipse = cover((Math.hypot(ex, ey) - 1) * Math.min(rxBubble, ryBubble))
@@ -104,7 +104,7 @@ function drawIcon(size, { maskable = false } = {}) {
       let out = color
       if (shape > 0) {
         out = mix(color, bubble, shape)
-        // Trois points d'appel : le rythme de la parole.
+        // Three dots: the rhythm of speech.
         for (const dotX of [-70, 0, 70]) {
           const d = Math.hypot(x + 0.5 - (cxBubble + dotX * s * scale), y + 0.5 - cyBubble)
           const dot = cover(d - 22 * s * scale)
@@ -130,5 +130,5 @@ const files = [
 ]
 for (const [name, buffer] of files) {
   writeFileSync(resolve(OUT_DIR, name), buffer)
-  console.log(`icone generee : public/icons/${name} (${buffer.length} o)`)
+  console.log(`icon generated: public/icons/${name} (${buffer.length} bytes)`)
 }
