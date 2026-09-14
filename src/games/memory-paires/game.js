@@ -41,7 +41,7 @@ export default {
       min: 5,
       max: 40,
       step: 5,
-      default: 12,
+      default: 15,
       unite: 'dixiemes',
     },
 

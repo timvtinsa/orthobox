@@ -6,6 +6,13 @@ import { VitePWA } from 'vite-plugin-pwa'
 // depuis n'importe quel sous-répertoire (GitHub Pages, Netlify, clé USB…).
 export default defineConfig({
   base: './',
+  test: {
+    // Les tests portent sur la logique : données des jeux, tirages, séance.
+    // Les vérifications d'interface se font dans un vrai navigateur.
+    include: ['tests/**/*.test.js'],
+    environment: 'node',
+    restoreMocks: true,
+  },
   plugins: [
     react(),
     VitePWA({
