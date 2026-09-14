@@ -100,11 +100,42 @@ npm run dev       # développement (http://localhost:5173)
 npm run build     # build de production dans dist/
 npm run preview   # prévisualiser le build
 npm run lint
+npm test          # tests unitaires (Vitest)
 ```
 
 `npm run build` régénère au passage les icônes PNG de la PWA
 (`npm run icons` pour les régénérer seules). `ORTHOBOX_NO_PWA=1` produit un
 build sans service worker, utile pour une prévisualisation hébergée.
+
+## Intégration continue
+
+| Fichier | Rôle |
+| --- | --- |
+| `.github/workflows/ci.yml` | lint, tests et build sur `main`, `integ` et chaque pull request |
+| `.github/workflows/release-please.yml` | calcul de version, changelog, tag et release |
+
+Le dépôt suit trois niveaux : les branches de travail partent de `integ`,
+`integ` sert de branche d’intégration, et `main` ne reçoit que ce qui est prêt
+à être publié.
+
+### Versions et changelog
+
+La version n’est jamais choisie à la main. Les messages de commit suivent la
+convention [Conventional Commits](https://www.conventionalcommits.org/fr/), et
+[release-please](https://github.com/googleapis/release-please) en déduit la
+version suivante : `fix` donne un correctif, `feat` une version mineure, un
+`!` ou un `BREAKING CHANGE` une version majeure.
+
+Concrètement, à chaque arrivée sur `main` :
+
+1. release-please ouvre ou met à jour une pull request de release, qui
+   contient le `CHANGELOG.md` mis à jour et la nouvelle version dans
+   `package.json` ;
+2. fusionner cette pull request crée le **tag** et la **release GitHub**, puis
+   le build y est joint en archive.
+
+La publication reste donc un geste volontaire, tout en étant entièrement
+calculée à partir de l’historique.
 
 ## Déploiement
 

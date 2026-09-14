@@ -197,7 +197,24 @@ Elles sont valables pour tout ajout :
 | `npm run build` | icônes PWA puis build de production |
 | `npm run build:preview` | build sans service worker, prêt à publier |
 | `npm run lint` | ESLint sur tout le dépôt |
+| `npm test` | tests unitaires (Vitest) |
 
-Il n'y a pas encore de tests automatisés : les vérifications se font dans un
-navigateur réel (Chromium est préinstallé dans l'environnement de
-développement), aux trois formats de référence.
+### Ce que les tests couvrent
+
+Les tests portent sur la logique et sur les données, là où une régression
+passerait inaperçue : le contrat des fiches de jeu (champs obligatoires,
+réglages exploitables, valeurs par défaut dans les bornes et atteignables au
+pas déclaré), les tirages aléatoires, le placement sans chevauchement, l'ordre
+des étapes d'une séance, la comparaison souple des mots et le stockage local,
+y compris lorsqu'il est refusé par le navigateur.
+
+Le rendu, lui, se vérifie dans un navigateur réel, aux trois formats de
+référence : c'est là que se voient les débordements et les cibles trop
+petites, que des tests unitaires ne détecteraient pas.
+
+### Intégration continue
+
+`.github/workflows/ci.yml` rejoue lint, tests et build sur `main`, sur `integ`
+et sur chaque pull request. `.github/workflows/release-please.yml` calcule la
+version à partir des messages de commit, tient le `CHANGELOG.md`, et crée le
+tag et la release au moment où la pull request de release est fusionnée.

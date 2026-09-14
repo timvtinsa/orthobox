@@ -36,10 +36,21 @@ Portées courantes : `jeux`, `seance`, `galerie`, `audio`, `ui`, `pwa`, `build`.
 Résumé en français, sans point final, 72 caractères au plus. Le corps explique
 le pourquoi, pas le comment.
 
+Ce format n'est pas cosmétique : release-please en déduit la version publiée
+et le contenu du changelog. Un `feat` donne une version mineure, un `fix` un
+correctif, un `!` après la portée une version majeure.
+
+## Branches
+
+Les branches de travail partent de `integ`, la branche d'intégration. `main`
+ne reçoit que ce qui est prêt à être publié, et déclenche alors la pull
+request de release.
+
 ## Avant de livrer
 
 ```bash
 npm run lint
+npm test
 npm run build
 ```
 
