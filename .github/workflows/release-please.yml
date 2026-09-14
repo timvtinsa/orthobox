@@ -1,0 +1,61 @@
+# Publication automatique, à chaque arrivée sur main.
+#
+# release-please lit les messages de commit (Conventional Commits), en déduit
+# la version suivante et maintient une pull request de release contenant le
+# CHANGELOG et le numéro de version. Le tag et la release GitHub ne sont créés
+# qu'au moment où cette pull request est fusionnée : la publication reste donc
+# un geste volontaire, tout en étant entièrement calculée.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Préparer et publier la release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculer la version et le changelog
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # Les étapes suivantes ne s'exécutent qu'au moment où la pull request de
+      # release vient d'être fusionnée, c'est-à-dire quand le tag a été créé.
+      - name: Récupérer le dépôt
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installer les dépendances
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm ci
+
+      - name: Construire l'application
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm run build
+
+      - name: Joindre le build à la release
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          tag='${{ steps.release.outputs.tag_name }}'
+          archive="orthobox-${tag}.zip"
+          (cd dist && zip -qr "../${archive}" .)
+          gh release upload "${tag}" "${archive}" --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
