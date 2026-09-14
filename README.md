@@ -166,7 +166,7 @@ sessions work without a connection.
   (see `public/sounds/README.md`).
 - **No emoji icon**: every game has its own drawn SVG cover
   (`src/games/<id>/cover.svg`), and the interface uses a hand-made icon set.
-  The picture games rely on 24 drawn pictograms (`src/lib/pictograms.jsx`).
+  The picture games rely on 32 drawn pictograms (`src/lib/pictograms.jsx`).
 - **Tablet first**: touch targets of at least 44 px, layouts that reflow in
   landscape as well as in portrait, boards sized to stay visible without
   scrolling.
