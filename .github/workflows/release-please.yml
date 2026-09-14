@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Calculer la version et le changelog
         id: release
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
@@ -33,13 +33,13 @@ jobs:
       # release vient d'être fusionnée, c'est-à-dire quand le tag a été créé.
       - name: Récupérer le dépôt
         if: ${{ steps.release.outputs.release_created }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Installer Node
         if: ${{ steps.release.outputs.release_created }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Installer les dépendances

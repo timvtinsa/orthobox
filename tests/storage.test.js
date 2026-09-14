@@ -1,33 +1,40 @@
-/**
- * @vitest-environment jsdom
- */
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
+import { installerStockage, retirerStockage } from './faux-stockage.js'
 import { readJson, writeJson } from '../src/lib/storage.js'
 
 describe('stockage local', () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
-    window.localStorage.clear()
-  })
+  afterEach(retirerStockage)
 
   it('relit ce qui a été écrit', () => {
+    installerStockage()
     writeJson('essai', { a: 1 })
     expect(readJson('essai', null)).toEqual({ a: 1 })
   })
 
+  it('préfixe les clés pour ne pas écraser celles d’une autre application', () => {
+    const stockage = installerStockage()
+    writeJson('favoris', ['stroop'])
+    expect(stockage.getItem('orthobox:favoris')).toBe('["stroop"]')
+  })
+
   it('rend la valeur de repli quand la clé est absente', () => {
+    installerStockage()
     expect(readJson('jamais-ecrit', 'repli')).toBe('repli')
   })
 
   it('résiste à un contenu illisible', () => {
-    window.localStorage.setItem('orthobox:casse', '{ pas du json')
+    const stockage = installerStockage()
+    stockage.setItem('orthobox:casse', '{ pas du json')
     expect(readJson('casse', [])).toEqual([])
   })
 
   it('ne lève pas quand le stockage est refusé', () => {
-    vi.spyOn(window.localStorage.__proto__, 'setItem').mockImplementation(() => {
-      throw new Error('quota')
-    })
+    installerStockage({ enEchec: true })
+    expect(writeJson('essai', 1)).toBe(false)
+  })
+
+  it('ne lève pas quand le stockage est absent', () => {
+    expect(readJson('essai', 'repli')).toBe('repli')
     expect(writeJson('essai', 1)).toBe(false)
   })
 })

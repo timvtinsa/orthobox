@@ -1,11 +1,10 @@
-/**
- * @vitest-environment jsdom
- */
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { installerStockage, retirerStockage } from './faux-stockage.js'
 import { MODES, ecrireMode, lireMode } from '../src/lib/mode.js'
 
 describe('mode d’affichage', () => {
-  beforeEach(() => window.localStorage.clear())
+  beforeEach(() => installerStockage())
+  afterEach(retirerStockage)
 
   it('démarre en mode adulte', () => {
     expect(lireMode()).toBe('adulte')
