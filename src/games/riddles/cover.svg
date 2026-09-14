@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Trois bulles d'indices menant à un mot">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <g>
+    <rect x="28" y="34" width="120" height="30" rx="15" fill="#f6bdab"/>
+    <rect x="28" y="78" width="160" height="30" rx="15" fill="#f2d3a6"/>
+    <rect x="28" y="122" width="96" height="30" rx="15" fill="#a8c8ec"/>
+  </g>
+  <path d="M204 46h84a20 20 0 0 1 20 20v52a20 20 0 0 1-20 20h-30l-20 24-4-24h-30a20 20 0 0 1-20-20V66a20 20 0 0 1 20-20Z" fill="#ffffff" stroke="#a44a28" stroke-width="6" stroke-linejoin="round"/>
+  <g fill="#a44a28">
+    <circle cx="226" cy="92" r="8"/><circle cx="252" cy="92" r="8"/><circle cx="278" cy="92" r="8"/>
+  </g>
+</svg>

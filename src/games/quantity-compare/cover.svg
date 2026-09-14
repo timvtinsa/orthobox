@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Deux collections de points à comparer">
+  <rect width="320" height="200" fill="#fcf5e4"/>
+  <rect x="26" y="36" width="120" height="128" rx="18" fill="#ffffff" stroke="#f4dfa8" stroke-width="5"/>
+  <g fill="#8a6410">
+    <circle cx="62" cy="76" r="13"/><circle cx="110" cy="96" r="13"/><circle cx="70" cy="128" r="13"/>
+  </g>
+  <rect x="174" y="36" width="120" height="128" rx="18" fill="#ffffff" stroke="#f4dfa8" stroke-width="5"/>
+  <g fill="#8a6410" opacity=".85">
+    <circle cx="206" cy="70" r="11"/><circle cx="252" cy="64" r="11"/><circle cx="228" cy="100" r="11"/>
+    <circle cx="270" cy="106" r="11"/><circle cx="204" cy="132" r="11"/><circle cx="252" cy="136" r="11"/>
+  </g>
+  <circle cx="160" cy="100" r="16" fill="#a8c8ec"/>
+</svg>

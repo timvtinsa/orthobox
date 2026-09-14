@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des pièces et un billet pour composer une somme">
+  <rect width="320" height="200" fill="#fcf5e4"/>
+  <rect x="24" y="30" width="150" height="54" rx="8" fill="#c3d6ee" stroke="#7492b8" stroke-width="4"/>
+  <rect x="44" y="48" width="60" height="10" rx="5" fill="#7492b8"/>
+  <rect x="44" y="64" width="36" height="8" rx="4" fill="#7492b8" opacity=".6"/>
+  <g>
+    <circle cx="222" cy="58" r="28" fill="#f2dda6" stroke="#c0a15c" stroke-width="4"/>
+    <circle cx="222" cy="58" r="17" fill="#e6e9ec" stroke="#c0a15c" stroke-width="3"/>
+    <circle cx="280" cy="58" r="22" fill="#e8b79a" stroke="#b97d56" stroke-width="4"/>
+  </g>
+  <g>
+    <circle cx="60" cy="140" r="26" fill="#f2dda6" stroke="#c0a15c" stroke-width="4"/>
+    <circle cx="122" cy="140" r="26" fill="#f2dda6" stroke="#c0a15c" stroke-width="4"/>
+    <circle cx="184" cy="140" r="22" fill="#e8b79a" stroke="#b97d56" stroke-width="4"/>
+    <circle cx="240" cy="140" r="22" fill="#e8b79a" stroke="#b97d56" stroke-width="4"/>
+  </g>
+  <rect x="272" y="118" width="26" height="44" rx="6" fill="#b9d8c2"/>
+  <path d="M279 140l5 6 10-12" fill="none" stroke="#2f6b4c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

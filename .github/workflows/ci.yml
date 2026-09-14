@@ -1,0 +1,51 @@
+# Continuous integration: anything landing on an integration branch or coming
+# through a pull request must pass lint, tests and build.
+name: CI
+
+on:
+  push:
+    branches: [main, integ]
+  pull_request:
+    branches: [main, integ]
+  workflow_dispatch:
+
+# One run per branch: a new push cancels the previous one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, tests and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Keep the build
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist
+          retention-days: 7

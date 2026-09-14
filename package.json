@@ -1,0 +1,36 @@
+{
+  "name": "orthobox",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Client-side PWA gathering short games for speech therapy sessions",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/generate-icons.mjs && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.jsx",
+    "icons": "node scripts/generate-icons.mjs",
+    "build:preview": "node scripts/build-preview.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-pwa": "^0.20.5",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

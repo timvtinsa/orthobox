@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une liste mémorisée restituée de mémoire">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <g opacity=".5">
+    <rect x="28" y="42" width="110" height="116" rx="14" fill="#ffffff" stroke="#cdc3ec" stroke-width="5"/>
+    <g fill="#cdc3ec">
+      <rect x="46" y="62" width="74" height="11" rx="5.5"/>
+      <rect x="46" y="86" width="56" height="11" rx="5.5"/>
+      <rect x="46" y="110" width="68" height="11" rx="5.5"/>
+      <rect x="46" y="134" width="44" height="11" rx="5.5"/>
+    </g>
+  </g>
+  <path d="M150 100h34" stroke="#5b45a0" stroke-width="7" stroke-linecap="round"/>
+  <path d="M176 88l16 12-16 12" fill="none" stroke="#5b45a0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="206" y="42" width="88" height="116" rx="14" fill="#ffffff" stroke="#5b45a0" stroke-width="5"/>
+    <g fill="#cdc3ec">
+      <rect x="224" y="62" width="52" height="11" rx="5.5"/>
+      <rect x="224" y="86" width="40" height="11" rx="5.5"/>
+    </g>
+    <rect x="224" y="110" width="30" height="11" rx="5.5" fill="#5b45a0"/>
+    <rect x="258" y="106" width="4" height="20" rx="2" fill="#5b45a0"/>
+  </g>
+</svg>
