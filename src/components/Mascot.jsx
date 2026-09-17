@@ -1,18 +1,21 @@
 /**
  * Orthobox's little fox, the child-mode companion.
  *
- * Three moods, drawn from the same shapes so that it is clearly the same
- * animal changing expression:
- *   idle      : present and still, watching
- *   cheer     : narrowed eyes, open smile, one hop
- *   tryAgain  : raised brows, paw held out, mouth still smiling
+ * Drawn to the same rule as the patient bank, in three layers: the local
+ * colour of the animal, a single shadow plane on the side away from the light,
+ * and a constant black outline. A child has to be able to recognise a fox, not
+ * a round shape with ears, so the drawing carries what actually makes a fox: a
+ * bushy white-tipped tail, black stockings, black ear tips and a cheek ruff.
+ *
+ * Three moods, built from the same shapes so it is clearly the same animal
+ * changing expression:
+ *   idle      sitting, watching, breathing
+ *   cheer     narrowed eyes, open smile, a hop and a tail wag
+ *   tryAgain  raised brows, a paw held out, mouth still smiling
  *
  * Expressions rely on line work only: nothing changes colour from one mood to
- * the next, so success is never signalled by colour alone, and the failed
- * mood encourages instead of telling off. No frown, no tear, no red.
- *
- * The drawing takes its colours from the palette, like every other drawing in
- * the application: the peach pastel and the ink of the oral language domain.
+ * the next, so success is never signalled by colour alone, and the failed mood
+ * encourages instead of telling off. No frown, no tear, no red.
  */
 const FUR = '#f6bdab'
 const FUR_INK = '#a44a28'
@@ -22,20 +25,23 @@ const FEATURE = '#33303a'
 function Eyes({ mood }) {
   if (mood === 'cheer') {
     return (
-      <g fill="none" stroke={FEATURE} strokeWidth="4.5" strokeLinecap="round">
-        <path d="M39 56q7-7 14 0" />
-        <path d="M67 56q7-7 14 0" />
+      <g fill="none" stroke={FEATURE} strokeWidth="4" strokeLinecap="round">
+        <path d="M39 42q7-7 14 0" />
+        <path d="M67 42q7-7 14 0" />
       </g>
     )
   }
   return (
     <g>
-      <circle cx="46" cy="58" r="5" fill={FEATURE} />
-      <circle cx="74" cy="58" r="5" fill={FEATURE} />
+      <circle cx="46" cy="43" r="5" fill={FEATURE} />
+      <circle cx="74" cy="43" r="5" fill={FEATURE} />
+      {/* Le reflet est ce qui rend un oeil vivant plutôt que dessiné. */}
+      <circle cx="47.8" cy="41.2" r="1.7" fill="#fff" />
+      <circle cx="75.8" cy="41.2" r="1.7" fill="#fff" />
       {mood === 'tryAgain' && (
-        <g fill="none" stroke={FEATURE} strokeWidth="4" strokeLinecap="round">
-          <path d="M36 48l12 5" />
-          <path d="M84 48l-12 5" />
+        <g fill="none" stroke={FEATURE} strokeWidth="3.6" strokeLinecap="round">
+          <path d="M37 37l12-5" />
+          <path d="M83 37l-12-5" />
         </g>
       )}
     </g>
@@ -43,9 +49,25 @@ function Eyes({ mood }) {
 }
 
 function Mouth({ mood }) {
-  const path = mood === 'cheer' ? 'M48 86q12 12 24 0' : 'M50 88q10 8 20 0'
+  if (mood === 'cheer') {
+    return (
+      <path
+        d="M49 64q11 12 22 0z"
+        fill={FEATURE}
+        stroke={FEATURE}
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+    )
+  }
   return (
-    <path d={path} fill="none" stroke={FEATURE} strokeWidth="4.5" strokeLinecap="round" />
+    <path
+      d={mood === 'tryAgain' ? 'M51 64q9 6 18 0' : 'M51 63q9 8 18 0'}
+      fill="none"
+      stroke={FEATURE}
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
   )
 }
 
@@ -53,40 +75,86 @@ export default function Mascot({ mood = 'idle', size = 88, className = '' }) {
   return (
     <span className={`mascot mascot--${mood} ${className}`.trim()} style={{ width: size }}>
       <svg viewBox="0 0 120 120" width="100%" aria-hidden="true" focusable="false">
-        {/* L'ombre au sol pose l'animal, comme sur les dessins patient. */}
-        <ellipse cx="60" cy="110" rx="26" ry="5" fill={FEATURE} opacity=".12" />
+        <ellipse cx="60" cy="112" rx="36" ry="5" fill={FEATURE} opacity=".12" />
 
-        {/* Oreilles */}
-        <path d="M26 46L20 20l24 14z" fill={FUR} stroke={FUR_INK} strokeWidth="5" strokeLinejoin="round" />
-        <path d="M94 46L100 20 76 34z" fill={FUR} stroke={FUR_INK} strokeWidth="5" strokeLinejoin="round" />
+        {/* Queue touffue, derrière le corps, à bout blanc : c'est elle qui dit
+            « renard » avant même la tête. */}
+        <g className="mascot__tail">
+          <ellipse
+            cx="93"
+            cy="78"
+            rx="15"
+            ry="25"
+            fill={FUR}
+            stroke={FEATURE}
+            strokeWidth="4.5"
+            transform="rotate(28 93 78)"
+          />
+          <ellipse cx="103" cy="56" rx="12" ry="13" fill={BELLY} stroke={FEATURE} strokeWidth="4.5" transform="rotate(28 103 56)" />
+          <path d="M97 92a15 25 0 0 0 11-26 15 25 0 0 1-11 26z" fill={FEATURE} opacity=".16" />
+        </g>
 
-        {/* Tête et museau */}
+        {/* Corps assis */}
         <path
-          d="M60 30c22 0 34 16 34 34 0 22-15 36-34 36S26 86 26 64c0-18 12-34 34-34z"
+          d="M58 56c17 0 29 15 29 31 0 12-5 19-12 19H41c-7 0-12-7-12-19 0-16 12-31 29-31z"
           fill={FUR}
-          stroke={FUR_INK}
+          stroke={FEATURE}
           strokeWidth="5"
+          strokeLinejoin="round"
         />
         <path
-          d="M60 68c14 0 22 6 22 14 0 10-10 18-22 18s-22-8-22-18c0-8 8-14 22-14z"
+          d="M64 57c13 3 23 17 23 30 0 12-5 19-12 19H60c9 0 14-7 14-19 0-13-4-26-10-30z"
+          fill={FEATURE}
+          opacity=".14"
+        />
+        <path
+          d="M58 70c10 0 16 9 16 19s-6 17-16 17-16-7-16-17 6-19 16-19z"
           fill={BELLY}
-          stroke={FUR_INK}
+          stroke={FEATURE}
+          strokeWidth="4.5"
+        />
+
+        {/* Chaussettes noires, la marque du renard roux */}
+        <ellipse cx="45" cy="103" rx="9" ry="6" fill={FEATURE} />
+        <ellipse cx="71" cy="103" rx="9" ry="6" fill={FEATURE} />
+
+        {/* Oreilles à pointe noire */}
+        <path d="M34 28L26 5l23 11z" fill={FUR} stroke={FEATURE} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M35 24L30 11l12 6z" fill={FUR_INK} />
+        <path d="M26 5l11 5-4 9z" fill={FEATURE} />
+        <path d="M86 28L94 5 71 16z" fill={FUR} stroke={FEATURE} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M85 24L90 11l-12 6z" fill={FUR_INK} />
+        <path d="M94 5L83 10l4 9z" fill={FEATURE} />
+
+        {/* Tête, collerette et museau */}
+        <path
+          d="M60 14c16 0 27 12 27 27 0 9-3 17-9 23-5 5-11 8-18 8s-13-3-18-8c-6-6-9-14-9-23 0-15 11-27 27-27z"
+          fill={FUR}
+          stroke={FEATURE}
           strokeWidth="5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M72 18c9 5 15 13 15 23 0 9-3 17-9 23-5 5-11 8-18 8 11 0 18-14 18-31 0-10-2-18-6-23z"
+          fill={FEATURE}
+          opacity=".16"
+        />
+        <path
+          d="M60 50c9 0 16 5 16 12 0 7-7 13-16 13s-16-6-16-13c0-7 7-12 16-12z"
+          fill={BELLY}
+          stroke={FEATURE}
+          strokeWidth="4.5"
         />
 
         <Eyes mood={mood} />
-        <ellipse cx="60" cy="80" rx="7" ry="5.5" fill={FEATURE} />
+        <ellipse cx="60" cy="55" rx="6.5" ry="5" fill={FEATURE} />
         <Mouth mood={mood} />
 
         {/* Patte tendue : l'humeur ratée encourage, elle ne gronde pas. */}
         {mood === 'tryAgain' && (
-          <path
-            d="M96 84q10 4 14 12"
-            fill="none"
-            stroke={FUR_INK}
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
+          <g className="mascot__paw">
+            <ellipse cx="30" cy="80" rx="9" ry="7" fill={FUR} stroke={FEATURE} strokeWidth="4.5" transform="rotate(-25 30 80)" />
+          </g>
         )}
       </svg>
     </span>

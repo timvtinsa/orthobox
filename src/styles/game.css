@@ -47,9 +47,15 @@
 }
 
 .game-final {
+  /* Cadre des confettis de fin de partie : sans cela, ils tomberaient sur
+     toute la page au lieu de l'écran de fin. */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Pleine largeur, sinon les confettis tombent en colonne étroite autour
+     du seul contenu. */
+  width: 100%;
   gap: 16px;
   text-align: center;
 }

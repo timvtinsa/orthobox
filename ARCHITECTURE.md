@@ -140,8 +140,23 @@ counter allows replaying the animation even on two correct answers in a row,
 where the state does not change. A new game therefore gets the mascot without
 a single extra line of code.
 
-Animations are CSS-based and disappear under `prefers-reduced-motion`, like the
-rest of the application.
+The fox is drawn to the same rule as the patient bank, in three layers, and
+carries what actually makes a fox rather than a round shape with ears: a bushy
+white-tipped tail, black stockings and black ear tips. It sits permanently at
+the edge of the board and reacts on three occasions, a right answer, a miss,
+and the end of a game.
+
+A reward is long enough to be noticed, `--reward-item` in `child-mode.css`, and
+never blocks the next answer: the fox can still be hopping while the
+practitioner moves on, and a new answer cuts the previous reaction short rather
+than queueing behind it. That is what protects session time, not the length of
+the animation. A right answer pops a few stars around the fox; the confetti
+stays for the end of a game, where `GameOver` shows the same fox bigger. Two
+foxes on screen at once would read as two characters.
+
+Animations are CSS-based and disappear under `prefers-reduced-motion`: the fox
+still changes expression, it simply stops moving, so the information survives
+and the motion does not.
 
 ## Data and privacy
 
