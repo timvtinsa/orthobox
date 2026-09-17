@@ -17,7 +17,7 @@ Games are filed under four domains:
 | Fonctions exécutives (executive functions) | Inhibition, working memory, attention, flexibility, visual search |
 | Cognition mathématique (math cognition) | Number sense, estimation, number chain, calculation |
 
-## The 25 games
+## The 26 games
 
 **Oral language**
 
@@ -63,6 +63,7 @@ Games are filed under four domains:
 | Compter la monnaie | Make up an exact amount with coins and notes |
 | Le compte est bon | Find what is missing to reach ten, twenty or a hundred |
 | Quelle heure est-il ? | Read an analogue clock, then pick the time it shows |
+| La ligne des nombres | Place a number on a line, read a mark, or calculate by moving along it |
 
 **Every game opens on a settings screen**: number of rounds, material,
 durations and options are set before pressing « Démarrer », hence before the

@@ -1833,3 +1833,103 @@
   width: min(280px, 60vw);
   height: auto;
 }
+
+/* --- La ligne des nombres -------------------------------------------
+   Un nombre n'est pas qu'une quantité, c'est aussi une place. La ligne
+   donne cette image, et les graduations font la difficulté.
+   -------------------------------------------------------------------- */
+
+/* Le viewBox fait 1000 de large : à 880 px la graduation rend à 28 px, donc
+   au dessus du plancher patient de 24. Plus étroit, elle passerait dessous. */
+.number-line {
+  width: 100%;
+  max-width: 880px;
+  height: auto;
+}
+
+.number-line__axis {
+  stroke: var(--category);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.number-line__tick {
+  stroke: var(--category-pastel);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.number-line__figure {
+  fill: var(--ink-soft);
+  font-family: var(--font-patient);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.number-line__jump {
+  fill: none;
+  stroke: var(--category);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 12 10;
+}
+
+/* La bande de frappe couvre toute la hauteur de la ligne : le doigt vise
+   la ligne, pas un trait de six pixels. */
+.number-line__hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.line-marker path {
+  stroke: var(--category);
+  fill: none;
+}
+
+.line-marker circle {
+  fill: var(--category-pastel);
+  stroke: var(--category);
+  stroke-width: 5;
+}
+
+.line-marker__label {
+  fill: var(--ink);
+  font-family: var(--font-patient);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* Le repère à nommer ne porte pas son nombre : c'est la question. */
+.line-marker--ask circle {
+  fill: var(--category);
+}
+
+.line-marker--ok path {
+  stroke: var(--state-ok);
+}
+
+.line-marker--ok circle {
+  fill: var(--state-ok-tint);
+  stroke: var(--state-ok);
+}
+
+.line-marker--err path {
+  stroke: var(--state-err);
+}
+
+.line-marker--err circle {
+  fill: var(--state-err-tint);
+  stroke: var(--state-err);
+  stroke-dasharray: 8 7;
+}
+
+/* La réponse attendue, révélée après un échec : pointillé, jamais créditée. */
+.line-marker--expected path {
+  stroke: var(--state-expected);
+}
+
+.line-marker--expected circle {
+  fill: var(--surface-alt);
+  stroke: var(--state-expected);
+  stroke-dasharray: 4 6;
+}
