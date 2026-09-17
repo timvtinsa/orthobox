@@ -1,14 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des repères rangés le long d'une ligne graduée">
-  <rect width="320" height="200" fill="#fcf5e4"/>
-  <rect x="30" y="128" width="260" height="10" rx="5" fill="#f4dfa8"/>
-  <g stroke="#8a6410" stroke-width="5" stroke-linecap="round">
-    <path d="M54 128v16"/><path d="M112 128v16"/><path d="M170 128v16"/><path d="M228 128v16"/><path d="M286 128v16"/>
-  </g>
-  <g>
-    <rect x="34" y="94" width="40" height="26" rx="8" fill="#a8c8ec"/>
-    <rect x="92" y="80" width="40" height="40" rx="8" fill="#b9d8c2"/>
-    <rect x="150" y="62" width="40" height="58" rx="8" fill="#f6bdab"/>
-    <rect x="208" y="46" width="40" height="74" rx="8" fill="#cdc3ec"/>
-    <rect x="266" y="30" width="40" height="90" rx="8" fill="#f4dfa8" stroke="#8a6410" stroke-width="4"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des barres croissantes, une place à retrouver">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <rect x="34" y="120" width="56" height="44" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="106" y="92" width="56" height="72" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="178" y="56" width="56" height="108" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="250" y="120" width="56" height="44" rx="10" fill="none" stroke="#8a6a18" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M206 24v18M198 34l8 10 8-10" stroke="#8a6a18" stroke-width="6" stroke-linecap="round" fill="none"/>
 </svg>

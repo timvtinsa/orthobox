@@ -99,9 +99,24 @@ has to know which mode is active.
 ## 3. The `cover.svg` file
 
 An SVG in `viewBox="0 0 320 200"`, without text, evoking the mechanics of the
-game: a flat background in the light tint of the domain, then shapes in the
-palette colours (`src/lib/categories.js`). No emoji, no generic icon: the cover
-must stay recognisable small in the gallery.
+game: a flat background in the light tint of the domain, then two or three
+shapes in its pastel and its ink (`src/lib/categories.js`), stroked at 6 units.
+No emoji, no generic icon: the cover must stay recognisable small in the
+gallery.
+
+A cover shows the gesture, not the theme: comparing two piles, setting an odd
+one aside, putting back in order. The twenty covers are composed with one
+vocabulary, so a practitioner who has read one has read them all:
+
+| Sign | Means |
+| --- | --- |
+| dashed outline | the element to designate |
+| bent arrow | a movement |
+| pile of tokens | a quantity |
+| empty dashed rectangle | a place to fill |
+
+Unlike the drawings of the patient bank, a cover belongs to a domain, so its
+stroke takes the ink of that domain rather than the constant black.
 
 ## 4. Shared building blocks
 

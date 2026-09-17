@@ -1,12 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un mot qui apparaît brièvement">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un mot montré très brièvement, puis reconnu">
   <rect width="320" height="200" fill="#eaf4ee"/>
-  <rect x="34" y="44" width="252" height="112" rx="18" fill="#ffffff" stroke="#2f6b4c" stroke-width="5"/>
-  <g>
-    <rect x="64" y="84" width="34" height="16" rx="8" fill="#2f6b4c"/>
-    <rect x="106" y="84" width="46" height="16" rx="8" fill="#2f6b4c" opacity=".7"/>
-    <rect x="160" y="84" width="34" height="16" rx="8" fill="#2f6b4c" opacity=".4"/>
-    <rect x="202" y="84" width="54" height="16" rx="8" fill="#2f6b4c" opacity=".15"/>
-  </g>
-  <path d="M244 22l-34 44h24l-10 40 38-50h-26l8-34z" fill="#f4dfa8" stroke="#8a6410" stroke-width="4" stroke-linejoin="round"/>
-  <rect x="64" y="120" width="120" height="10" rx="5" fill="#b9d8c2"/>
+  <path d="M28 54h34M16 80h46M28 106h34" stroke="#b9d8c2" stroke-width="10" stroke-linecap="round"/>
+  <rect x="88" y="34" width="150" height="92" rx="14" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="118" y="72" width="90" height="16" rx="8" fill="#2f6b4c"/>
+  <rect x="40" y="146" width="68" height="34" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="126" y="146" width="68" height="34" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="212" y="146" width="68" height="34" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="116" y="136" width="88" height="54" rx="16" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-dasharray="14 12"/>
 </svg>
