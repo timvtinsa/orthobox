@@ -17,7 +17,7 @@ Games are filed under four domains:
 | Fonctions exécutives (executive functions) | Inhibition, working memory, attention, flexibility, visual search |
 | Cognition mathématique (math cognition) | Number sense, estimation, number chain, calculation |
 
-## The 20 games
+## The 25 games
 
 **Oral language**
 
@@ -26,6 +26,8 @@ Games are filed under four domains:
 | L’intrus sonore | Spot the word that shares neither the onset nor the rhyme of the others |
 | Qui suis-je ? | Find a word from progressive clues (lexical retrieval) |
 | La suite de sons | Listen to a series of sounds, then put the cards back in order |
+| Combien de syllabes ? | Count the syllables of a word, heard or read and heard |
+| L’intrus de la famille | Spot the word that does not belong to the same family as the others |
 
 **Written language**
 
@@ -35,6 +37,7 @@ Games are filed under four domains:
 | La phrase à trous | Pick the missing word: meaning, connectors or agreement |
 | Lecture flash | Identify a word shown very briefly, among close lures |
 | L’histoire et les détails | Read a story, then answer multiple-choice questions on its details |
+| La bonne lettre | Find a letter among the ones it gets confused with (b d p q, n u, m w) |
 
 **Executive functions**
 
@@ -58,6 +61,8 @@ Games are filed under four domains:
 | Range les nombres | Order numbers, decimals included |
 | Le calcul éclair | Find the result of an operation among four options |
 | Compter la monnaie | Make up an exact amount with coins and notes |
+| Le compte est bon | Find what is missing to reach ten, twenty or a hundred |
+| Quelle heure est-il ? | Read an analogue clock, then pick the time it shows |
 
 **Every game opens on a settings screen**: number of rounds, material,
 durations and options are set before pressing « Démarrer », hence before the

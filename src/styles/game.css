@@ -1704,3 +1704,126 @@
 .picto--small .picto__fine {
   display: none;
 }
+
+/* --- Combien de syllabes ? ------------------------------------------ */
+
+.syllable-word {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.syllable-word__text {
+  font-family: var(--font-patient);
+  font-size: var(--pt-lg);
+  line-height: 56px;
+  font-weight: 700;
+}
+
+/* Mot masqué : la place reste, pour que le plateau ne saute pas quand le
+   praticien passe d'un régime à l'autre. */
+.syllable-word__hidden {
+  display: block;
+  width: 180px;
+  height: 56px;
+  border-radius: var(--radius);
+  background: var(--category-tint);
+}
+
+/* --- La bonne lettre ------------------------------------------------- */
+
+.letter-target {
+  font-family: var(--font-patient);
+  font-size: var(--pt-xl);
+  line-height: 84px;
+  font-weight: 700;
+  color: var(--category);
+}
+
+.letter-row {
+  display: flex;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.letter-cell {
+  position: relative;
+  min-width: var(--hit-patient);
+  min-height: 96px;
+  padding: 0 var(--s4);
+  border: 3px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  font-family: var(--font-patient);
+  font-size: var(--pt-lg);
+  line-height: 56px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.letter-cell:hover:not(:disabled) {
+  border-color: var(--category-pastel);
+  background: var(--category-tint);
+}
+
+/* --- Le compte est bon ----------------------------------------------- */
+
+.bond-line {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--font-patient);
+  font-size: var(--pt-lg);
+  line-height: 56px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.bond-line__sign {
+  color: var(--ink-soft);
+}
+
+/* La place manquante porte le tracé pointillé du « à remplir », comme les
+   vignettes de la galerie. */
+.bond-line__hole {
+  display: inline-block;
+  width: 72px;
+  height: 56px;
+  border: 3px dashed var(--category);
+  border-radius: var(--radius);
+}
+
+.ten-frame {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 6px;
+  border: 3px solid var(--category);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.ten-frame__cell {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}
+
+.ten-frame__cell--filled {
+  background: var(--category-pastel);
+}
+
+/* --- Quelle heure est-il ? ------------------------------------------- */
+
+.dial {
+  width: min(280px, 60vw);
+  height: auto;
+}
