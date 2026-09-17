@@ -6,7 +6,9 @@
  */
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
+import StateMark from '../../components/StateMark.jsx'
 import StudyPhase from '../../components/StudyPhase.jsx'
+import { stateClass } from '../../lib/answer-state.js'
 import { PICTOGRAMS, Pictogram } from '../../lib/pictograms.jsx'
 import { sample, shuffle } from '../../lib/random.js'
 
@@ -106,14 +108,12 @@ export default function PictureBoard({ config, session }) {
 
       <ul className="picture-grid">
         {game.board.map(({ id, label }) => {
-          const wasMissed = missed.some((item) => item.pictogram.id === id)
+          const state = missed.some((item) => item.pictogram.id === id) ? 'err' : 'ok'
           return (
-            <li
-              key={id}
-              className={`picture-card ${wasMissed ? 'picture-card--wrong' : 'picture-card--correct'}`}
-            >
+            <li key={id} className={`picture-card${stateClass(state)}`}>
               <Pictogram id={id} size={56} title={label} />
               <span className="picture-card__label">{label}</span>
+              <StateMark state={state} size={28} />
             </li>
           )
         })}

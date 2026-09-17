@@ -7,8 +7,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
+import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
+import { answerState, stateClass } from '../../lib/answer-state.js'
 import { pick, shuffle } from '../../lib/random.js'
 
 const COLORS = [
@@ -34,7 +36,7 @@ function buildRound(config) {
 }
 
 export default function Stroop({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
@@ -102,22 +104,19 @@ export default function Stroop({ config, session }) {
 
       <div className="choice-grid">
         {round.options.map((color) => {
-          let modifier = ''
-          if (picked) {
-            if (color.id === round.expected) modifier = ' choice--correct'
-            else if (color.id === picked) modifier = ' choice--wrong'
-            else modifier = ' choice--dim'
-          }
+          const state = answerState(color.id, { picked, expected: round.expected })
+          const dim = picked && !state ? ' choice--dim' : ''
           return (
             <button
               key={color.id}
               type="button"
-              className={`choice stroop-swatch${modifier}`}
+              className={`choice stroop-swatch${stateClass(state)}${dim}`}
               disabled={Boolean(picked)}
               onClick={() => answer(color.id)}
             >
               <span className="stroop-swatch__dot" style={{ background: color.hex }} />
               {color.label.toLowerCase()}
+              <StateMark state={state} />
             </button>
           )
         })}

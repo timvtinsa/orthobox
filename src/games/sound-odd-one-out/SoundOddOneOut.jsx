@@ -8,8 +8,10 @@ import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
+import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
+import { answerState, stateClass } from '../../lib/answer-state.js'
 import { pick, sample, shuffle } from '../../lib/random.js'
 import { ONSETS, RHYMES } from './data.js'
 
@@ -29,7 +31,7 @@ function buildRound(config) {
 }
 
 export default function SoundOddOneOut({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
@@ -73,22 +75,18 @@ export default function SoundOddOneOut({ config, session }) {
 
       <div className="choice-grid">
         {round.options.map((word) => {
-          const isOddOne = word === round.oddOne
-          let modifier = ''
-          if (picked) {
-            if (isOddOne) modifier = ' choice--correct'
-            else if (word === picked) modifier = ' choice--wrong'
-            else modifier = ' choice--dim'
-          }
+          const state = answerState(word, { picked, expected: round.oddOne })
+          const dim = picked && !state ? ' choice--dim' : ''
           return (
             <div key={word} className="choice-card">
               <button
                 type="button"
-                className={`choice${modifier}`}
+                className={`choice${stateClass(state)}${dim}`}
                 disabled={Boolean(picked)}
                 onClick={() => answer(word)}
               >
                 {word}
+                <StateMark state={state} />
               </button>
               <SpeakButton text={word} label="Écouter le mot" />
             </div>

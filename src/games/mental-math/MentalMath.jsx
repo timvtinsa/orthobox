@@ -8,8 +8,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
+import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
+import { answerState, stateClass } from '../../lib/answer-state.js'
 import { pick, randomInt, shuffle } from '../../lib/random.js'
 
 /** Operand bounds for each range setting. */
@@ -69,7 +71,7 @@ function buildRound(config) {
 }
 
 export default function MentalMath({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [choice, setChoice] = useState(null)
   const lock = useAnswerLock()
@@ -127,21 +129,18 @@ export default function MentalMath({ config, session }) {
 
       <div className="choice-grid">
         {round.options.map((value) => {
-          let modifier = ''
-          if (choice !== null) {
-            if (value === round.result) modifier = ' choice--correct'
-            else if (value === choice) modifier = ' choice--wrong'
-            else modifier = ' choice--dim'
-          }
+          const state = answerState(value, { picked: choice, expected: round.result })
+          const dim = choice !== null && !state ? ' choice--dim' : ''
           return (
             <button
               key={value}
               type="button"
-              className={`choice choice--number${modifier}`}
+              className={`choice choice--number${stateClass(state)}${dim}`}
               disabled={choice !== null}
               onClick={() => answer(value)}
             >
               {value}
+              <StateMark state={state} />
             </button>
           )
         })}

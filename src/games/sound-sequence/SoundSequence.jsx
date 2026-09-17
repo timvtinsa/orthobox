@@ -27,7 +27,7 @@ function drawSequence(config) {
 }
 
 export default function SoundSequence({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [sequence, setSequence] = useState(() => drawSequence(config))
   const [cards, setCards] = useState(() => shuffle(sequence))
   const [option, setOption] = useState([])

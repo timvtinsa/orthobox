@@ -1,15 +1,18 @@
 /**
- * Session run: games follow one another, then the summary.
+ * Session run: games follow one another, then the printed summary.
+ *
+ * A persistent banner is the only place where progress shows, and it does not
+ * follow the patient onto the board. « Jeu suivant » is a proposal, never an
+ * obligation: the practitioner cuts a game short whenever they want, the
+ * milestone is then marked interrupted and the session carries on.
  */
 import { Suspense, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GameCompanion from '../components/GameCompanion.jsx'
-import Icon from '../components/Icon.jsx'
-import Scoreboard from '../components/Scoreboard.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
 import { useGameSession } from '../hooks/useGameSession.js'
-import { readSessionPlan, successRate } from '../lib/session-plan.js'
+import { readSessionPlan, summariseConfig } from '../lib/session-plan.js'
 
 export default function SessionRunPage() {
   const navigate = useNavigate()
@@ -56,17 +59,16 @@ export default function SessionRunPage() {
     <SessionStep
       key={steps[index].id}
       step={steps[index]}
-      number={index + 1}
-      total={steps.length}
+      steps={steps}
+      index={index}
       onFinish={finishStep}
     />
   )
 }
 
-function SessionStep({ step, number, total, onFinish }) {
+function SessionStep({ step, steps, index, onFinish }) {
   const session = useGameSession()
   const game = getGame(step.gameId)
-  const [runKey, setRunKey] = useState(0)
 
   if (!game) {
     return (
@@ -75,7 +77,7 @@ function SessionStep({ step, number, total, onFinish }) {
         <button
           type="button"
           className="btn"
-          onClick={() => onFinish({ gameId: step.gameId, correct: 0, attempts: 0, skipped: true })}
+          onClick={() => onFinish({ gameId: step.gameId, correct: 0, attempts: 0, played: false })}
         >
           Passer
         </button>
@@ -85,155 +87,117 @@ function SessionStep({ step, number, total, onFinish }) {
 
   const category = getCategory(game.category)
   const GameComponent = game.component
+  const next = steps[index + 1]
 
   const finish = () =>
     onFinish({
       gameId: game.id,
+      config: step.config,
       correct: session.correct,
       attempts: session.attempts,
-      skipped: session.attempts === 0,
+      played: session.attempts > 0,
+      // A game left before its last item is interrupted, which the summary
+      // writes out rather than hiding behind a partial score.
+      completed: session.total === null ? null : session.index >= session.total,
     })
 
   return (
-    <div className="stack game-page" style={categoryStyle(category)}>
-      <div className="session-bar">
-        <div className="session-bar__text">
-          <span className="game-round">
-            Séance, jeu {number} sur {total}
-          </span>
-          <strong className="session-bar__title">{game.title}</strong>
-        </div>
-
-        <ol
-          className="progress-steps session-bar__steps"
-          aria-label={`Progression : jeu ${number} sur ${total}`}
-        >
-          {Array.from({ length: total }, (_, position) => {
-            const state =
-              position < number - 1 ? 'done' : position === number - 1 ? 'current' : 'todo'
-            return (
-              <li key={position} className={`progress-step progress-step--${state}`}>
-                <span className="progress-step__dot">{position + 1}</span>
-                <span className="visually-hidden">
-                  {state === 'done' ? 'terminé' : state === 'current' ? 'en cours' : 'à venir'}
-                </span>
-              </li>
-            )
-          })}
-        </ol>
-
-        <div className="session-bar__actions">
-          <Scoreboard session={session} />
-          <button
-            type="button"
-            className="btn btn--ghost"
-            onClick={() => {
-              session.reset()
-              setRunKey((key) => key + 1)
-            }}
-          >
-            Recommencer
-          </button>
-          <button type="button" className="btn" onClick={finish}>
-            {number === total ? 'Terminer la séance' : 'Jeu suivant'}
-            <Icon name="check" size={18} filled={false} />
-          </button>
-        </div>
+    <div className="session" style={categoryStyle(category)}>
+      <div className="session-banner">
+        <span className="session-banner__rank">
+          {index + 1} sur {steps.length}
+        </span>
+        <span className="session-banner__current">{game.title}</span>
+        <span className="session-banner__next">
+          Puis : {next ? getGame(next.gameId)?.title ?? 'jeu retiré' : 'fin de séance'}
+        </span>
+        <button type="button" className="session-banner__advance" onClick={finish}>
+          {next ? 'Jeu suivant' : 'Terminer la séance'}
+        </button>
       </div>
 
-      <section className="panel game-panel">
+      <ol className="milestones" aria-label={`Jeu ${index + 1} sur ${steps.length}`}>
+        {steps.map((entry, position) => {
+          const state = position < index ? 'done' : position === index ? 'current' : 'todo'
+          const title = getGame(entry.gameId)?.title ?? entry.gameId
+          return (
+            <li key={entry.id} className={`milestone milestone--${state}`}>
+              <span className="milestone__bar" />
+              <span className="milestone__name">{title}</span>
+              <span className="visually-hidden">
+                {state === 'done' ? 'fait' : state === 'current' ? 'en cours' : 'à venir'}
+              </span>
+            </li>
+          )
+        })}
+      </ol>
+
+      <div className="board__area">
         <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
-          <GameComponent key={runKey} config={step.config} session={session} />
+          <GameComponent config={step.config} session={session} />
         </Suspense>
-      </section>
+      </div>
 
       <GameCompanion session={session} />
-
-      <p className="game-instruction session-note">
-        Le passage au jeu suivant se fait quand vous le décidez : le score obtenu jusque-là est
-        conservé dans le récapitulatif.
-      </p>
     </div>
   )
 }
 
+/**
+ * Printed summary: black on white, black rules, no flat colour that would
+ * drink the ink. Photographed askew, the table stays readable, and the shape
+ * of the domain keeps saying the domain once the colour is gone.
+ */
 function Summary({ steps, results, onRestart, onEdit }) {
-  const played = results.filter((result) => !result.skipped)
-  const totalCorrect = played.reduce((sum, result) => sum + result.correct, 0)
-  const totalAttempts = played.reduce((sum, result) => sum + result.attempts, 0)
-  const overall = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : null
+  const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
+
+  const score = (result) => {
+    if (!result || !result.played) return 'non joué'
+    if (result.completed === false) return 'interrompu'
+    return `${result.correct} / ${result.attempts}`
+  }
 
   return (
     <div className="stack summary">
-      <header className="hero">
+      <header className="hero no-print">
         <h1 className="hero__title">Récapitulatif de la séance</h1>
         <p className="hero__text">
-          {steps.length} jeu{steps.length > 1 ? 'x' : ''} enchaîné
-          {steps.length > 1 ? 's' : ''}
-          {overall !== null
-            ? ` · ${totalCorrect} réussites sur ${totalAttempts} essais (${overall} %)`
-            : ''}
+          À imprimer ou à photographier. Ces scores ne sont pas enregistrés : ils disparaissent en
+          quittant la page.
         </p>
       </header>
 
-      <div className="table-wrap">
-        <table className="summary-table">
-          <thead>
-            <tr>
-              <th scope="col">Jeu</th>
-              <th scope="col">Domaine</th>
-              <th scope="col">Réussites</th>
-              <th scope="col">Taux</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((result, position) => {
-              const game = getGame(result.gameId)
-              const category = game ? getCategory(game.category) : null
-              const rate = successRate(result)
-              return (
-                <tr key={`${result.gameId}-${position}`}>
-                  <th scope="row">{game?.title ?? result.gameId}</th>
-                  <td>
-                    {category && (
-                      <span className="badge badge--category" style={categoryStyle(category)}>
-                        {category.short}
-                      </span>
-                    )}
-                  </td>
-                  <td className="summary-table__number">
-                    {result.skipped ? '·' : `${result.correct} / ${result.attempts}`}
-                  </td>
-                  <td className="summary-table__number">
-                    {rate === null ? (
-                      <span className="muted">non joué</span>
-                    ) : (
-                      <span className="summary-rate">
-                        <span className="summary-rate__bar">
-                          <span className="summary-rate__fill" style={{ width: `${rate}%` }} />
-                        </span>
-                        {rate} %
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+      <div className="recap">
+        <div className="recap__head">
+          <div className="recap__title">Séance du {today}</div>
+          <div className="recap__meta">
+            {steps.length} jeu{steps.length > 1 ? 'x' : ''}
+          </div>
+        </div>
+
+        {steps.map((step, position) => {
+          const game = getGame(step.gameId)
+          const result = results[position]
+          return (
+            <div key={step.id} className="recap__row">
+              <span className="recap__rank">{position + 1}</span>
+              <span className="recap__text">
+                <strong>{game?.title ?? step.gameId}</strong>
+                <br />
+                {game ? summariseConfig(game, step.config) : 'jeu retiré de la galerie'}
+              </span>
+              <span className="recap__score">{score(result)}</span>
+            </div>
+          )
+        })}
       </div>
 
-      <p className="muted">
-        Ces scores ne sont pas enregistrés : ils disparaissent en quittant la page. Utilisez
-        l’impression si vous souhaitez les conserver.
-      </p>
-
       <div className="game-actions no-print">
-        <button type="button" className="btn btn--lg" onClick={onRestart}>
-          Refaire la séance
-        </button>
-        <button type="button" className="btn btn--ghost" onClick={() => window.print()}>
+        <button type="button" className="btn btn--lg" onClick={() => window.print()}>
           Imprimer le récapitulatif
+        </button>
+        <button type="button" className="btn btn--ghost" onClick={onRestart}>
+          Refaire la séance
         </button>
         <button type="button" className="btn btn--ghost" onClick={onEdit}>
           Modifier la séance

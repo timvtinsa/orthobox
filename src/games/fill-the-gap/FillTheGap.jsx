@@ -32,7 +32,7 @@ function phraseComplete(sentence, word) {
 
 export default function FillTheGap({ config, session }) {
   const [sentences, setSentences] = useState(() => buildSeries(config))
-  const rounds = useRounds(sentences.length)
+  const rounds = useRounds(sentences.length, session)
   const [choice, setChoice] = useState(null)
   const lock = useAnswerLock()
 

@@ -1,29 +1,60 @@
 /**
- * Hand-drawn pictograms, used by the visual memory games, the visual search
+ * Hand-drawn drawings, used by the visual memory games, the visual search
  * scene and the sound sequence cards.
  *
- * Concrete, easily named objects in flat pastel shapes: they can be memorised
- * visually or put into words, which leaves the practitioner free to choose
- * the strategy being worked on. Labels stay in French, since they are shown
- * to the patient.
+ * Concrete, easily named objects: they can be memorised visually or put into
+ * words, which leaves the practitioner free to choose the strategy being
+ * worked on. Labels stay in French, since they are shown to the patient.
+ *
+ * Drawings carrying `grid: 120` follow the illustration rule, in three
+ * layers: the flat local colour of the object, a single shadow plane at 18 %
+ * on the side away from the light, and a 5 unit outline plus a ground ellipse
+ * that sets the object down. An outline on its own asks the patient to
+ * recognise a graphic convention at the same time as they are looking for a
+ * word, which is why the bank is moving over to illustrations.
+ *
+ * Fine details sit in a `picto__fine` group, dropped below 64 px: at 52 px
+ * they would turn to mush. It is a lightening, never a second version.
  */
 const C = {
   peach: '#f6bdab',
+  peachInk: '#a44a28',
   sage: '#b9d8c2',
+  sageInk: '#2f6b4c',
   lavender: '#cdc3ec',
   sand: '#f4dfa8',
+  sandInk: '#8a6a18',
   blue: '#a8c8ec',
+  accent: '#35608f',
   outline: '#5c5566',
 }
+
+/**
+ * The outline of the patient drawings is a constant black, not the ink of a
+ * domain: the bank is shared between games, so a fish does not change colour
+ * depending on which game borrows it.
+ *
+ * No drawn object is ever filled with the success green or the error red,
+ * otherwise a patient would see a red apple and read a mistake.
+ */
+const INK = '#33303a'
 
 const DRAWINGS = {
   house: {
     label: 'maison',
+    grid: 120,
     draw: (
       <>
-        <path d="M12 30L32 13l20 17v21a3 3 0 0 1-3 3H15a3 3 0 0 1-3-3z" fill={C.peach} />
-        <path d="M8 31L32 10l24 21" fill="none" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-        <rect x="27" y="40" width="12" height="14" rx="2" fill={C.outline} opacity=".75" />
+        <ellipse cx="60" cy="108" rx="36" ry="5" fill={INK} opacity=".12" />
+        <path d="M28 54h64v48H28z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M74 54h18v48H74z" fill={INK} opacity=".18" />
+        <path d="M18 57L60 23l42 34z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 26l40 31H60z" fill={INK} opacity=".18" />
+        <rect x="52" y="74" width="21" height="28" rx="4" fill={C.sage} stroke={INK} strokeWidth="4.5" />
+        <rect x="34" y="63" width="16" height="15" rx="3" fill={C.blue} stroke={INK} strokeWidth="4" />
+        <g className="picto__fine">
+          <circle cx="56" cy="89" r="2.8" fill={INK} />
+        </g>
       </>
     ),
   },
@@ -40,11 +71,20 @@ const DRAWINGS = {
   },
   fish: {
     label: 'poisson',
+    grid: 120,
     draw: (
       <>
-        <path d="M40 32c0 9-8 15-17 15S8 41 8 32s6-15 15-15 17 6 17 15z" fill={C.blue} />
-        <path d="M40 32l16-11v22z" fill={C.blue} />
-        <circle cx="18" cy="28" r="3" fill={C.outline} />
+        <ellipse cx="60" cy="104" rx="32" ry="5" fill={INK} opacity=".12" />
+        <path d="M96 62l20-16v34z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <ellipse cx="60" cy="62" rx="38" ry="26" fill={C.blue} stroke={INK} strokeWidth="5" />
+        <path d="M22 62a38 26 0 0 0 76 0z" fill={INK} opacity=".18" />
+        <path d="M48 40q12-16 26-4" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <circle cx="40" cy="54" r="7" fill="#fff" stroke={INK} strokeWidth="4" />
+        <circle cx="40" cy="54" r="2.8" fill={INK} />
+        <g className="picto__fine">
+          <path d="M60 58q8 4 0 8" fill="none" stroke={C.accent} strokeWidth="4" strokeLinecap="round" />
+          <path d="M76 56q6 6 0 12" fill="none" stroke={C.accent} strokeWidth="4" strokeLinecap="round" />
+        </g>
       </>
     ),
   },
@@ -60,21 +100,28 @@ const DRAWINGS = {
   },
   cup: {
     label: 'tasse',
+    grid: 120,
     draw: (
       <>
-        <path d="M14 22h30v20a12 12 0 0 1-12 12h-6a12 12 0 0 1-12-12z" fill={C.peach} />
-        <path d="M44 27h6a7 7 0 0 1 0 14h-6" fill="none" stroke={C.outline} strokeWidth="3.5" />
-        <rect x="14" y="22" width="30" height="6" fill={C.outline} opacity=".25" />
+        <ellipse cx="58" cy="104" rx="38" ry="6" fill={INK} opacity=".12" />
+        <path d="M84 52h6a13 13 0 0 1 0 26h-8" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M26 44h58v30a29 26 0 0 1-58 0z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M64 44h20v30a29 26 0 0 1-20 25z" fill={INK} opacity=".14" />
+        <ellipse cx="55" cy="45" rx="29" ry="8" fill={C.sandInk} stroke={INK} strokeWidth="5" />
+        <path d="M20 98h76" stroke={INK} strokeWidth="5" strokeLinecap="round" />
       </>
     ),
   },
   umbrella: {
     label: 'parapluie',
+    grid: 120,
     draw: (
       <>
-        <path d="M8 34a24 24 0 0 1 48 0z" fill={C.lavender} />
-        <path d="M8 34a12 12 0 0 1 24 0 12 12 0 0 1 24 0" fill="none" stroke={C.outline} strokeWidth="3" />
-        <path d="M32 34v16a6 6 0 0 0 12 0" fill="none" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" />
+        <ellipse cx="54" cy="112" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 58v42q0 12-13 12-11 0-11-10" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M14 58a46 40 0 0 1 92 0q-11-13-23 0-11-13-23 0-11-13-23 0-11-13-23 0z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 18a46 40 0 0 1 46 40q-11-13-23 0-11-13-23 0z" fill={INK} opacity=".16" />
+        <path d="M60 14v6" stroke={INK} strokeWidth="5" strokeLinecap="round" />
       </>
     ),
   },
@@ -194,11 +241,14 @@ const DRAWINGS = {
   },
   apple: {
     label: 'pomme',
+    grid: 120,
     draw: (
       <>
-        <path d="M32 20c8-6 22-2 22 12s-12 22-22 22S10 46 10 32 24 14 32 20z" fill={C.peach} />
-        <path d="M32 20c0-6 3-10 8-11" fill="none" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M32 14c5-4 11-3 11-3s-1 6-7 7" fill={C.sage} />
+        <ellipse cx="60" cy="108" rx="28" ry="5" fill={INK} opacity=".12" />
+        <path d="M60 36c14-10 34-2 34 22 0 26-18 44-34 44S26 84 26 58c0-24 20-32 34-22z" fill={C.sage} stroke={INK} strokeWidth="5" />
+        <path d="M72 33c14 2 22 16 22 25 0 26-18 44-34 44 22 0 30-22 30-44 0-11-6-21-18-25z" fill={INK} opacity=".16" />
+        <path d="M60 36V20" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M62 24q14-14 26-8-4 14-26 8z" fill={C.sageInk} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
       </>
     ),
   },
@@ -274,15 +324,21 @@ const DRAWINGS = {
   },
   cat: {
     label: 'chat',
+    grid: 120,
     draw: (
       <>
-        <path d="M14 24l2-14 12 8h8l12-8 2 14z" fill={C.lavender} />
-        <circle cx="32" cy="36" r="20" fill={C.lavender} />
-        <g fill={C.outline}>
-          <circle cx="24" cy="33" r="3" /><circle cx="40" cy="33" r="3" />
-          <path d="M32 40l-4 4h8z" />
+        <ellipse cx="60" cy="110" rx="30" ry="5" fill={INK} opacity=".12" />
+        <path d="M30 46L24 18l26 14z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M90 46L96 18 70 32z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 30c20 0 32 15 32 33S78 100 60 100 28 81 28 63s12-33 32-33z" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M76 36c10 6 16 16 16 27 0 19-14 37-32 37 26 0 32-22 32-37 0-11-6-21-16-27z" fill={INK} opacity=".16" />
+        <path d="M60 70c11 0 18 5 18 12s-8 13-18 13-18-6-18-13 7-12 18-12z" fill="#fff" stroke={INK} strokeWidth="4.5" />
+        <circle cx="47" cy="58" r="5" fill={INK} />
+        <circle cx="73" cy="58" r="5" fill={INK} />
+        <path d="M60 76l-5 5 5 4 5-4z" fill={C.peachInk} stroke={INK} strokeWidth="3" />
+        <g className="picto__fine">
+          <path d="M40 80H22M80 80h18" stroke={INK} strokeWidth="4" strokeLinecap="round" />
         </g>
-        <path d="M8 38h12M44 38h12" stroke={C.outline} strokeWidth="2.5" strokeLinecap="round" />
       </>
     ),
   },
@@ -353,16 +409,19 @@ const DRAWINGS = {
 
 export const PICTOGRAMS = Object.entries(DRAWINGS).map(([id, { label }]) => ({ id, label }))
 
-/** Renders one pictogram. `size` is a CSS length (pixels by default). */
+/** Renders one drawing. `size` is a CSS length (pixels by default). */
 export function Pictogram({ id, size = 72, title }) {
   const drawing = DRAWINGS[id]
   if (!drawing) return null
 
+  const grid = drawing.grid ?? 64
+
   return (
     <svg
+      className={`picto${size < 64 ? ' picto--small' : ''}`}
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox={`0 0 ${grid} ${grid}`}
       role={title ? 'img' : 'presentation'}
       aria-label={title}
       aria-hidden={title ? undefined : 'true'}

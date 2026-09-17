@@ -1,8 +1,9 @@
 /**
- * Confetti shower, overlaid on a panel.
+ * Confetti shower, overlaid on the companion bar.
  *
  * Purely decorative: the layer catches no click, and is only rendered in
- * child mode, on moments of success.
+ * child mode, on a completed end of game, never on an item. Everything is
+ * over within the 1.5 s end-of-game budget, delay included.
  */
 const COLORS = ['#f6bdab', '#b9d8c2', '#cdc3ec', '#f4dfa8', '#a8c8ec']
 
@@ -11,8 +12,8 @@ function seed(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
     left: Math.round(Math.random() * 100),
-    delay: Math.round(Math.random() * 600),
-    duration: 1400 + Math.round(Math.random() * 900),
+    delay: Math.round(Math.random() * 250),
+    duration: 1100 + Math.round(Math.random() * 150),
     color: COLORS[index % COLORS.length],
     rotation: Math.round(Math.random() * 360),
     width: 6 + Math.round(Math.random() * 6),

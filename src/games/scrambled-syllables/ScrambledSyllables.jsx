@@ -25,7 +25,7 @@ function buildRound(config) {
 }
 
 export default function ScrambledSyllables({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [placed, setPlaced] = useState([])
   const [result, setResult] = useState(null)

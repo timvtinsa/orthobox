@@ -1,6 +1,8 @@
 /**
- * Domain filters, each with its number of games.
+ * Domain filters: one pill per domain, each carrying its shape next to its
+ * colour, so the filter bar stays readable without colour.
  */
+import CategoryShape from './CategoryShape.jsx'
 import { CATEGORIES, categoryStyle } from '../lib/categories.js'
 
 export default function CategoryFilter({ value, counts, onChange }) {
@@ -10,7 +12,7 @@ export default function CategoryFilter({ value, counts, onChange }) {
     <div className="filters" role="group" aria-label="Filtrer par domaine">
       <button
         type="button"
-        className={`filter${value === 'all' ? ' filter--active' : ''}`}
+        className={`filter filter--all${value === 'all' ? ' filter--active' : ''}`}
         aria-pressed={value === 'all'}
         onClick={() => onChange('all')}
       >
@@ -26,7 +28,7 @@ export default function CategoryFilter({ value, counts, onChange }) {
           style={categoryStyle(category)}
           onClick={() => onChange(category.id)}
         >
-          <span className="filter__dot" aria-hidden="true" />
+          <CategoryShape shape={category.shape} size={10} />
           {category.label}
           <span className="filter__count">{counts[category.id] ?? 0}</span>
         </button>

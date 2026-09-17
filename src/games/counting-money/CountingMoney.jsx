@@ -29,7 +29,7 @@ function availableCoins(config) {
 }
 
 export default function CountingMoney({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [price, setPrice] = useState(() => drawPrice(config))
   const [chosen, setChosen] = useState([])
   const [result, setResult] = useState(null)

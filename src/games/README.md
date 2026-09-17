@@ -109,7 +109,9 @@ must stay recognisable small in the gallery.
 - `components/GameOver.jsx`: end screen, score and « Rejouer » button
 - `components/SpeakButton.jsx`: reads a word aloud, when a voice is available
 - `components/GameSetup.jsx`: settings screen built from `settings`
-  (`SetupPanel`, `Stepper` and `SwitchGroup` are its building blocks)
+  (`Stepper` and `SwitchGroup` are its building blocks)
+- `components/StateMark.jsx`: the corner pictogram of a correction state
+- `components/CategoryShape.jsx`: the geometric shape of a domain
 - `components/StudyPhase.jsx`: memorisation phase with a countdown
 - `components/Icon.jsx`: the SVG icon set (star, speaker, arrow)
 - `components/MultipleChoice.jsx`: single-answer options, with correction
@@ -121,13 +123,22 @@ must stay recognisable small in the gallery.
 - `lib/pictograms.jsx`: 32 drawn pictograms, reusable
 - `lib/audio.js`: sound effects, an audio file when one exists, synthesis otherwise
 - `lib/layout.js`: placing items without overlap
+- `lib/answer-state.js`: the correction state of an option, `answerState`
+  and `stateClass`
 - shared CSS classes: `.game-board`, `.game-prompt`, `.choice-grid`,
-  `.choice` (+ `--correct`, `--wrong`, `--dim`), `.game-actions`, `.token`,
-  `.setup`, `.field`, `.word-list`, `.picture-grid`, `.quiz`, `.scene`
+  `.choice` (+ `.is-ok`, `.is-err`, `.is-expected`, `.is-selected`,
+  `--dim`), `.game-actions`, `.token`, `.setup`, `.word-list`,
+  `.picture-grid`, `.quiz`, `.scene`
+
+A correction state is never carried by colour alone: it always shows a border
+stroke (solid, dashed, dotted), a corner pictogram and a tint, which is what
+`answerState` plus `StateMark` produce. The expected answer revealed after a
+miss carries its own state, `expected`, and is never credited as correct.
 
 Honouring these blocks keeps the games consistent with one another and
-readable on a tablet: touch targets of at least 44 px, sufficient contrast, and
-no information carried by colour alone.
+readable on a tablet: touch targets of at least 44 px on the practitioner's
+side and 64 px for anything the patient touches on a board, sufficient
+contrast, and no information carried by colour alone.
 
 ### Games with adjustable material
 
