@@ -120,7 +120,11 @@ must stay recognisable small in the gallery.
 - `hooks/useAnswerLock.js`: double-click guard on answers
 - `lib/random.js`: `shuffle`, `sample`, `pick`, `randomInt`
 - `lib/lexicon.js`: frequent words, digit sequences, lenient comparison
-- `lib/pictograms.jsx`: 32 drawn pictograms, reusable
+- `lib/pictograms.jsx`: the bank of 32 drawings, reusable, each in three
+  layers on a 120 by 120 grid (flat colour, one shadow plane, outline plus
+  ground ellipse), with the fine details in a `picto__fine` group dropped
+  below 64 px. `node scripts/contact-sheet.mjs` renders the whole bank in the
+  three readings a drawing has to hold: 132 px, 52 px and greyscale
 - `lib/audio.js`: sound effects, an audio file when one exists, synthesis otherwise
 - `lib/layout.js`: placing items without overlap
 - `lib/answer-state.js`: the correction state of an option, `answerState`

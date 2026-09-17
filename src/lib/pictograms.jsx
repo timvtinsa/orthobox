@@ -6,12 +6,17 @@
  * words, which leaves the practitioner free to choose the strategy being
  * worked on. Labels stay in French, since they are shown to the patient.
  *
- * Drawings carrying `grid: 120` follow the illustration rule, in three
- * layers: the flat local colour of the object, a single shadow plane at 18 %
- * on the side away from the light, and a 5 unit outline plus a ground ellipse
- * that sets the object down. An outline on its own asks the patient to
- * recognise a graphic convention at the same time as they are looking for a
- * word, which is why the bank is moving over to illustrations.
+ * Every drawing is written on a 120 by 120 grid and follows the illustration
+ * rule, in three layers: the flat local colour of the object, a single shadow
+ * plane at around 18 % on the side away from the light, which always comes
+ * from the top left, and a 5 unit outline plus a ground ellipse that sets the
+ * object down. An outline on its own asks the patient to recognise a graphic
+ * convention at the same time as they are looking for a word, which is why
+ * the bank is drawn rather than diagrammed.
+ *
+ * `scripts/contact-sheet.mjs` renders the bank in the three readings the
+ * direction asks for, 132 px, 52 px and greyscale. A drawing that does not
+ * hold all three does not belong in the bank.
  *
  * Fine details sit in a `picto__fine` group, dropped below 64 px: at 52 px
  * they would turn to mush. It is a lightening, never a second version.
@@ -26,7 +31,6 @@ const C = {
   sandInk: '#8a6a18',
   blue: '#a8c8ec',
   accent: '#35608f',
-  outline: '#5c5566',
 }
 
 /**
@@ -42,7 +46,6 @@ const INK = '#33303a'
 const DRAWINGS = {
   house: {
     label: 'maison',
-    grid: 120,
     draw: (
       <>
         <ellipse cx="60" cy="108" rx="36" ry="5" fill={INK} opacity=".12" />
@@ -62,16 +65,16 @@ const DRAWINGS = {
     label: 'arbre',
     draw: (
       <>
-        <circle cx="32" cy="26" r="17" fill={C.sage} />
-        <circle cx="21" cy="34" r="10" fill={C.sage} />
-        <circle cx="43" cy="34" r="10" fill={C.sage} />
-        <rect x="28" y="38" width="8" height="18" rx="3" fill={C.outline} opacity=".75" />
+        <ellipse cx="60" cy="110" rx="30" ry="5" fill={INK} opacity=".12" />
+        <rect x="51" y="64" width="18" height="40" rx="5" fill={C.peachInk} stroke={INK} strokeWidth="5" />
+        <path d="M61 64h8v40h-8z" fill={INK} opacity=".18" />
+        <path d="M60 16c19 0 32 13 32 28 0 16-14 27-32 27s-32-11-32-27c0-15 13-28 32-28z" fill={C.sage} stroke={INK} strokeWidth="5" />
+        <path d="M72 19c12 5 20 15 20 25 0 16-14 27-32 27 21 0 26-12 26-27 0-10-4-20-14-25z" fill={INK} opacity=".16" />
       </>
     ),
   },
   fish: {
     label: 'poisson',
-    grid: 120,
     draw: (
       <>
         <ellipse cx="60" cy="104" rx="32" ry="5" fill={INK} opacity=".12" />
@@ -92,15 +95,19 @@ const DRAWINGS = {
     label: 'clé',
     draw: (
       <>
-        <circle cx="20" cy="26" r="12" fill="none" stroke={C.sand} strokeWidth="7" />
-        <path d="M28 34l24 22" stroke={C.sand} strokeWidth="7" strokeLinecap="round" />
-        <path d="M44 42l-7 7M50 48l-6 6" stroke={C.outline} strokeWidth="4" strokeLinecap="round" />
+        <ellipse cx="60" cy="110" rx="26" ry="5" fill={INK} opacity=".12" />
+        <rect x="52" y="46" width="16" height="58" rx="6" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M61 46h7v58h-7z" fill={INK} opacity=".18" />
+        <path d="M68 68h17v12H68z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M68 88h13v12H68z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <circle cx="60" cy="34" r="21" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M70 17c9 5 11 12 11 17 0 12-9 21-21 21 14 0 17-10 17-21 0-6-2-12-7-17z" fill={INK} opacity=".16" />
+        <circle cx="60" cy="34" r="8" fill="#fff" stroke={INK} strokeWidth="4.5" />
       </>
     ),
   },
   cup: {
     label: 'tasse',
-    grid: 120,
     draw: (
       <>
         <ellipse cx="58" cy="104" rx="38" ry="6" fill={INK} opacity=".12" />
@@ -114,7 +121,6 @@ const DRAWINGS = {
   },
   umbrella: {
     label: 'parapluie',
-    grid: 120,
     draw: (
       <>
         <ellipse cx="54" cy="112" rx="22" ry="4" fill={INK} opacity=".12" />
@@ -129,30 +135,51 @@ const DRAWINGS = {
     label: 'ballon',
     draw: (
       <>
-        <circle cx="32" cy="30" r="18" fill={C.peach} />
-        <path d="M32 12c8 10 8 26 0 36M14 30h36" fill="none" stroke={C.outline} strokeWidth="3" />
-        <path d="M32 48v9" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
+        <path d="M60 14c17 0 28 13 28 28 0 19-17 32-28 40-11-8-28-21-28-40 0-15 11-28 28-28z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M73 18c9 5 15 14 15 24 0 19-17 32-28 40 15-15 23-27 23-40 0-9-4-18-10-24z" fill={INK} opacity=".16" />
+        <path d="M54 83h12l-6 9z" fill={C.peach} stroke={INK} strokeWidth="4" strokeLinejoin="round" />
+        <path d="M60 92q9 9 0 18" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
       </>
     ),
   },
   star: {
     label: 'étoile',
-    draw: <path d="M32 10l7 15 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2z" fill={C.sand} stroke={C.outline} strokeWidth="3" strokeLinejoin="round" />,
+    draw: (
+      <>
+        <path d="M60 16l13 27 30 4-22 21 5 30-26-14-26 14 5-30-22-21 30-4z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 16l13 27 30 4-22 21 5 30-26-14z" fill={INK} opacity=".16" />
+      </>
+    ),
   },
   moon: {
     label: 'lune',
-    draw: <path d="M42 12a22 22 0 1 0 10 30A24 24 0 0 1 42 12z" fill={C.blue} stroke={C.outline} strokeWidth="3" strokeLinejoin="round" />,
+    draw: (
+      <>
+        <path d="M68 14a46 46 0 1 0 0 92 54 54 0 0 1 0-92z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M26 76a46 46 0 0 0 42 30 54 54 0 0 1-14-20 40 40 0 0 1-28-10z" fill={INK} opacity=".16" />
+        <g className="picto__fine">
+          <circle cx="44" cy="44" r="6" fill={INK} opacity=".2" />
+          <circle cx="38" cy="68" r="4.5" fill={INK} opacity=".2" />
+        </g>
+      </>
+    ),
   },
   flower: {
     label: 'fleur',
     draw: (
       <>
-        <g fill={C.lavender}>
-          <circle cx="32" cy="16" r="9" /><circle cx="46" cy="27" r="9" />
-          <circle cx="41" cy="42" r="9" /><circle cx="23" cy="42" r="9" /><circle cx="18" cy="27" r="9" />
-        </g>
-        <circle cx="32" cy="30" r="7" fill={C.sand} />
-        <path d="M32 44v14" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" />
+        <ellipse cx="60" cy="110" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 58v48" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M62 82q17-13 27-2-11 15-27 2z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <ellipse cx="60" cy="26" rx="11" ry="16" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <ellipse cx="60" cy="26" rx="11" ry="16" fill={C.peach} stroke={INK} strokeWidth="5" transform="rotate(72 60 48)" />
+        <ellipse cx="60" cy="26" rx="11" ry="16" fill={C.peach} stroke={INK} strokeWidth="5" transform="rotate(144 60 48)" />
+        <ellipse cx="60" cy="26" rx="11" ry="16" fill={C.peach} stroke={INK} strokeWidth="5" transform="rotate(216 60 48)" />
+        <ellipse cx="60" cy="26" rx="11" ry="16" fill={C.peach} stroke={INK} strokeWidth="5" transform="rotate(288 60 48)" />
+        <path d="M60 26a11 16 0 0 1 0 32z" fill={INK} opacity=".14" transform="rotate(144 60 48)" />
+        <path d="M60 26a11 16 0 0 1 0 32z" fill={INK} opacity=".14" transform="rotate(72 60 48)" />
+        <circle cx="60" cy="48" r="14" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M60 34a14 14 0 0 1 0 28z" fill={INK} opacity=".16" />
       </>
     ),
   },
@@ -160,10 +187,17 @@ const DRAWINGS = {
     label: 'voiture',
     draw: (
       <>
-        <path d="M10 40l5-13a5 5 0 0 1 5-3h24a5 5 0 0 1 5 3l5 13v6H10z" fill={C.blue} />
-        <circle cx="20" cy="47" r="6" fill={C.outline} />
-        <circle cx="44" cy="47" r="6" fill={C.outline} />
-        <path d="M18 38l3-9h22l3 9z" fill="#fff" opacity=".7" />
+        <ellipse cx="60" cy="106" rx="42" ry="5" fill={INK} opacity=".12" />
+        <path d="M34 62l11-22a9 9 0 0 1 8-5h14a9 9 0 0 1 8 5l11 22z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 35h7a9 9 0 0 1 8 5l11 22H60z" fill={INK} opacity=".16" />
+        <path d="M16 62h88v24a7 7 0 0 1-7 7H23a7 7 0 0 1-7-7z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 62h44v24a7 7 0 0 1-7 7H60z" fill={INK} opacity=".16" />
+        <circle cx="36" cy="92" r="12" fill="#fff" stroke={INK} strokeWidth="5" />
+        <circle cx="84" cy="92" r="12" fill="#fff" stroke={INK} strokeWidth="5" />
+        <g className="picto__fine">
+          <circle cx="36" cy="92" r="4" fill={INK} />
+          <circle cx="84" cy="92" r="4" fill={INK} />
+        </g>
       </>
     ),
   },
@@ -171,9 +205,14 @@ const DRAWINGS = {
     label: 'bateau',
     draw: (
       <>
-        <path d="M32 8l16 26H32z" fill={C.peach} />
-        <path d="M30 8v26H16z" fill={C.sand} />
-        <path d="M10 40h44l-7 13H17z" fill={C.outline} opacity=".8" />
+        <path d="M56 70V22L26 70z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M66 70V28l28 42z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M80 49l14 21H80z" fill={INK} opacity=".18" />
+        <path d="M16 72h88l-13 22a9 9 0 0 1-8 5H37a9 9 0 0 1-8-5z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 72h44l-13 22a9 9 0 0 1-8 5H60z" fill={INK} opacity=".16" />
+        <g className="picto__fine">
+          <path d="M14 108h92" stroke={C.accent} strokeWidth="5" strokeLinecap="round" />
+        </g>
       </>
     ),
   },
@@ -181,9 +220,14 @@ const DRAWINGS = {
     label: 'livre',
     draw: (
       <>
-        <path d="M32 18c-6-5-14-5-20-3v30c6-2 14-2 20 3z" fill={C.sage} />
-        <path d="M32 18c6-5 14-5 20-3v30c-6-2-14-2-20 3z" fill={C.blue} />
-        <path d="M32 18v30" stroke={C.outline} strokeWidth="3" />
+        <ellipse cx="60" cy="104" rx="40" ry="5" fill={INK} opacity=".12" />
+        <path d="M60 34c-11-8-25-10-40-8v56c15-2 29 0 40 8z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 34c11-8 25-10 40-8v56c-15-2-29 0-40 8z" fill={C.lavender} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M74 28c9-2 18-2 26-2v56c-11-1-21-1-30 1z" fill={INK} opacity=".14" />
+        <path d="M60 34v56" stroke={INK} strokeWidth="5" />
+        <g className="picto__fine">
+          <path d="M32 46h18M32 58h18M70 46h18M70 58h18" stroke={INK} strokeWidth="4" strokeLinecap="round" opacity=".5" />
+        </g>
       </>
     ),
   },
@@ -191,9 +235,14 @@ const DRAWINGS = {
     label: 'ciseaux',
     draw: (
       <>
-        <path d="M18 14l28 30M46 14L18 44" stroke={C.outline} strokeWidth="4" strokeLinecap="round" />
-        <circle cx="18" cy="50" r="7" fill="none" stroke={C.peach} strokeWidth="5" />
-        <circle cx="46" cy="50" r="7" fill="none" stroke={C.peach} strokeWidth="5" />
+        <ellipse cx="60" cy="110" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M36 18l32 54-11 6-30-54z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M84 18L52 72l11 6 30-54z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M84 18L52 72l11 6 30-54z" fill={INK} opacity=".16" />
+        <path d="M55 78l-9 8M65 78l9 8" stroke={INK} strokeWidth="6" strokeLinecap="round" />
+        <circle cx="40" cy="94" r="12" fill="none" stroke={INK} strokeWidth="6" />
+        <circle cx="80" cy="94" r="12" fill="none" stroke={INK} strokeWidth="6" />
+        <circle cx="60" cy="72" r="6" fill={C.sand} stroke={INK} strokeWidth="4" />
       </>
     ),
   },
@@ -201,11 +250,16 @@ const DRAWINGS = {
     label: 'gâteau',
     draw: (
       <>
-        <rect x="12" y="30" width="40" height="24" rx="5" fill={C.peach} />
-        <rect x="12" y="36" width="40" height="6" fill="#fff" opacity=".65" />
-        <path d="M22 30v-8M32 30v-8M42 30v-8" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
-        <g fill={C.sand}>
-          <circle cx="22" cy="18" r="4" /><circle cx="32" cy="18" r="4" /><circle cx="42" cy="18" r="4" />
+        <ellipse cx="60" cy="108" rx="36" ry="5" fill={INK} opacity=".12" />
+        <rect x="38" y="36" width="8" height="20" rx="4" fill={C.sand} stroke={INK} strokeWidth="4" />
+        <rect x="56" y="32" width="8" height="24" rx="4" fill={C.sand} stroke={INK} strokeWidth="4" />
+        <rect x="74" y="36" width="8" height="20" rx="4" fill={C.sand} stroke={INK} strokeWidth="4" />
+        <path d="M22 68h76v26a8 8 0 0 1-8 8H30a8 8 0 0 1-8-8z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 68h38v26a8 8 0 0 1-8 8H60z" fill={INK} opacity=".16" />
+        <path d="M22 56h76v14q-9 10-19 0-9 10-19 0-9 10-19 0-9 10-19 0z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 56h38v14q-9 10-19 0-9 10-19 0z" fill={INK} opacity=".12" />
+        <g className="picto__fine">
+          <path d="M42 34q5-7 0-11-5 4 0 11zM60 30q5-7 0-11-5 4 0 11zM78 34q5-7 0-11-5 4 0 11z" fill={C.peachInk} stroke={INK} strokeWidth="3" strokeLinejoin="round" />
         </g>
       </>
     ),
@@ -214,9 +268,11 @@ const DRAWINGS = {
     label: 'montre',
     draw: (
       <>
-        <circle cx="32" cy="32" r="17" fill={C.sand} stroke={C.outline} strokeWidth="3.5" />
-        <path d="M32 22v11l8 5" fill="none" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M24 16l2-8h12l2 8M24 48l2 8h12l2-8" fill={C.lavender} />
+        <ellipse cx="60" cy="112" rx="24" ry="4" fill={INK} opacity=".12" />
+        <path d="M44 16h32v24H44zM44 80h32v24H44z" fill={C.lavender} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <circle cx="60" cy="60" r="30" fill="#fff" stroke={INK} strokeWidth="5" />
+        <path d="M60 30a30 30 0 0 1 0 60 25 25 0 0 0 0-60z" fill={INK} opacity=".16" />
+        <path d="M60 42v18l13 8" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
       </>
     ),
   },
@@ -224,9 +280,12 @@ const DRAWINGS = {
     label: 'lampe',
     draw: (
       <>
-        <path d="M32 10a14 14 0 0 1 8 25c-2 2-3 4-3 6H27c0-2-1-4-3-6a14 14 0 0 1 8-25z" fill={C.sand} />
-        <rect x="27" y="45" width="10" height="8" rx="3" fill={C.outline} opacity=".75" />
-        <path d="M32 4v-2M50 14l2-2M14 14l-2-2" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
+        <ellipse cx="60" cy="110" rx="30" ry="5" fill={INK} opacity=".12" />
+        <path d="M60 52v44" stroke={INK} strokeWidth="6" strokeLinecap="round" />
+        <path d="M34 54h52l-11-32a8 8 0 0 0-8-6H53a8 8 0 0 0-8 6z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 16h7a8 8 0 0 1 8 6l11 32H60z" fill={INK} opacity=".16" />
+        <path d="M40 94h40a8 8 0 0 1 8 8v4H32v-4a8 8 0 0 1 8-8z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 94h20a8 8 0 0 1 8 8v4H60z" fill={INK} opacity=".16" />
       </>
     ),
   },
@@ -234,14 +293,13 @@ const DRAWINGS = {
     label: 'nuage',
     draw: (
       <>
-        <path d="M20 42a10 10 0 0 1 0-20 14 14 0 0 1 26-3 9 9 0 0 1 2 23z" fill={C.blue} />
-        <path d="M24 50l-3 6M34 50l-3 6M44 50l-3 6" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
+        <path d="M36 88a21 21 0 0 1 1-44 25 25 0 0 1 46-6 19 19 0 0 1 3 50z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M36 88h50a19 19 0 0 0 10-16 32 32 0 0 1-61 2 21 21 0 0 0 1 14z" fill={INK} opacity=".13" />
       </>
     ),
   },
   apple: {
     label: 'pomme',
-    grid: 120,
     draw: (
       <>
         <ellipse cx="60" cy="108" rx="28" ry="5" fill={INK} opacity=".12" />
@@ -256,9 +314,13 @@ const DRAWINGS = {
     label: 'chaussure',
     draw: (
       <>
-        <path d="M10 42V24h10l8 8h16a10 10 0 0 1 10 10v4H14a4 4 0 0 1-4-4z" fill={C.lavender} />
-        <path d="M10 40h44" stroke={C.outline} strokeWidth="3" />
-        <path d="M28 32l4 6M36 32l4 6" stroke={C.outline} strokeWidth="2.5" strokeLinecap="round" />
+        <ellipse cx="60" cy="106" rx="42" ry="5" fill={INK} opacity=".12" />
+        <path d="M22 44h14l11 22 33 8a15 15 0 0 1 12 15v7H22z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 71l20 5a15 15 0 0 1 12 14v6H60z" fill={INK} opacity=".16" />
+        <path d="M18 92h84a5 5 0 0 1 0 10H18a5 5 0 0 1 0-10z" fill="#fff" stroke={INK} strokeWidth="5" />
+        <g className="picto__fine">
+          <path d="M40 54l14 7M35 65l16 7" stroke={INK} strokeWidth="4" strokeLinecap="round" />
+        </g>
       </>
     ),
   },
@@ -266,9 +328,12 @@ const DRAWINGS = {
     label: 'valise',
     draw: (
       <>
-        <rect x="10" y="24" width="44" height="28" rx="6" fill={C.sage} />
-        <path d="M24 24v-5a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v5" fill="none" stroke={C.outline} strokeWidth="3.5" />
-        <rect x="10" y="34" width="44" height="6" fill={C.outline} opacity=".25" />
+        <ellipse cx="60" cy="106" rx="38" ry="5" fill={INK} opacity=".12" />
+        <path d="M46 34v-6a9 9 0 0 1 9-9h10a9 9 0 0 1 9 9v6" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <rect x="18" y="34" width="84" height="66" rx="10" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M60 34h32a10 10 0 0 1 10 10v46a10 10 0 0 1-10 10H60z" fill={INK} opacity=".16" />
+        <path d="M18 78h84" stroke={INK} strokeWidth="5" />
+        <rect x="51" y="48" width="18" height="16" rx="4" fill={C.sand} stroke={INK} strokeWidth="4.5" />
       </>
     ),
   },
@@ -276,9 +341,10 @@ const DRAWINGS = {
     label: 'cloche',
     draw: (
       <>
-        <path d="M32 12a14 14 0 0 1 14 14v12l4 6H14l4-6V26a14 14 0 0 1 14-14z" fill={C.sand} />
-        <circle cx="32" cy="50" r="5" fill={C.outline} opacity=".8" />
-        <path d="M32 12V8" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
+        <ellipse cx="60" cy="108" rx="32" ry="5" fill={INK} opacity=".12" />
+        <path d="M60 16a9 9 0 0 1 9 9 31 31 0 0 1 17 27c0 19 6 27 10 34H24c4-7 10-15 10-34a31 31 0 0 1 17-27 9 9 0 0 1 9-9z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 16a9 9 0 0 1 9 9 31 31 0 0 1 17 27c0 19 6 27 10 34H60z" fill={INK} opacity=".16" />
+        <path d="M48 86h24a12 12 0 0 1-24 0z" fill={C.sandInk} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
       </>
     ),
   },
@@ -286,8 +352,14 @@ const DRAWINGS = {
     label: 'échelle',
     draw: (
       <>
-        <path d="M20 8v48M44 8v48" stroke={C.peach} strokeWidth="6" strokeLinecap="round" />
-        <path d="M20 20h24M20 32h24M20 44h24" stroke={C.outline} strokeWidth="4" strokeLinecap="round" />
+        <ellipse cx="60" cy="110" rx="36" ry="4" fill={INK} opacity=".12" />
+        <rect x="24" y="14" width="13" height="92" rx="6" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M32 14h5v92h-5z" fill={INK} opacity=".18" />
+        <rect x="83" y="14" width="13" height="92" rx="6" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M91 14h5v92h-5z" fill={INK} opacity=".18" />
+        <rect x="35" y="28" width="50" height="11" rx="5" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <rect x="35" y="54" width="50" height="11" rx="5" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <rect x="35" y="80" width="50" height="11" rx="5" fill={C.peach} stroke={INK} strokeWidth="5" />
       </>
     ),
   },
@@ -295,9 +367,14 @@ const DRAWINGS = {
     label: 'téléphone',
     draw: (
       <>
-        <rect x="20" y="8" width="24" height="48" rx="6" fill={C.blue} stroke={C.outline} strokeWidth="3" />
-        <rect x="25" y="15" width="14" height="24" rx="2" fill="#fff" />
-        <circle cx="32" cy="48" r="4" fill={C.outline} />
+        <ellipse cx="60" cy="112" rx="26" ry="4" fill={INK} opacity=".12" />
+        <rect x="33" y="12" width="54" height="94" rx="13" fill={C.lavender} stroke={INK} strokeWidth="5" />
+        <path d="M60 12h14a13 13 0 0 1 13 13v68a13 13 0 0 1-13 13H60z" fill={INK} opacity=".16" />
+        <rect x="43" y="28" width="34" height="58" rx="5" fill="#fff" stroke={INK} strokeWidth="4.5" />
+        <g className="picto__fine">
+          <circle cx="60" cy="96" r="5" fill="none" stroke={INK} strokeWidth="4" />
+          <path d="M52 20h16" stroke={INK} strokeWidth="4" strokeLinecap="round" />
+        </g>
       </>
     ),
   },
@@ -305,10 +382,15 @@ const DRAWINGS = {
     label: 'tambour',
     draw: (
       <>
-        <rect x="12" y="26" width="40" height="24" rx="4" fill={C.peach} />
-        <ellipse cx="32" cy="26" rx="20" ry="7" fill={C.sand} stroke={C.outline} strokeWidth="3" />
-        <path d="M14 30l36 14M50 30L14 44" stroke={C.outline} strokeWidth="2.5" />
-        <path d="M20 22l-6-12M44 22l6-12" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" />
+        <ellipse cx="60" cy="108" rx="34" ry="5" fill={INK} opacity=".12" />
+        <path d="M22 52h76v32a38 14 0 0 1-76 0z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 52h38v32a38 14 0 0 1-38 14z" fill={INK} opacity=".16" />
+        <ellipse cx="60" cy="52" rx="38" ry="14" fill="#fff" stroke={INK} strokeWidth="5" />
+        <g className="picto__fine">
+          <path d="M28 62l14 22M60 66v22M92 62L78 84" stroke={INK} strokeWidth="4" strokeLinecap="round" opacity=".45" />
+        </g>
+        <path d="M82 20L66 44" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <circle cx="85" cy="16" r="7" fill={C.sandInk} stroke={INK} strokeWidth="4" />
       </>
     ),
   },
@@ -316,15 +398,17 @@ const DRAWINGS = {
     label: 'sifflet',
     draw: (
       <>
-        <path d="M10 26h26a12 12 0 0 1 0 24H22a12 12 0 0 1-12-12z" fill={C.sage} stroke={C.outline} strokeWidth="3" />
-        <rect x="36" y="30" width="18" height="8" rx="4" fill={C.outline} opacity=".8" />
-        <path d="M44 18a10 10 0 0 1 8-6M46 12a14 14 0 0 1 10-4" fill="none" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
+        <ellipse cx="60" cy="104" rx="30" ry="5" fill={INK} opacity=".12" />
+        <path d="M12 58h30v20H12a4 4 0 0 1-4-4v-12a4 4 0 0 1 4-4z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <rect x="34" y="46" width="54" height="44" rx="20" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M61 46h7a20 20 0 0 1 20 20v4a20 20 0 0 1-20 20h-7z" fill={INK} opacity=".16" />
+        <circle cx="66" cy="60" r="8" fill="#fff" stroke={INK} strokeWidth="4.5" />
+        <circle cx="96" cy="38" r="10" fill="none" stroke={INK} strokeWidth="5" />
       </>
     ),
   },
   cat: {
     label: 'chat',
-    grid: 120,
     draw: (
       <>
         <ellipse cx="60" cy="110" rx="30" ry="5" fill={INK} opacity=".12" />
@@ -346,14 +430,18 @@ const DRAWINGS = {
     label: 'chien',
     draw: (
       <>
-        <path d="M12 20a8 8 0 0 1 8-8v20z" fill={C.sand} />
-        <path d="M52 20a8 8 0 0 0-8-8v20z" fill={C.sand} />
-        <rect x="18" y="16" width="28" height="30" rx="13" fill={C.sand} />
-        <ellipse cx="32" cy="46" rx="12" ry="9" fill="#fff" opacity=".55" />
-        <g fill={C.outline}>
-          <circle cx="25" cy="30" r="3" /><circle cx="39" cy="30" r="3" />
-          <ellipse cx="32" cy="42" rx="5" ry="4" />
-        </g>
+        <ellipse cx="60" cy="110" rx="30" ry="5" fill={INK} opacity=".12" />
+        <path d="M32 40c-10 0-17 12-17 26s8 25 18 25c7 0 11-6 11-15V48z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M88 40c10 0 17 12 17 26s-8 25-18 25c-7 0-11-6-11-15V48z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M88 44c8 5 12 14 12 23s-5 20-13 23c8-7 10-15 10-23s-3-18-9-23z" fill={INK} opacity=".16" />
+        <path d="M60 22c18 0 30 14 30 30 0 22-13 42-30 42S30 74 30 52c0-16 12-30 30-30z" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M75 28c9 6 15 16 15 24 0 22-13 42-30 42 24 0 27-24 27-42 0-9-4-18-12-24z" fill={INK} opacity=".16" />
+        <path d="M60 62c12 0 21 7 21 16s-9 17-21 17-21-8-21-17 9-16 21-16z" fill="#fff" stroke={INK} strokeWidth="4.5" />
+        <circle cx="48" cy="48" r="5" fill={INK} />
+        <circle cx="72" cy="48" r="5" fill={INK} />
+        <ellipse cx="60" cy="70" rx="9" ry="6.5" fill={INK} />
+        <path d="M60 77v5" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+        <path d="M48 82q6 9 12 0 6 9 12 0" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
       </>
     ),
   },
@@ -361,11 +449,16 @@ const DRAWINGS = {
     label: 'oiseau',
     draw: (
       <>
-        <circle cx="28" cy="30" r="16" fill={C.blue} />
-        <path d="M40 26l14-6-6 12z" fill={C.sand} />
-        <path d="M24 42c-4 8-10 12-16 12 6-4 8-10 8-14z" fill={C.blue} />
-        <circle cx="24" cy="26" r="3" fill={C.outline} />
-        <path d="M22 48v8M32 48v8" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
+        <ellipse cx="60" cy="112" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M52 88v16M70 88v16M45 104h13M64 104h13" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M12 38l34 24-32 12z" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M56 34c18 0 31 13 31 29S74 92 56 92 25 79 25 63s13-29 31-29z" fill={C.blue} stroke={INK} strokeWidth="5" />
+        <path d="M70 38c11 6 17 14 17 25 0 16-13 29-31 29 22 0 27-15 27-29 0-11-4-19-13-25z" fill={INK} opacity=".16" />
+        <circle cx="81" cy="33" r="16" fill={C.blue} stroke={INK} strokeWidth="5" />
+        <path d="M81 17a16 16 0 0 1 0 32 12 12 0 0 0 0-32z" fill={INK} opacity=".14" />
+        <path d="M96 28l15 6-15 7z" fill={C.sand} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <path d="M42 58q18-10 30 5-15 12-30-5z" fill="#fff" stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <circle cx="85" cy="29" r="4.5" fill={INK} />
       </>
     ),
   },
@@ -373,13 +466,20 @@ const DRAWINGS = {
     label: 'vache',
     draw: (
       <>
-        <path d="M10 22a8 8 0 0 1 10-6M54 22a8 8 0 0 0-10-6" fill="none" stroke={C.outline} strokeWidth="3.5" strokeLinecap="round" />
-        <rect x="14" y="16" width="36" height="30" rx="14" fill="#fff" stroke={C.outline} strokeWidth="3" />
-        <path d="M20 22a5 5 0 0 0 8 4 5 5 0 0 0-8-4z" fill={C.outline} opacity=".7" />
-        <ellipse cx="32" cy="44" rx="12" ry="9" fill={C.peach} />
-        <g fill={C.outline}>
-          <circle cx="26" cy="30" r="2.6" /><circle cx="40" cy="30" r="2.6" />
-          <circle cx="28" cy="44" r="2.4" /><circle cx="36" cy="44" r="2.4" />
+        <ellipse cx="60" cy="110" rx="32" ry="5" fill={INK} opacity=".12" />
+        <path d="M30 42c-10-4-17 3-14 11 3 9 11 11 18 8z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M90 42c10-4 17 3 14 11-3 9-11 11-18 8z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M38 32q-9-16 2-16t9 11" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M82 32q9-16-2-16t-9 11" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M60 24c20 0 32 15 32 32 0 20-14 36-32 36S28 76 28 56c0-17 12-32 32-32z" fill="#fff" stroke={INK} strokeWidth="5" />
+        <path d="M76 30c10 6 16 16 16 26 0 20-14 36-32 36 24 0 28-20 28-36 0-10-4-20-12-26z" fill={INK} opacity=".13" />
+        <path d="M38 40q11-7 17 2-11 9-17-2z" fill={INK} opacity=".55" />
+        <path d="M60 64c14 0 23 6 23 15s-10 15-23 15-23-6-23-15 9-15 23-15z" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <circle cx="50" cy="50" r="5" fill={INK} />
+        <circle cx="72" cy="50" r="5" fill={INK} />
+        <g className="picto__fine">
+          <circle cx="52" cy="78" r="4" fill={INK} />
+          <circle cx="68" cy="78" r="4" fill={INK} />
         </g>
       </>
     ),
@@ -388,9 +488,17 @@ const DRAWINGS = {
     label: 'cheval',
     draw: (
       <>
-        <path d="M20 54V30c0-8 6-14 14-14h6l6-8 4 10-4 4v10c0 6-4 8-10 10l-6 12z" fill={C.peach} stroke={C.outline} strokeWidth="3" strokeLinejoin="round" />
-        <path d="M40 16c6-2 10 2 10 8" fill="none" stroke={C.outline} strokeWidth="3" strokeLinecap="round" />
-        <circle cx="40" cy="24" r="2.6" fill={C.outline} />
+        <ellipse cx="60" cy="110" rx="32" ry="5" fill={INK} opacity=".12" />
+        <path d="M50 18l-6-16 18 8z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M74 18l8-16 8 15z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M40 104V80c0-10 4-17 11-21L24 55c-9-1-11-10-5-16l26-10c4-10 12-16 22-16 16 0 26 12 28 30l4 32c1 12 0 21 0 29z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M67 13c16 0 26 12 28 30l4 32c1 12 0 21 0 29H72V58c0-20-1-35-5-45z" fill={INK} opacity=".16" />
+        <path d="M72 16c10 5 16 15 18 29l4 25" fill="none" stroke={C.sandInk} strokeWidth="8" strokeLinecap="round" />
+        <circle cx="66" cy="38" r="5" fill={INK} />
+        <path d="M20 50h14" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+        <g className="picto__fine">
+          <ellipse cx="29" cy="42" rx="5" ry="4" fill={INK} />
+        </g>
       </>
     ),
   },
@@ -398,10 +506,13 @@ const DRAWINGS = {
     label: 'cadeau',
     draw: (
       <>
-        <rect x="12" y="26" width="40" height="28" rx="4" fill={C.lavender} />
-        <rect x="10" y="18" width="44" height="10" rx="3" fill={C.blue} />
-        <path d="M32 18V54" stroke={C.outline} strokeWidth="4" />
-        <path d="M32 18c-8-10-18-2-8 4M32 18c8-10 18-2 8 4" fill="none" stroke={C.outline} strokeWidth="3.5" />
+        <ellipse cx="60" cy="108" rx="36" ry="5" fill={INK} opacity=".12" />
+        <rect x="20" y="48" width="80" height="54" rx="8" fill={C.lavender} stroke={INK} strokeWidth="5" />
+        <path d="M60 48h32a8 8 0 0 1 8 8v38a8 8 0 0 1-8 8H60z" fill={INK} opacity=".16" />
+        <rect x="14" y="32" width="92" height="18" rx="6" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M60 32h40a6 6 0 0 1 6 6v6a6 6 0 0 1-6 6H60z" fill={INK} opacity=".14" />
+        <rect x="51" y="32" width="18" height="70" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M60 30c-11-15-27-12-25-2 2 9 15 8 25 2zM60 30c11-15 27-12 25-2-2 9-15 8-25 2z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
       </>
     ),
   },
@@ -414,14 +525,12 @@ export function Pictogram({ id, size = 72, title }) {
   const drawing = DRAWINGS[id]
   if (!drawing) return null
 
-  const grid = drawing.grid ?? 64
-
   return (
     <svg
       className={`picto${size < 64 ? ' picto--small' : ''}`}
       width={size}
       height={size}
-      viewBox={`0 0 ${grid} ${grid}`}
+      viewBox="0 0 120 120"
       role={title ? 'img' : 'presentation'}
       aria-label={title}
       aria-hidden={title ? undefined : 'true'}

@@ -181,6 +181,13 @@ sets `categoryStyle(category)` on a container and uses `var(--category)`,
 `var(--category-pastel)` and `var(--category-tint)`. Changing the palette of a
 domain therefore only takes editing one object.
 
+The bank of patient drawings (`lib/pictograms.jsx`) is the one place that
+departs from the domain colours: the outline of a drawing is a constant black,
+because the bank is shared and a fish does not change colour depending on
+which game borrows it. No drawn object is ever filled with the success green
+or the error red, otherwise a patient would see a red apple and read a
+mistake.
+
 A domain carries a fourth property, `shape`: a square, a circle, a triangle or
 a diamond, rendered by `CategoryShape` and exposed as `var(--category-shape)`.
 It is what keeps the domain readable in greyscale and on the printed summary.
