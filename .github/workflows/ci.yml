@@ -21,14 +21,21 @@ jobs:
   verify:
     name: Lint, tests and build
     runs-on: ubuntu-latest
+    # A hung step fails the run instead of sitting there for six hours.
+    timeout-minutes: 15
     steps:
       - name: Check out the repository
         uses: actions/checkout@v5
+        with:
+          # Nothing here pushes: the checkout keeps no credentials around.
+          persist-credentials: false
 
       - name: Set up Node
         uses: actions/setup-node@v5
         with:
-          node-version: 22
+          # The version lives in .nvmrc, so the workstation and the workflow
+          # cannot drift apart.
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
@@ -42,6 +49,19 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # `npm run build` regenerates the PWA icons, which are versioned. A dirty
+      # tree here means the generator and the committed files disagree: either
+      # an icon was edited by hand, or the generator changed without its output
+      # being replayed.
+      - name: Check the generated files are up to date
+        run: |
+          if ! git diff --quiet; then
+            echo "Des fichiers générés diffèrent de ce qui est versionné :"
+            git --no-pager diff --stat
+            echo "Lancez « npm run build », puis committez le résultat."
+            exit 1
+          fi
 
       - name: Keep the build
         uses: actions/upload-artifact@v5

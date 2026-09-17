@@ -16,10 +16,17 @@ permissions:
   contents: write
   pull-requests: write
 
+# Two landings on main in quick succession must not race for the release pull
+# request: they queue instead, and none is cancelled halfway through a tag.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     name: Prepare and publish the release
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Compute the version and the changelog
         id: release
@@ -34,12 +41,15 @@ jobs:
       - name: Check out the repository
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v5
+        with:
+          # The upload below authenticates through GH_TOKEN, not through git.
+          persist-credentials: false
 
       - name: Set up Node
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
@@ -59,3 +69,6 @@ jobs:
           gh release upload "${tag}" "${archive}" --clobber
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The checkout keeps no credentials, so name the repository rather
+          # than letting gh infer it from the git remote.
+          GH_REPO: ${{ github.repository }}
