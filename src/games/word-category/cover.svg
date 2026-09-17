@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Trois objets d'une même famille, un intrus désigné">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <rect x="24" y="52" width="176" height="96" rx="18" fill="none" stroke="#a44a28" stroke-width="6"/>
+  <circle cx="66" cy="100" r="20" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <circle cx="112" cy="100" r="20" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <circle cx="158" cy="100" r="20" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <path d="M258 78l26 44h-52z" fill="#a44a28"/>
+  <circle cx="258" cy="104" r="42" fill="none" stroke="#a44a28" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

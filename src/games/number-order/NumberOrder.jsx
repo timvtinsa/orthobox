@@ -41,7 +41,7 @@ function buildRound(config) {
 }
 
 export default function NumberOrder({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [placed, setPlaced] = useState([])
   const [error, setError] = useState(null)

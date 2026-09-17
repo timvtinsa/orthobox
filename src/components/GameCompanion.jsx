@@ -1,40 +1,68 @@
 /**
- * Child-mode companion: the mascot reacts to every answer.
+ * Child-mode companion: the fox at the edge of the board.
+ *
+ * It is there permanently, small, rather than appearing on success: a
+ * character that is already present costs nothing in attention when it
+ * reacts. It moves on three occasions only, success, miss and end of game.
+ *
+ * The rewards were lengthened so a child has time to see them, and the one
+ * rule that actually costs session time is kept: a reward never blocks the
+ * next answer. The fox can still be hopping while the practitioner moves on,
+ * and a new answer cuts the previous reaction short rather than queueing
+ * behind it.
+ *
+ * At the end of a game the bar steps aside: `GameOver` shows the same fox
+ * bigger, with the confetti. Two foxes on screen at once would read as two
+ * characters rather than one.
  *
  * It knows nothing about the games. It watches the session, which is fed by
- * `session.register()`. A game therefore needs no extra code to benefit from
- * it, and adult mode simply does not render it.
+ * `session.register()`, so a game needs no extra code to benefit from it and
+ * adult mode simply does not render it.
  */
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import Mascot from './Mascot.jsx'
+import Sparkles from './Sparkles.jsx'
 import { useMode } from './ModeProvider.jsx'
 
-const MESSAGES = {
-  idle: ['À toi de jouer !', 'Je t’écoute !', 'Prêt quand tu veux !'],
-  correct: ['Bravo !', 'Super !', 'Tu as trouvé !', 'Bien joué !', 'Continue comme ça !'],
-  wrong: ['Essaie encore !', 'Presque !', 'On recommence ?', 'Ce n’est pas grave !'],
+// Le budget d'une réaction d'item, en miroir de --reward-item dans
+// child-mode.css. La fête de fin de partie vit dans GameOver.
+const REWARD_ITEM = 1000
+
+const LINES = {
+  idle: 'À toi.',
+  cheer: 'Bravo, c’est ça !',
+  tryAgain: 'Essaie encore, regarde bien.',
 }
 
 export default function GameCompanion({ session }) {
   const { isChild } = useMode()
-  const state = session.lastAnswer ?? 'idle'
+  const [reacting, setReacting] = useState(false)
 
-  // The message changes with every answer, cycling through the list so the
-  // same one never shows twice in a row.
-  const message = useMemo(() => {
-    const list = MESSAGES[state]
-    return list[session.answerCount % list.length]
-  }, [state, session.answerCount])
+  const { answerCount, lastAnswer, index, total } = session
+  const done = total !== null && index >= total
 
-  if (!isChild) return null
+  // La réaction dure le temps du budget, puis le renard revient au repos,
+  // quel que soit le rythme des réponses.
+  useEffect(() => {
+    if (answerCount === 0) return undefined
+    setReacting(true)
+    const id = window.setTimeout(() => setReacting(false), REWARD_ITEM)
+    return () => window.clearTimeout(id)
+  }, [answerCount])
 
-  const mood = state === 'correct' ? 'cheer' : state === 'wrong' ? 'tryAgain' : 'idle'
+  if (!isChild || done) return null
+
+  const cheering = reacting && lastAnswer === 'correct'
+  const mood = cheering ? 'cheer' : reacting && lastAnswer === 'wrong' ? 'tryAgain' : 'idle'
 
   return (
-    <div className="companion" key={session.answerCount}>
-      <Mascot mood={mood} size={96} />
-      <p className={`companion__bubble companion__bubble--${mood}`} role="status">
-        {message}
+    <div className="companion">
+      <span className="companion__stage">
+        <Mascot mood={mood} size={84} />
+        {cheering && <Sparkles key={answerCount} />}
+      </span>
+      <p className="companion__line" role="status">
+        {LINES[mood]}
       </p>
     </div>
   )

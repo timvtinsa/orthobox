@@ -53,6 +53,16 @@ const PATHS = {
       strokeLinecap="round"
     />
   ),
+  chevron: (
+    <path
+      d="M5 9l7 7 7-7"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  ),
   settings: (
     <>
       <path

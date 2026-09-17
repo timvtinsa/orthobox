@@ -1,17 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une planche d'images à mémoriser">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une planche d'images, une image à reconnaître">
   <rect width="320" height="200" fill="#f0ecfa"/>
-  <g>
-    <rect x="30" y="34" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
-    <path d="M52 76l17-22 17 22z" fill="#b9d8c2"/>
-    <rect x="120" y="34" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
-    <circle cx="159" cy="64" r="18" fill="#f6bdab"/>
-    <rect x="210" y="34" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
-    <rect x="233" y="48" width="32" height="32" rx="8" fill="#a8c8ec"/>
-    <rect x="30" y="106" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
-    <path d="M50 148a19 19 0 0 1 38 0z" fill="#f4dfa8"/>
-    <rect x="120" y="106" width="78" height="60" rx="12" fill="#ffffff" stroke="#5b45a0" stroke-width="5"/>
-    <path d="M141 136l12 12 26-26" stroke="#5b45a0" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="210" y="106" width="78" height="60" rx="12" fill="#ffffff" stroke="#cdc3ec" stroke-width="4"/>
-    <path d="M236 130h26M249 117v26" stroke="#cdc3ec" stroke-width="8" stroke-linecap="round"/>
-  </g>
+  <rect x="24" y="30" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <circle cx="65" cy="61" r="17" fill="#cdc3ec"/>
+  <rect x="119" y="30" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M160 44l19 32h-38z" fill="#cdc3ec"/>
+  <rect x="214" y="30" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <rect x="239" y="46" width="32" height="30" rx="8" fill="#cdc3ec"/>
+  <rect x="24" y="108" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M44 148a21 21 0 0 1 42 0z" fill="#cdc3ec"/>
+  <rect x="214" y="108" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <rect x="239" y="124" width="32" height="30" rx="15" fill="#cdc3ec"/>
+  <rect x="119" y="108" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <circle cx="160" cy="139" r="17" fill="#cdc3ec"/>
+  <rect x="109" y="98" width="102" height="82" rx="16" fill="none" stroke="#5b45a0" stroke-width="6" stroke-dasharray="14 12"/>
 </svg>

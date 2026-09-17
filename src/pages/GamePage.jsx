@@ -1,13 +1,19 @@
 /**
- * Game page: settings first, then the game itself, with the score and a way
- * back to the settings.
+ * Game page: two moments of the same screen.
+ *
+ * The practitioner's settings first, then the patient's board. The switch is
+ * abrupt on purpose: the board is not mounted before « Démarrer », so the
+ * patient sees neither the material nor the expected answer, and the settings
+ * disappear once the game starts.
  */
 import { Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import BoardBar from '../components/BoardBar.jsx'
+import CategoryShape from '../components/CategoryShape.jsx'
+import GameBrief from '../components/GameBrief.jsx'
 import GameCompanion from '../components/GameCompanion.jsx'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
-import Scoreboard from '../components/Scoreboard.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
 import { useGameSession } from '../hooks/useGameSession.js'
@@ -25,6 +31,7 @@ function GameScreen({ gameId }) {
   // `null` until the game starts, which means the settings screen is showing.
   const [config, setConfig] = useState(null)
   const [runKey, setRunKey] = useState(0)
+  const [briefOpen, setBriefOpen] = useState(false)
   const session = useGameSession()
 
   if (!game) return <NotFoundPage />
@@ -38,87 +45,62 @@ function GameScreen({ gameId }) {
     setRunKey((key) => key + 1)
   }
 
-  return (
-    <div className="game-page stack" style={categoryStyle(category)}>
-      <nav className="breadcrumb">
-        <Link to="/" className="breadcrumb__back">
-          <Icon name="back" size={18} filled={false} />
-          Galerie
-        </Link>
-        <span className="badge badge--category">{category.label}</span>
-      </nav>
+  // Leaving a game is immediate: no confirmation, no end screen. The
+  // practitioner cuts a game short more often than they finish it.
+  const quit = () => {
+    session.reset()
+    setConfig(null)
+  }
 
-      <header className="game-header">
-        <img className="game-header__cover" src={game.cover} alt="" width="320" height="200" />
-        <div className="game-header__text">
-          <h1 className="game-header__title">{game.title}</h1>
-          <p className="muted">{game.tagline}</p>
-        </div>
-        {config && (
-          <div className="game-header__controls">
-            <Scoreboard session={session} />
-            <button type="button" className="btn btn--ghost" onClick={() => start(config)}>
-              Recommencer
-            </button>
-            <button
-              type="button"
-              className="btn btn--ghost"
-              onClick={() => {
-                session.reset()
-                setConfig(null)
-              }}
-            >
-              <Icon name="settings" size={18} filled={false} />
-              Réglages
-            </button>
-          </div>
-        )}
-      </header>
+  if (config !== null) {
+    return (
+      <div className="board" style={categoryStyle(category)}>
+        <BoardBar title={game.title} session={session} onQuit={quit} />
 
-      <section className="panel game-panel">
-        {config === null ? (
-          <GameSetup
-            game={game}
-            initial={defaultConfig(game.settings)}
-            onStart={start}
-            actionLabel="Démarrer"
-          />
-        ) : (
+        <div className="board__area">
           <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
             <GameComponent key={runKey} config={config} session={session} />
           </Suspense>
-        )}
-      </section>
-
-      {config && <GameCompanion session={session} />}
-
-      <details className="game-notes">
-        <summary>Consignes et objectifs</summary>
-        <div className="stack">
-          {game.instructions && <p>{game.instructions}</p>}
-          {game.objectives.length > 0 && (
-            <div>
-              <h2 className="game-notes__title">Objectifs travaillés</h2>
-              <ul>
-                {game.objectives.map((objective) => (
-                  <li key={objective}>{objective}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {game.materials.length > 0 && (
-            <div>
-              <h2 className="game-notes__title">Variantes et matériel</h2>
-              <ul>
-                {game.materials.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <p className="muted">Public : {game.ages}</p>
         </div>
-      </details>
+
+        <GameCompanion session={session} />
+      </div>
+    )
+  }
+
+  return (
+    <div className="screen" style={categoryStyle(category)}>
+      <header className="screen-bar">
+        <Link to="/" className="icon-round" aria-label="Retour à la galerie">
+          <Icon name="back" size={22} filled={false} />
+        </Link>
+
+        <h1 className="screen-bar__title">{game.title}</h1>
+
+        <span className="domain-pill">
+          <CategoryShape shape={category.shape} size={10} />
+          {category.label}
+        </span>
+
+        <button
+          type="button"
+          className="screen-bar__brief"
+          aria-expanded={briefOpen}
+          onClick={() => setBriefOpen((open) => !open)}
+        >
+          Consignes et objectifs
+          <Icon
+            name="chevron"
+            size={16}
+            filled={false}
+            className={briefOpen ? 'icon--flipped' : ''}
+          />
+        </button>
+      </header>
+
+      {briefOpen && <GameBrief game={game} />}
+
+      <GameSetup game={game} initial={defaultConfig(game.settings)} onStart={start} />
     </div>
   )
 }

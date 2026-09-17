@@ -1,25 +1,18 @@
-/* --- Galerie ----------------------------------------------------- */
+/* --- Galerie -----------------------------------------------------
+   Régime praticien strict : rien de ce que porte une carte n'est
+   décoratif. La vignette donne la reconnaissance en un coup d'oeil, le
+   reste est titre et lancement.
+   ----------------------------------------------------------------- */
 
-.hero {
-  padding: 4px 0;
-  max-width: 62ch;
-}
-
-.hero__title {
-  font-size: clamp(2rem, 1.3rem + 2.6vw, 2.9rem);
-  letter-spacing: -0.02em;
-  margin-bottom: 10px;
-}
-
-.hero__text {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 1.06rem;
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
 }
 
 .toolbar {
   display: flex;
-  gap: 12px;
+  gap: var(--s3);
   align-items: center;
   flex-wrap: wrap;
 }
@@ -27,49 +20,52 @@
 .search {
   position: relative;
   flex: 1 1 280px;
+  max-width: 420px;
 }
 
 .search__icon {
   position: absolute;
-  left: 16px;
+  left: var(--s4);
   top: 50%;
   transform: translateY(-50%);
-  color: var(--ink-faint);
+  color: var(--ink-soft);
   pointer-events: none;
 }
 
 .search__input {
   width: 100%;
-  min-height: 48px;
+  min-height: var(--hit-ui);
   padding: 10px 18px 10px 46px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--surface-alt);
   font: inherit;
+  font-size: var(--ui-md);
   color: inherit;
 }
 
 .search__input::placeholder {
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 .filters {
   display: flex;
-  gap: 10px;
+  gap: var(--s2);
   flex-wrap: wrap;
 }
 
 .filter {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 8px 18px;
+  gap: var(--s2);
+  min-height: var(--hit-ui);
+  padding: 0 var(--s4);
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--surface);
+  color: var(--ink-soft);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: var(--ui-sm);
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
@@ -84,11 +80,12 @@
   color: var(--category, var(--accent));
 }
 
-.filter__dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--category-pastel, var(--accent-pastel));
+/* « Tous les domaines » ne porte pas de domaine : il se distingue par le
+   contraste, pas par une teinte de domaine qu'il n'a pas. */
+.filter--all.filter--active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface);
 }
 
 .filter__count {
@@ -96,7 +93,7 @@
   padding: 1px 8px;
   border-radius: 999px;
   background: var(--surface-alt);
-  font-size: 0.8rem;
+  font-size: var(--ui-xs);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
@@ -105,41 +102,64 @@
   background: rgba(255, 255, 255, 0.75);
 }
 
+.filter--all.filter--active .filter__count {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* --- Sections ----------------------------------------------------- */
+
 .category-section {
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .category-section__header {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding-left: 16px;
-  border-left: 5px solid var(--category-pastel);
-  margin-bottom: 18px;
-}
-
-.category-section__title {
-  font-size: 1.35rem;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--hit-ui);
   color: var(--category);
 }
 
-.category-section__desc {
-  margin: 0;
-  font-size: 0.95rem;
-  max-width: 70ch;
+.category-section__star {
+  color: var(--accent);
 }
+
+.category-section__title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.category-section__count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.category-section__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* --- Carte de jeu -------------------------------------------------- */
 
 .game-grid {
   display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s3);
+  grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
 }
 
 .game-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-sm);
@@ -148,31 +168,53 @@
 }
 
 .game-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow);
   border-color: var(--category-pastel);
 }
 
+.game-card__media {
+  position: relative;
+  height: 104px;
+  background: var(--category-tint);
+}
+
+/* La vignette dit la mécanique du jeu : elle est vue entière, posée sur la
+   teinte du domaine, jamais recadrée sur sa bande centrale. */
 .game-card__cover {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 320 / 200;
-  max-width: 100%;
-  object-fit: cover;
-  border-bottom: 1px solid var(--line);
+  height: 100%;
+  object-fit: contain;
+}
+
+.game-card__domain {
+  position: absolute;
+  top: var(--s2);
+  left: var(--s2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 var(--s2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: var(--ui-xs);
+  font-weight: 800;
+  color: var(--category);
 }
 
 .game-card__body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 18px 20px 20px;
+  gap: var(--s2);
+  padding: 10px var(--s3) var(--s3);
   flex: 1;
 }
 
 .game-card__title {
-  font-size: 1.2rem;
+  font-size: var(--ui-lg);
+  line-height: 24px;
 }
 
 .game-card__link {
@@ -188,46 +230,46 @@
   border-radius: inherit;
 }
 
-.game-card__tagline {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-}
-
-.game-card__objectives {
-  margin: 0;
-  padding-left: 18px;
-  color: var(--ink-soft);
-  font-size: 0.88rem;
-}
-
-.game-card__meta {
+.game-card__launch {
+  align-self: flex-end;
   margin-top: auto;
-  padding-top: 8px;
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: var(--ui-sm);
+  font-weight: 800;
 }
 
 .game-card__fav {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 6px;
+  right: 6px;
   z-index: 1;
-  width: 42px;
-  height: 42px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.86);
-  color: var(--ink-faint);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink-soft);
   cursor: pointer;
   transition: color 0.15s ease, background 0.15s ease;
 }
 
+/* La cible du doigt reste à 44 px, sans agrandir la pastille blanche. */
+.game-card__fav::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
 .game-card__fav[aria-pressed='true'] {
-  color: #d79b28;
+  color: var(--accent);
 }
 
 .game-card__fav:hover {
@@ -241,21 +283,9 @@
 
 /* --- Tablette et mobile ------------------------------------------ */
 
-@media (max-width: 900px) {
-  .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-  }
-}
-
 @media (max-width: 560px) {
   .game-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .toolbar .filter {
-    flex: 1 1 auto;
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
 

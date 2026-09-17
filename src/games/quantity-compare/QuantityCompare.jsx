@@ -7,8 +7,10 @@
 import { useEffect, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
+import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
+import { answerState, stateClass } from '../../lib/answer-state.js'
 import { scatterOnGrid } from '../../lib/layout.js'
 import { randomInt } from '../../lib/random.js'
 
@@ -48,7 +50,7 @@ function buildRound(config) {
 }
 
 export default function QuantityCompare({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [picked, setPicked] = useState(null)
   const [hidden, setHidden] = useState(false)
@@ -92,16 +94,12 @@ export default function QuantityCompare({ config, session }) {
   const renderSide = (side) => {
     const collection = round[side]
     const asNumeral = round.digit === side
-    let modifier = ''
-    if (picked) {
-      if (side === winner) modifier = ' quantity--correct'
-      else if (side === picked) modifier = ' quantity--wrong'
-    }
+    const state = answerState(side, { picked, expected: winner })
 
     return (
       <button
         type="button"
-        className={`quantity${modifier}`}
+        className={`quantity${stateClass(state)}`}
         disabled={Boolean(picked)}
         onClick={() => answer(side)}
         aria-label={`Choisir la collection de ${side === 'left' ? 'gauche' : 'droite'}`}
@@ -127,6 +125,7 @@ export default function QuantityCompare({ config, session }) {
           ))
         )}
         {picked && <span className="quantity__total">{collection.total}</span>}
+        <StateMark state={state} />
       </button>
     )
   }

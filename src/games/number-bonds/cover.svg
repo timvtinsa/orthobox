@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des jetons posés, la place qui complète le compte">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <rect x="24" y="46" width="200" height="108" rx="18" fill="none" stroke="#8a6a18" stroke-width="6"/>
+  <circle cx="64" cy="82" r="16" fill="#8a6a18"/>
+  <circle cx="106" cy="82" r="16" fill="#8a6a18"/>
+  <circle cx="148" cy="82" r="16" fill="#8a6a18"/>
+  <circle cx="64" cy="122" r="16" fill="#8a6a18"/>
+  <circle cx="106" cy="122" r="16" fill="#8a6a18"/>
+  <rect x="166" y="98" width="46" height="46" rx="14" fill="none" stroke="#8a6a18" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M248 78h44M248 122h44" stroke="#8a6a18" stroke-width="6" stroke-linecap="round"/>
+  <rect x="250" y="34" width="44" height="20" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+</svg>

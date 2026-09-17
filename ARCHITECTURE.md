@@ -96,7 +96,11 @@ settings: [
 ```
 
 `GameSetup` turns that description into controls (`SwitchGroup` for a choice,
-`Stepper` for a number) and produces the `config` object. No game draws its own
+`Stepper` for a number) and produces the `config` object. It imposes the order
+rather than each manifest doing so: numbers first, then choices, and a choice
+of more than three options takes a row of its own. Each setting is a card read
+by its value, not by its label, with a « Modifié » marker on whatever departs
+from the game's default. No game draws its own
 settings screen: that is what guarantees that all of them are configured the
 same way, and that session mode can configure any game without knowing
 anything about it.
@@ -136,8 +140,23 @@ counter allows replaying the animation even on two correct answers in a row,
 where the state does not change. A new game therefore gets the mascot without
 a single extra line of code.
 
-Animations are CSS-based and disappear under `prefers-reduced-motion`, like the
-rest of the application.
+The fox is drawn to the same rule as the patient bank, in three layers, and
+carries what actually makes a fox rather than a round shape with ears: a bushy
+white-tipped tail, black stockings and black ear tips. It sits permanently at
+the edge of the board and reacts on three occasions, a right answer, a miss,
+and the end of a game.
+
+A reward is long enough to be noticed, `--reward-item` in `child-mode.css`, and
+never blocks the next answer: the fox can still be hopping while the
+practitioner moves on, and a new answer cuts the previous reaction short rather
+than queueing behind it. That is what protects session time, not the length of
+the animation. A right answer pops a few stars around the fox; the confetti
+stays for the end of a game, where `GameOver` shows the same fox bigger. Two
+foxes on screen at once would read as two characters.
+
+Animations are CSS-based and disappear under `prefers-reduced-motion`: the fox
+still changes expression, it simply stops moving, so the information survives
+and the motion does not.
 
 ## Data and privacy
 
@@ -177,9 +196,36 @@ sets `categoryStyle(category)` on a container and uses `var(--category)`,
 `var(--category-pastel)` and `var(--category-tint)`. Changing the palette of a
 domain therefore only takes editing one object.
 
-Two type families, with distinct roles: Nunito for the interface, Atkinson
-Hyperlegible for everything the patient has to read, because it tells `b/d/p/q`
-and `I/l/1` apart.
+The bank of patient drawings (`lib/pictograms.jsx`) is the one place that
+departs from the domain colours: the outline of a drawing is a constant black,
+because the bank is shared and a fish does not change colour depending on
+which game borrows it. No drawn object is ever filled with the success green
+or the error red, otherwise a patient would see a red apple and read a
+mistake.
+
+A domain carries a fourth property, `shape`: a square, a circle, a triangle or
+a diamond, rendered by `CategoryShape` and exposed as `var(--category-shape)`.
+It is what keeps the domain readable in greyscale and on the printed summary.
+
+**Two regimes, one system.** The application serves two pairs of eyes that
+never look at the screen at the same time. The practitioner wants density and
+reliable targets, the patient wants big, calm and unambiguous. Hence one
+typographic scale per regime, one density per regime, and an abrupt switch
+between the two:
+
+- `--ui-xs … --ui-xl` (12, 14, 16, 19, 26 px) in Nunito, `var(--font-ui)`;
+- `--pt-sm … --pt-xl` (24, 34, 52, 80 px) in Atkinson Hyperlegible,
+  `var(--font-patient)`, which tells `b/d/p/q` and `I/l/1` apart. A string read
+  by the patient never drops below 24 px and never takes Nunito, not even in
+  the label of a board button;
+- `--s1 … --s7` (4, 8, 12, 16, 24, 32, 48 px), one step of 4 px, no improvised
+  spacing in between;
+- `--hit-ui` 44 px and `--hit-patient` 64 px, the target floor of each regime.
+
+Correction states are declared once, in `styles/global.css`: each carries a
+border stroke (`--state-border-ok`, `-err`, `-expected`), a corner pictogram
+and a tint. The stroke being a variable is what makes « never colour alone »
+verifiable by reading the stylesheet.
 
 ## Interface constraints
 

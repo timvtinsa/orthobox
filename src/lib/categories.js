@@ -7,6 +7,10 @@
  *   ink    : the darker variant, used for text and borders
  *   tint   : the very light background of badges and play areas
  *
+ * A fourth property, `shape`, carries the domain a second time as a geometric
+ * shape. It is what keeps the domain readable in greyscale and on the printed
+ * summary, where colour says nothing.
+ *
  * Labels and descriptions are in French: they are shown to the practitioner.
  */
 export const CATEGORIES = [
@@ -18,6 +22,7 @@ export const CATEGORIES = [
     pastel: '#f6bdab',
     ink: '#a44a28',
     tint: '#fdede7',
+    shape: 'square',
   },
   {
     id: 'written-language',
@@ -27,15 +32,17 @@ export const CATEGORIES = [
     pastel: '#b9d8c2',
     ink: '#2f6b4c',
     tint: '#eaf4ee',
+    shape: 'circle',
   },
   {
     id: 'executive-functions',
     label: 'Fonctions exécutives',
-    short: 'Exécutif',
+    short: 'Exécutives',
     description: 'Inhibition, mémoire de travail, attention, flexibilité et recherche visuelle.',
     pastel: '#cdc3ec',
     ink: '#5b45a0',
     tint: '#f0ecfa',
+    shape: 'triangle',
   },
   {
     id: 'math-cognition',
@@ -43,8 +50,9 @@ export const CATEGORIES = [
     short: 'Maths',
     description: 'Sens du nombre, estimation, chaîne numérique et calcul.',
     pastel: '#f4dfa8',
-    ink: '#8a6410',
-    tint: '#fcf5e4',
+    ink: '#8a6a18',
+    tint: '#fbf5e4',
+    shape: 'diamond',
   },
 ]
 
@@ -67,5 +75,6 @@ export function categoryStyle(category) {
     '--category': category.ink,
     '--category-pastel': category.pastel,
     '--category-tint': category.tint,
+    '--category-shape': `var(--shape-${category.shape})`,
   }
 }

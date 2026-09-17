@@ -5,10 +5,15 @@ import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
-import { formatValue } from '../components/Stepper.jsx'
 import { GAMES, getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
-import { createStep, moveItem, readSessionPlan, writeSessionPlan } from '../lib/session-plan.js'
+import {
+  createStep,
+  moveItem,
+  readSessionPlan,
+  summariseConfig,
+  writeSessionPlan,
+} from '../lib/session-plan.js'
 import { useDragSequence } from '../hooks/useDragSequence.js'
 
 export default function SessionBuilderPage() {
@@ -240,18 +245,4 @@ export default function SessionBuilderPage() {
       )}
     </div>
   )
-}
-
-/** Readable summary of a step's settings, for its card in the plan. */
-function summariseConfig(game, config) {
-  if (!game.settings.length) return 'Aucun réglage'
-  return game.settings
-    .map((field) => {
-      const value = config?.[field.id]
-      if (field.type === 'choice') {
-        return field.options.find((option) => option.id === value)?.label ?? value
-      }
-      return `${field.label.toLowerCase()} : ${formatValue(value, field.unit, field.suffix)}`
-    })
-    .join(' · ')
 }

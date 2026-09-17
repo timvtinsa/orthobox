@@ -45,7 +45,7 @@ function buildScene(config) {
 }
 
 export default function VisualSearch({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [scene, setScene] = useState(() => buildScene(config))
   const [found, setFound] = useState(false)
   const [errors, setErrors] = useState(0)

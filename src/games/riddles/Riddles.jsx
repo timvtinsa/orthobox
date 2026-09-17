@@ -19,7 +19,7 @@ function buildDeck(config) {
 
 export default function Riddles({ config, session }) {
   const [deck, setDeck] = useState(() => buildDeck(config))
-  const rounds = useRounds(deck.length)
+  const rounds = useRounds(deck.length, session)
   const [shown, setShown] = useState(1)
   const [revealed, setRevealed] = useState(false)
 

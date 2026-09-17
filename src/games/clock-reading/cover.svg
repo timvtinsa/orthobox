@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une horloge lue, la bonne réponse désignée">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <circle cx="88" cy="100" r="62" fill="#fff" stroke="#8a6a18" stroke-width="6"/>
+  <circle cx="88" cy="46" r="7" fill="#f4dfa8"/>
+  <circle cx="142" cy="100" r="7" fill="#f4dfa8"/>
+  <circle cx="88" cy="154" r="7" fill="#f4dfa8"/>
+  <circle cx="34" cy="100" r="7" fill="#f4dfa8"/>
+  <path d="M88 100V66M88 100l30 18" stroke="#8a6a18" stroke-width="9" stroke-linecap="round"/>
+  <path d="M170 100h30" stroke="#8a6a18" stroke-width="6" stroke-linecap="round"/>
+  <path d="M194 88l16 12-16 12z" fill="#8a6a18"/>
+  <rect x="224" y="42" width="72" height="34" rx="12" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="224" y="124" width="72" height="34" rx="12" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="214" y="72" width="92" height="56" rx="16" fill="none" stroke="#8a6a18" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

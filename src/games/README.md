@@ -99,9 +99,24 @@ has to know which mode is active.
 ## 3. The `cover.svg` file
 
 An SVG in `viewBox="0 0 320 200"`, without text, evoking the mechanics of the
-game: a flat background in the light tint of the domain, then shapes in the
-palette colours (`src/lib/categories.js`). No emoji, no generic icon: the cover
-must stay recognisable small in the gallery.
+game: a flat background in the light tint of the domain, then two or three
+shapes in its pastel and its ink (`src/lib/categories.js`), stroked at 6 units.
+No emoji, no generic icon: the cover must stay recognisable small in the
+gallery.
+
+A cover shows the gesture, not the theme: comparing two piles, setting an odd
+one aside, putting back in order. The twenty covers are composed with one
+vocabulary, so a practitioner who has read one has read them all:
+
+| Sign | Means |
+| --- | --- |
+| dashed outline | the element to designate |
+| bent arrow | a movement |
+| pile of tokens | a quantity |
+| empty dashed rectangle | a place to fill |
+
+Unlike the drawings of the patient bank, a cover belongs to a domain, so its
+stroke takes the ink of that domain rather than the constant black.
 
 ## 4. Shared building blocks
 
@@ -109,7 +124,9 @@ must stay recognisable small in the gallery.
 - `components/GameOver.jsx`: end screen, score and « Rejouer » button
 - `components/SpeakButton.jsx`: reads a word aloud, when a voice is available
 - `components/GameSetup.jsx`: settings screen built from `settings`
-  (`SetupPanel`, `Stepper` and `SwitchGroup` are its building blocks)
+  (`Stepper` and `SwitchGroup` are its building blocks)
+- `components/StateMark.jsx`: the corner pictogram of a correction state
+- `components/CategoryShape.jsx`: the geometric shape of a domain
 - `components/StudyPhase.jsx`: memorisation phase with a countdown
 - `components/Icon.jsx`: the SVG icon set (star, speaker, arrow)
 - `components/MultipleChoice.jsx`: single-answer options, with correction
@@ -118,16 +135,29 @@ must stay recognisable small in the gallery.
 - `hooks/useAnswerLock.js`: double-click guard on answers
 - `lib/random.js`: `shuffle`, `sample`, `pick`, `randomInt`
 - `lib/lexicon.js`: frequent words, digit sequences, lenient comparison
-- `lib/pictograms.jsx`: 32 drawn pictograms, reusable
+- `lib/pictograms.jsx`: the bank of 32 drawings, reusable, each in three
+  layers on a 120 by 120 grid (flat colour, one shadow plane, outline plus
+  ground ellipse), with the fine details in a `picto__fine` group dropped
+  below 64 px. `node scripts/contact-sheet.mjs` renders the whole bank in the
+  three readings a drawing has to hold: 132 px, 52 px and greyscale
 - `lib/audio.js`: sound effects, an audio file when one exists, synthesis otherwise
 - `lib/layout.js`: placing items without overlap
+- `lib/answer-state.js`: the correction state of an option, `answerState`
+  and `stateClass`
 - shared CSS classes: `.game-board`, `.game-prompt`, `.choice-grid`,
-  `.choice` (+ `--correct`, `--wrong`, `--dim`), `.game-actions`, `.token`,
-  `.setup`, `.field`, `.word-list`, `.picture-grid`, `.quiz`, `.scene`
+  `.choice` (+ `.is-ok`, `.is-err`, `.is-expected`, `.is-selected`,
+  `--dim`), `.game-actions`, `.token`, `.setup`, `.word-list`,
+  `.picture-grid`, `.quiz`, `.scene`
+
+A correction state is never carried by colour alone: it always shows a border
+stroke (solid, dashed, dotted), a corner pictogram and a tint, which is what
+`answerState` plus `StateMark` produce. The expected answer revealed after a
+miss carries its own state, `expected`, and is never credited as correct.
 
 Honouring these blocks keeps the games consistent with one another and
-readable on a tablet: touch targets of at least 44 px, sufficient contrast, and
-no information carried by colour alone.
+readable on a tablet: touch targets of at least 44 px on the practitioner's
+side and 64 px for anything the patient touches on a board, sufficient
+contrast, and no information carried by colour alone.
 
 ### Games with adjustable material
 

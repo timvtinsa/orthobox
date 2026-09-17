@@ -7,8 +7,10 @@
 import { useEffect, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
+import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
+import { answerState, stateClass } from '../../lib/answer-state.js'
 import { pick, shuffle } from '../../lib/random.js'
 import { SHORT_WORDS, LONG_WORDS } from './data.js'
 
@@ -23,7 +25,7 @@ function buildRound(config) {
 }
 
 export default function FlashReading({ config, session }) {
-  const rounds = useRounds(config.rounds)
+  const rounds = useRounds(config.rounds, session)
   const [round, setRound] = useState(() => buildRound(config))
   const [phase, setPhase] = useState('ready') // ready -> flash -> choice
   const [picked, setPicked] = useState(null)
@@ -88,21 +90,18 @@ export default function FlashReading({ config, session }) {
           <p className="game-prompt">Quel mot as-tu vu ?</p>
           <div className="choice-grid choice-grid--wide">
             {round.options.map((word) => {
-              let modifier = ''
-              if (picked) {
-                if (word === round.word) modifier = ' choice--correct'
-                else if (word === picked) modifier = ' choice--wrong'
-                else modifier = ' choice--dim'
-              }
+              const state = answerState(word, { picked, expected: round.word })
+              const dim = picked && !state ? ' choice--dim' : ''
               return (
                 <button
                   key={word}
                   type="button"
-                  className={`choice${modifier}`}
+                  className={`choice${stateClass(state)}${dim}`}
                   disabled={Boolean(picked)}
                   onClick={() => answer(word)}
                 >
                   {word}
+                  <StateMark state={state} />
                 </button>
               )
             })}
