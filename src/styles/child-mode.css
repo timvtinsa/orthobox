@@ -219,20 +219,18 @@
 }
 
 /* --- Le renard au bord du plateau -----------------------------------
-   Posé dans le coin du plateau lui-même plutôt que dans une barre à part :
-   même surface, aucun trait qui le sépare du matériel de jeu. Il ne capte
-   jamais le doigt (`pointer-events: none`), pour qu'un tapis en bas de
-   plateau ne lui vole jamais un appui destiné au jeu.
+   Dans le fil de la page plutôt qu'en survol : il prend sa propre place
+   sous le matériel de jeu, qui reste centré dans l'espace qui lui reste
+   au dessus. Même surface que le plateau, aucun trait qui l'en sépare,
+   mais jamais posé par-dessus un bouton du jeu.
    ------------------------------------------------------------------- */
 .companion {
-  position: absolute;
-  left: var(--s3);
-  bottom: var(--s3);
-  z-index: 2;
+  align-self: flex-start;
+  flex: none;
+  margin-top: var(--s4);
   display: flex;
   align-items: flex-end;
   gap: var(--s3);
-  pointer-events: none;
 }
 
 /* Les étincelles se posent autour du renard, pas autour de la barre. */

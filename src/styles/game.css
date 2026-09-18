@@ -494,11 +494,8 @@
 }
 
 .board__area {
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   flex: 1;
   min-height: 420px;
   padding: var(--s6) var(--s5);
@@ -506,6 +503,18 @@
   border: 1px solid var(--line);
   border-top: none;
   border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* Le matériel du jeu occupe l'espace disponible et reste centré dedans ;
+   le renard prend sa propre place en dessous plutôt que de se poser
+   par-dessus, pour qu'il ne recouvre jamais un bouton du jeu. */
+.board__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100%;
 }
 
 /* Le rang de l'item est porté par la barre : les jeux n'ont plus à le
