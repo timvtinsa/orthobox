@@ -17,7 +17,7 @@ Games are filed under four domains:
 | Fonctions exécutives (executive functions) | Inhibition, working memory, attention, flexibility, visual search |
 | Cognition mathématique (math cognition) | Number sense, estimation, number chain, calculation |
 
-## The 26 games
+## The 27 games
 
 **Oral language**
 
@@ -27,6 +27,7 @@ Games are filed under four domains:
 | Qui suis-je ? | Find a word from progressive clues (lexical retrieval) |
 | La suite de sons | Listen to a series of sounds, then put the cards back in order |
 | Combien de syllabes ? | Count the syllables of a word, heard or read and heard |
+| Combien de sons ? | Count the phonemes of a word — finer than its syllables |
 | L’intrus de la famille | Spot the word that does not belong to the same family as the others |
 
 **Written language**
