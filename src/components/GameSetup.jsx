@@ -13,7 +13,9 @@
  * choices, and a choice of more than three options takes a row of its own.
  */
 import { useState } from 'react'
+import { shareLink } from '../lib/share-settings.js'
 import Stepper from './Stepper.jsx'
+import StyledQr from './StyledQr.jsx'
 import SwitchGroup from './SwitchGroup.jsx'
 
 /** Default values declared by a game in its `game.js` manifest. */
@@ -31,11 +33,28 @@ export default function GameSetup({
   onStart,
   actionLabel = 'Démarrer',
   variant = 'start',
+  sharedApplied = false,
 }) {
   const defaults = defaultConfig(game.settings)
   const [config, setConfig] = useState(() => initial ?? defaults)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const update = (id, value) => setConfig((current) => ({ ...current, [id]: value }))
+
+  const link = shareLink(game.id, game.settings, config)
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(link)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Presse-papiers indisponible (contexte non sécurisé, permission
+      // refusée) : le champ reste sélectionnable à la main.
+      setCopied(false)
+    }
+  }
 
   const fields = [...game.settings].sort((a, b) => {
     if (a.type === b.type) return 0
@@ -46,6 +65,13 @@ export default function GameSetup({
 
   return (
     <div className="setup">
+      {sharedApplied && (
+        <p className="setup__note setup__note--shared">
+          Réglages reçus par lien : les champs marqués « Modifié » viennent de ce lien, pas d’un
+          choix fait ici.
+        </p>
+      )}
+
       <div className="setup__grid">
         {fields.map((field) => {
           const wide = field.type === 'choice' && field.options.length > 3
@@ -102,6 +128,15 @@ export default function GameSetup({
           Réglages par défaut
         </button>
 
+        <button
+          type="button"
+          className="btn btn--ghost"
+          aria-expanded={shareOpen}
+          onClick={() => setShareOpen((open) => !open)}
+        >
+          Partager ces réglages
+        </button>
+
         {variant === 'start' && (
           <p className="setup__note">
             Le plateau n’est pas monté avant cet appui : le patient ne voit ni le matériel, ni la
@@ -109,6 +144,33 @@ export default function GameSetup({
           </p>
         )}
       </div>
+
+      {shareOpen && (
+        <div className="share-panel">
+          <StyledQr value={link} className="share-panel__qr" />
+
+          <div className="share-panel__details">
+            <p className="share-panel__note">
+              Le code et le lien ne contiennent que ces réglages : aucune donnée patient, aucun
+              résultat n’y est attaché.
+            </p>
+
+            <div className="share-panel__link-row">
+              <input
+                className="share-panel__link"
+                type="text"
+                readOnly
+                value={link}
+                onFocus={(event) => event.target.select()}
+                aria-label="Lien vers ces réglages"
+              />
+              <button type="button" className="btn btn--subtle" onClick={copyLink}>
+                {copied ? 'Copié' : 'Copier le lien'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
