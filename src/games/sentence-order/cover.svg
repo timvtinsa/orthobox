@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des mots de tailles différentes en désordre, une flèche courbe pour les remettre en ordre">
+  <rect width="320" height="200" fill="#eaf4ee"/>
+  <rect x="24" y="84" width="46" height="34" rx="10" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="82" y="52" width="80" height="34" rx="10" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="24" y="132" width="64" height="34" rx="10" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="176" y="90" width="54" height="34" rx="10" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <path
+    d="M244 150c30 8 52-10 44-36"
+    fill="none"
+    stroke="#2f6b4c"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+  <path d="M280 104l10 12-16 2Z" fill="#2f6b4c"/>
+</svg>

@@ -17,7 +17,7 @@ Games are filed under four domains:
 | Fonctions exécutives (executive functions) | Inhibition, working memory, attention, flexibility, visual search |
 | Cognition mathématique (math cognition) | Number sense, estimation, number chain, calculation |
 
-## The 26 games
+## The 27 games
 
 **Oral language**
 
@@ -34,6 +34,7 @@ Games are filed under four domains:
 | Game | Principle |
 | --- | --- |
 | Le mot en morceaux | Rebuild a word from its scrambled syllables |
+| La phrase mélangée | Rebuild a sentence from its scrambled words |
 | La phrase à trous | Pick the missing word: meaning, connectors or agreement |
 | Lecture flash | Identify a word shown very briefly, among close lures |
 | L’histoire et les détails | Read a story, then answer multiple-choice questions on its details |
