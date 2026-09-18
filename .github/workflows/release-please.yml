@@ -5,6 +5,10 @@
 # CHANGELOG and the version number. The tag and the GitHub release are only
 # created when that pull request is merged: publishing stays a deliberate act,
 # while being entirely computed.
+#
+# The same build then does two things with the exact same `dist/`, so the
+# downloadable archive and the hosted copy can never drift apart: it is
+# attached to the GitHub release, and published to GitHub Pages.
 name: Release
 
 on:
@@ -27,6 +31,8 @@ jobs:
     name: Prepare and publish the release
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
     steps:
       - name: Compute the version and the changelog
         id: release
@@ -56,6 +62,8 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         run: npm ci
 
+      # The service worker and the offline install are part of what a release
+      # publishes: unlike the hosted preview, this build keeps the PWA.
       - name: Build the application
         if: ${{ steps.release.outputs.release_created }}
         run: npm run build
@@ -72,3 +80,30 @@ jobs:
           # The checkout keeps no credentials, so name the repository rather
           # than letting gh infer it from the git remote.
           GH_REPO: ${{ github.repository }}
+
+      - name: Package the build for GitHub Pages
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  # A separate job so the deployment gets its own `github-pages` environment
+  # (the URL shown on the commit and in the repository's Environments tab),
+  # and so the elevated `id-token` permission stays scoped to the one step
+  # that needs it rather than sitting on the whole release job.
+  deploy:
+    name: Publish to GitHub Pages
+    needs: release
+    if: ${{ needs.release.outputs.released }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
