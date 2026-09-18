@@ -5,7 +5,8 @@
  * colour of the animal, a single shadow plane on the side away from the light,
  * and a constant black outline. A child has to be able to recognise a fox, not
  * a round shape with ears, so the drawing carries what actually makes a fox: a
- * bushy white-tipped tail, black stockings, black ear tips and a cheek ruff.
+ * bushy white-tipped tail, black stockings, tall pointed ears with a dark
+ * back, a cheek ruff tapering to the chin, a small dark nose, and whiskers.
  *
  * Three moods, built from the same shapes so it is clearly the same animal
  * changing expression:
@@ -71,14 +72,26 @@ function Mouth({ mood }) {
   )
 }
 
+/** Three short, fine strokes per cheek: enough to read as whiskers at this
+ * size without competing with the face. */
+function Whiskers() {
+  return (
+    <g stroke={FEATURE} strokeWidth="1.6" strokeLinecap="round" opacity=".35">
+      <path d="M40 58h-11M39 62h-10.5M40 66h-9.5" />
+      <path d="M80 58h11M81 62h10.5M80 66h9.5" />
+    </g>
+  )
+}
+
 export default function Mascot({ mood = 'idle', size = 88, className = '' }) {
   return (
     <span className={`mascot mascot--${mood} ${className}`.trim()} style={{ width: size }}>
       <svg viewBox="0 0 120 120" width="100%" aria-hidden="true" focusable="false">
         <ellipse cx="60" cy="112" rx="36" ry="5" fill={FEATURE} opacity=".12" />
 
-        {/* Queue touffue, derrière le corps, à bout blanc : c'est elle qui dit
-            « renard » avant même la tête. */}
+        {/* Queue touffue, derrière le corps, à bout blanc : une touffe de
+            plus qu'avant, pour une silhouette qui se lit comme du poil
+            plutôt que comme une seule goutte de couleur. */}
         <g className="mascot__tail">
           <ellipse
             cx="93"
@@ -89,6 +102,16 @@ export default function Mascot({ mood = 'idle', size = 88, className = '' }) {
             stroke={FEATURE}
             strokeWidth="4.5"
             transform="rotate(28 93 78)"
+          />
+          <ellipse
+            cx="88"
+            cy="58"
+            rx="10.5"
+            ry="14"
+            fill={FUR}
+            stroke={FEATURE}
+            strokeWidth="4"
+            transform="rotate(14 88 58)"
           />
           <ellipse cx="103" cy="56" rx="12" ry="13" fill={BELLY} stroke={FEATURE} strokeWidth="4.5" transform="rotate(28 103 56)" />
           <path d="M97 92a15 25 0 0 0 11-26 15 25 0 0 1-11 26z" fill={FEATURE} opacity=".16" />
@@ -118,13 +141,15 @@ export default function Mascot({ mood = 'idle', size = 88, className = '' }) {
         <ellipse cx="45" cy="103" rx="9" ry="6" fill={FEATURE} />
         <ellipse cx="71" cy="103" rx="9" ry="6" fill={FEATURE} />
 
-        {/* Oreilles à pointe noire */}
-        <path d="M34 28L26 5l23 11z" fill={FUR} stroke={FEATURE} strokeWidth="5" strokeLinejoin="round" />
-        <path d="M35 24L30 11l12 6z" fill={FUR_INK} />
-        <path d="M26 5l11 5-4 9z" fill={FEATURE} />
-        <path d="M86 28L94 5 71 16z" fill={FUR} stroke={FEATURE} strokeWidth="5" strokeLinejoin="round" />
-        <path d="M85 24L90 11l-12 6z" fill={FUR_INK} />
-        <path d="M94 5L83 10l4 9z" fill={FEATURE} />
+        {/* Oreilles hautes et pointues, à revers sombre et pointe noire :
+            plus dressées que rondes, pour un air aux aguets plutôt qu'en
+            peluche. */}
+        <path d="M35 29L24 2l26 14z" fill={FUR} stroke={FEATURE} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M35 24L29 9l14 7z" fill={FUR_INK} />
+        <path d="M24 2l13 6-5 10z" fill={FEATURE} />
+        <path d="M85 29L96 2 70 16z" fill={FUR} stroke={FEATURE} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M85 24L91 9l-14 7z" fill={FUR_INK} />
+        <path d="M96 2l-13 6 5 10z" fill={FEATURE} />
 
         {/* Tête, collerette et museau */}
         <path
@@ -146,8 +171,10 @@ export default function Mascot({ mood = 'idle', size = 88, className = '' }) {
           strokeWidth="4.5"
         />
 
+        <Whiskers />
         <Eyes mood={mood} />
         <ellipse cx="60" cy="55" rx="6.5" ry="5" fill={FEATURE} />
+        <ellipse cx="58" cy="53.3" rx="1.4" ry="1" fill="#fff" opacity=".65" />
         <Mouth mood={mood} />
 
         {/* Patte tendue : l'humeur ratée encourage, elle ne gronde pas. */}

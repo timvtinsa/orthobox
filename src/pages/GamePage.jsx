@@ -70,12 +70,14 @@ function GameScreen({ gameId }) {
         <BoardBar title={game.title} session={session} onQuit={quit} />
 
         <div className="board__area">
-          <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
-            <GameComponent key={runKey} config={config} session={session} />
-          </Suspense>
-        </div>
+          <div className="board__content">
+            <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
+              <GameComponent key={runKey} config={config} session={session} />
+            </Suspense>
+          </div>
 
-        <GameCompanion session={session} />
+          <GameCompanion session={session} />
+        </div>
       </div>
     )
   }

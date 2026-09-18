@@ -160,17 +160,23 @@ a single extra line of code.
 
 The fox is drawn to the same rule as the patient bank, in three layers, and
 carries what actually makes a fox rather than a round shape with ears: a bushy
-white-tipped tail, black stockings and black ear tips. It sits permanently at
-the edge of the board and reacts on three occasions, a right answer, a miss,
-and the end of a game.
+tail built from layered tufts, black stockings, tall pointed ears with a dark
+back, whiskers and a small dark nose. It sits inside `.board__area` itself, in
+its bottom corner, not in a bar underneath it — same surface, no seam between
+the fox and the game — and reacts on three occasions, a right answer, a miss,
+and the end of a game. `pointer-events: none` on `.companion` keeps it from
+ever stealing a tap meant for the game beside it.
 
-A reward is long enough to be noticed, `--reward-item` in `child-mode.css`, and
-never blocks the next answer: the fox can still be hopping while the
-practitioner moves on, and a new answer cuts the previous reaction short rather
-than queueing behind it. That is what protects session time, not the length of
-the animation. A right answer pops a few stars around the fox; the confetti
-stays for the end of a game, where `GameOver` shows the same fox bigger. Two
-foxes on screen at once would read as two characters.
+At rest the fox is quiet, no caption competing with the material; a reaction
+opens a small speech bubble next to it (`.companion__line--visible`), which
+closes again once the reward budget runs out. A reward is long enough to be
+noticed, `--reward-item` in `child-mode.css`, and never blocks the next
+answer: the fox can still be hopping while the practitioner moves on, and a
+new answer cuts the previous reaction short rather than queueing behind it.
+That is what protects session time, not the length of the animation. A right
+answer pops a few stars around the fox; the confetti stays for the end of a
+game, where `GameOver` shows the same fox bigger. Two foxes on screen at once
+would read as two characters.
 
 Animations are CSS-based and disappear under `prefers-reduced-motion`: the fox
 still changes expression, it simply stops moving, so the information survives

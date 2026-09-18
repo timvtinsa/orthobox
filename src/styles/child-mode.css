@@ -66,7 +66,7 @@
    -------------------------------------------------------------------- */
 
 :root {
-  --reward-item: 1000ms;
+  --reward-item: 1500ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -218,21 +218,19 @@
   }
 }
 
-/* --- Le renard au bord du plateau ---------------------------------- */
-
-/* Pas de rognage ici : c'est la couche de confettis qui se rogne elle même,
-   sinon la barre couperait le saut du renard. */
+/* --- Le renard au bord du plateau -----------------------------------
+   Dans le fil de la page plutôt qu'en survol : il prend sa propre place
+   sous le matériel de jeu, qui reste centré dans l'espace qui lui reste
+   au dessus. Même surface que le plateau, aucun trait qui l'en sépare,
+   mais jamais posé par-dessus un bouton du jeu.
+   ------------------------------------------------------------------- */
 .companion {
-  position: relative;
+  align-self: flex-start;
+  flex: none;
+  margin-top: var(--s4);
   display: flex;
-  align-items: center;
-  gap: var(--s4);
-  min-height: 112px;
-  padding: var(--s2) var(--s5);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
+  align-items: flex-end;
+  gap: var(--s3);
 }
 
 /* Les étincelles se posent autour du renard, pas autour de la barre. */
@@ -242,11 +240,35 @@
   flex: none;
 }
 
+/* Une bulle plutôt qu'une ligne de barre d'état : elle n'existe que le
+   temps de la réaction, comme le renard qui saute ou penche la tête. */
 .companion__line {
-  margin: 0;
+  position: relative;
+  margin: 0 0 6px;
+  max-width: 42vw;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
   font-family: var(--font-patient);
   font-size: var(--pt-sm);
   color: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.companion__line--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (max-width: 560px) {
+  .companion__line {
+    max-width: 56vw;
+    font-size: var(--ui-md);
+  }
 }
 
 /* --- Confettis, fin de partie seulement ---------------------------- */
