@@ -1,0 +1,551 @@
+/* ---------------------------------------------------------------
+   Orthobox, feuille de style globale
+
+   Palette pastel : quatre teintes de domaine (pêche, sauge, lavande, sable)
+   posées sur un neutre chaud, avec pour chacune une déclinaison foncée
+   réservée au texte, pour que les contrastes restent lisibles.
+   https://coolors.co/f6bdab-b9d8c2-cdc3ec-f4dfa8-a8c8ec
+
+   Les jeux réutilisent les classes de ce fichier (.panel, .choice-grid,
+   .choice, .feedback…) pour rester cohérents entre eux.
+   --------------------------------------------------------------- */
+
+:root {
+  /* Teintes */
+  --accent-pastel: #a8c8ec;
+  --accent: #35608f;
+  --accent-tint: #eaf2fb;
+
+  /* Neutres, légèrement chauds */
+  --ground: #faf7f5;
+  --surface: #ffffff;
+  --surface-alt: #f4f0ed;
+  --line: #e7e0db;
+  --line-strong: #d6cdc6;
+  --ink: #33303a;
+  --ink-soft: #6b6674;
+  --ink-faint: #98929f;
+
+  /* Sémantique */
+  --success: #2f7d57;
+  --success-pastel: #bfe0cb;
+  --success-tint: #eaf5ee;
+  --danger: #b4453f;
+  --danger-pastel: #f3c2be;
+  --danger-tint: #fdecea;
+
+  /* États de correction. Chaque état porte trois marqueurs indépendants :
+     un tracé, un pictogramme d'angle et une teinte. Le tracé est une
+     variable pour que l'interdit « jamais la couleur seule » se vérifie
+     en relisant la feuille de style. */
+  --state-ok: #2f7d57;
+  --state-ok-tint: #eaf4ee;
+  --state-err: #b4453f;
+  --state-err-tint: #fbeeed;
+  --state-expected: #6b6674;
+  --state-border-ok: solid;
+  --state-border-err: dashed;
+  --state-border-expected: dotted;
+
+  /* Domaine courant (redéfini par catégorie sur les conteneurs) */
+  --category: var(--accent);
+  --category-pastel: var(--accent-pastel);
+  --category-tint: var(--accent-tint);
+  --category-shape: var(--shape-square);
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --shadow-sm: 0 1px 2px rgba(51, 48, 58, 0.05), 0 2px 10px rgba(51, 48, 58, 0.04);
+  --shadow: 0 8px 28px rgba(51, 48, 58, 0.1);
+
+  /* Les quatre formes de domaine, en clip-path : le domaine reste lisible
+     en niveaux de gris, et sur le récapitulatif imprimé. */
+  --shape-square: inset(0 round 2px);
+  --shape-circle: circle(50%);
+  --shape-triangle: polygon(50% 0, 100% 100%, 0 100%);
+  --shape-diamond: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+
+  --font-ui: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-patient: 'Atkinson Hyperlegible', 'Nunito', 'Segoe UI', system-ui, sans-serif;
+
+  /* Échelle praticien : Nunito, densité de travail. */
+  --ui-xs: 12px;
+  --ui-sm: 14px;
+  --ui-md: 16px;
+  --ui-lg: 19px;
+  --ui-xl: 26px;
+
+  /* Échelle patient : Atkinson Hyperlegible, jamais sous 24 px. Toute règle
+     qui pose une de ces tailles pose aussi --font-patient. */
+  --pt-sm: 24px;
+  --pt-md: 34px;
+  --pt-lg: 52px;
+  --pt-xl: 80px;
+
+  /* Un pas de 4 px, sept crans : le régime praticien tient dans s1 à s4,
+     le régime patient dans s4 à s7. */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  /* Plancher de cible par régime. */
+  --hit-ui: 44px;
+  --hit-patient: 64px;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.18;
+  margin: 0;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Structure ------------------------------------------------- */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 28px 20px 72px;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(250, 247, 245, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.app-header__inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  /* L'en-tête porte le titre, la navigation et l'interrupteur de mode :
+     en écran étroit, il passe sur deux lignes plutôt que de déborder. */
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+@media (max-width: 560px) {
+  .app-header__inner {
+    padding: 10px 16px;
+    gap: 8px 10px;
+  }
+
+  .brand {
+    font-size: 1.05rem;
+    gap: 8px;
+  }
+
+  .app-nav__link {
+    padding: 6px 12px;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--ink);
+  margin-right: auto;
+}
+
+.brand__mark {
+  display: block;
+  width: 34px;
+  height: 34px;
+}
+
+/* Titre d'écran, sur les écrans qui en portent un. La galerie n'en a pas :
+   c'est un catalogue, la première rangée de cartes est son titre. */
+.hero {
+  max-width: 62ch;
+}
+
+.hero__title {
+  font-size: var(--ui-xl);
+  line-height: 30px;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--s2);
+}
+
+.hero__text {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--ui-md);
+}
+
+.app-footer {
+  border-top: 1px solid var(--line);
+  padding: 22px 20px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+}
+
+/* --- Boutons ---------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--accent-pastel);
+  color: #1d3a5c;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--ghost {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.btn--subtle {
+  background: var(--category-tint);
+  color: var(--category);
+}
+
+.btn--lg {
+  min-height: 56px;
+  padding: 14px 30px;
+  font-size: 1.05rem;
+}
+
+/* --- Blocs ------------------------------------------------------ */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.badge--category {
+  background: var(--category-tint);
+  color: var(--category);
+  font-weight: 700;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+/* --- Éléments de jeu partagés ----------------------------------- */
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+/* La consigne du plateau est lue par le patient : Atkinson, et jamais sous
+   le plancher de 24 px. */
+.game-prompt {
+  margin: 0;
+  font-family: var(--font-patient);
+  font-size: clamp(var(--pt-sm), 1rem + 1.6vw, var(--pt-md));
+  line-height: 1.25;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.choice-grid--wide {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Matériel patient : jamais sous le plancher de cible ni sous le plancher
+   typographique, et le radius du plateau. */
+.choice {
+  min-height: 96px;
+  padding: var(--s4);
+  border-radius: var(--radius-lg);
+  border: 3px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-patient);
+  font-size: var(--pt-md);
+  line-height: 40px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.choice:hover:not(:disabled) {
+  border-color: var(--category-pastel);
+  background: var(--category-tint);
+  transform: translateY(-2px);
+}
+
+.choice:disabled {
+  cursor: default;
+}
+
+.choice--dim {
+  opacity: 0.4;
+}
+
+/* --- États de correction ----------------------------------------
+   Trois marqueurs indépendants par état : un tracé de bordure, un
+   pictogramme d'angle (StateMark) et une teinte. Le même triplet sert sur
+   une carte, un jeton, une case de grille ou une pièce de monnaie, ce qui
+   évite d'inventer une convention par plateau.
+   ---------------------------------------------------------------- */
+
+.is-state {
+  position: relative;
+  border-width: 3px;
+}
+
+.is-ok {
+  border-style: var(--state-border-ok);
+  border-color: var(--state-ok);
+  background: var(--state-ok-tint);
+}
+
+.is-err {
+  border-style: var(--state-border-err);
+  border-color: var(--state-err);
+  background: var(--state-err-tint);
+}
+
+.is-expected {
+  border-style: var(--state-border-expected);
+  border-color: var(--state-expected);
+  background: var(--surface-alt);
+}
+
+/* Sélectionné n'est jamais « juste » : bordure d'accent, plus une barre de
+   base qui le distingue au tracé comme à la forme. */
+.is-selected {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.is-selected::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  width: 26px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+/* Sur un plateau à réponse continue, la teinte s'atténue après validation de
+   l'item : le tracé et le pictogramme, eux, restent. */
+.is-settled {
+  background: transparent;
+}
+
+.state-mark {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.state-mark--ok {
+  background: var(--state-ok);
+}
+
+.state-mark--err {
+  background: var(--state-err);
+}
+
+.state-mark--expected {
+  background: var(--state-expected);
+}
+
+/* --- Forme de domaine -------------------------------------------- */
+
+.category-shape {
+  flex: none;
+  color: var(--category);
+}
+
+.feedback {
+  min-height: 32px;
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.feedback--correct {
+  color: var(--success);
+}
+
+.feedback--wrong {
+  color: var(--danger);
+}
+
+/* --- Navigation et notifications -------------------------------- */
+
+.app-header__install {
+  min-height: 40px;
+  padding: 6px 16px;
+  font-size: 0.92rem;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 50;
+  width: min(520px, calc(100% - 32px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.toast__text {
+  margin: 0;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

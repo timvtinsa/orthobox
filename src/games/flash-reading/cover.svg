@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un mot montré très brièvement, puis reconnu">
+  <rect width="320" height="200" fill="#eaf4ee"/>
+  <path d="M28 54h34M16 80h46M28 106h34" stroke="#b9d8c2" stroke-width="10" stroke-linecap="round"/>
+  <rect x="88" y="34" width="150" height="92" rx="14" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="118" y="72" width="90" height="16" rx="8" fill="#2f6b4c"/>
+  <rect x="40" y="146" width="68" height="34" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="126" y="146" width="68" height="34" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="212" y="146" width="68" height="34" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="116" y="136" width="88" height="54" rx="16" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une planche d'images, une image à reconnaître">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <rect x="24" y="30" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <circle cx="65" cy="61" r="17" fill="#cdc3ec"/>
+  <rect x="119" y="30" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M160 44l19 32h-38z" fill="#cdc3ec"/>
+  <rect x="214" y="30" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <rect x="239" y="46" width="32" height="30" rx="8" fill="#cdc3ec"/>
+  <rect x="24" y="108" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M44 148a21 21 0 0 1 42 0z" fill="#cdc3ec"/>
+  <rect x="214" y="108" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <rect x="239" y="124" width="32" height="30" rx="15" fill="#cdc3ec"/>
+  <rect x="119" y="108" width="82" height="62" rx="12" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <circle cx="160" cy="139" r="17" fill="#cdc3ec"/>
+  <rect x="109" y="98" width="102" height="82" rx="16" fill="none" stroke="#5b45a0" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

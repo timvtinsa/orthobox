@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Orthobox">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b74e8"/>
+      <stop offset="1" stop-color="#353fa8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <path d="M256 104c-93 0-168 59-168 132 0 41 24 78 62 102l-14 66 78-46c14 2 28 4 42 4 93 0 168-59 168-126S349 104 256 104Z" fill="#fff"/>
+  <g fill="#353fa8">
+    <circle cx="186" cy="236" r="22"/>
+    <circle cx="256" cy="236" r="22"/>
+    <circle cx="326" cy="236" r="22"/>
+  </g>
+</svg>

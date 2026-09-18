@@ -1,0 +1,74 @@
+# Automated publishing, on every landing on main.
+#
+# release-please reads the commit messages (Conventional Commits), derives the
+# next version from them and maintains a release pull request holding the
+# CHANGELOG and the version number. The tag and the GitHub release are only
+# created when that pull request is merged: publishing stays a deliberate act,
+# while being entirely computed.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# Two landings on main in quick succession must not race for the release pull
+# request: they queue instead, and none is cancelled halfway through a tag.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Prepare and publish the release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Compute the version and the changelog
+        id: release
+        uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # The steps below only run right after the release pull request has been
+      # merged, that is once the tag has been created.
+      - name: Check out the repository
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v5
+        with:
+          # The upload below authenticates through GH_TOKEN, not through git.
+          persist-credentials: false
+
+      - name: Set up Node
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm ci
+
+      - name: Build the application
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm run build
+
+      - name: Attach the build to the release
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          tag='${{ steps.release.outputs.tag_name }}'
+          archive="orthobox-${tag}.zip"
+          (cd dist && zip -qr "../${archive}" .)
+          gh release upload "${tag}" "${archive}" --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The checkout keeps no credentials, so name the repository rather
+          # than letting gh infer it from the git remote.
+          GH_REPO: ${{ github.repository }}

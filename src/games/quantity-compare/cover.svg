@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Deux tas comparés d'un coup d'oeil">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <g fill="#8a6a18">
+    <circle cx="72" cy="140" r="15"/><circle cx="106" cy="140" r="15"/><circle cx="89" cy="112" r="15"/>
+  </g>
+  <g fill="#8a6a18">
+    <circle cx="196" cy="140" r="15"/><circle cx="230" cy="140" r="15"/><circle cx="264" cy="140" r="15"/>
+    <circle cx="213" cy="112" r="15"/><circle cx="247" cy="112" r="15"/><circle cx="230" cy="84" r="15"/>
+  </g>
+  <rect x="172" y="46" width="116" height="122" rx="16" fill="none" stroke="#8a6a18" stroke-width="6"/>
+</svg>

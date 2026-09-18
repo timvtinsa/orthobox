@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une liste mémorisée, puis restituée de mémoire">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <rect x="24" y="34" width="116" height="132" rx="14" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M48 68h68M48 100h68M48 132h44" stroke="#5b45a0" stroke-width="12" stroke-linecap="round"/>
+  <path d="M160 100h28" stroke="#5b45a0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M182 88l16 12-16 12z" fill="#5b45a0"/>
+  <rect x="210" y="34" width="86" height="132" rx="14" fill="none" stroke="#5b45a0" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M232 68h42M232 100h42M232 132h28" stroke="#cdc3ec" stroke-width="12" stroke-linecap="round"/>
+</svg>

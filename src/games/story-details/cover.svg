@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un texte lu, un détail à retrouver dedans">
+  <rect width="320" height="200" fill="#eaf4ee"/>
+  <rect x="24" y="28" width="150" height="144" rx="14" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <path d="M46 60h106M46 84h106M46 132h106" stroke="#b9d8c2" stroke-width="10" stroke-linecap="round"/>
+  <path d="M52 108h46" stroke="#2f6b4c" stroke-width="10" stroke-linecap="round"/>
+  <rect x="38" y="94" width="74" height="30" rx="15" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M194 100h30" stroke="#2f6b4c" stroke-width="6" stroke-linecap="round"/>
+  <path d="M218 88l16 12-16 12z" fill="#2f6b4c"/>
+  <rect x="242" y="68" width="60" height="64" rx="14" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+</svg>

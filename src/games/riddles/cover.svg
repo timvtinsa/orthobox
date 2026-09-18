@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des indices de plus en plus précis, puis le mot à trouver">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <rect x="28" y="52" width="70" height="16" rx="8" fill="#f6bdab"/>
+  <rect x="28" y="92" width="104" height="16" rx="8" fill="#f6bdab"/>
+  <rect x="28" y="132" width="138" height="16" rx="8" fill="#a44a28"/>
+  <path d="M186 140q30 0 30-30V96" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M208 100l8-14 8 14z" fill="#a44a28"/>
+  <rect x="188" y="34" width="104" height="52" rx="16" fill="none" stroke="#a44a28" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

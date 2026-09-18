@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Deux sons semblables, un intrus désigné">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <g fill="none" stroke="#a44a28" stroke-width="7" stroke-linecap="round">
+    <path d="M44 100c8-26 16-26 24 0s16 26 24 0"/>
+    <path d="M124 100c8-26 16-26 24 0s16 26 24 0"/>
+  </g>
+  <path d="M204 100h16l8-22 10 44 8-22h16" fill="none" stroke="#a44a28" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="248" cy="100" r="52" fill="none" stroke="#a44a28" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

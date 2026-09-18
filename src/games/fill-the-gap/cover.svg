@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une phrase trouée, le mot qui vient s'y placer">
+  <rect width="320" height="200" fill="#eaf4ee"/>
+  <rect x="24" y="48" width="56" height="16" rx="8" fill="#b9d8c2"/>
+  <rect x="92" y="48" width="40" height="16" rx="8" fill="#b9d8c2"/>
+  <rect x="146" y="38" width="80" height="36" rx="12" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-dasharray="14 12"/>
+  <rect x="240" y="48" width="56" height="16" rx="8" fill="#b9d8c2"/>
+  <rect x="56" y="122" width="76" height="44" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="164" y="122" width="76" height="44" rx="12" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <path d="M94 116V96q0-16 16-16h26" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-linecap="round"/>
+  <path d="M132 68l16 12-16 12z" fill="#2f6b4c"/>
+</svg>

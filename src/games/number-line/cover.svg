@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une ligne graduée, un saut, une place à trouver">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <path d="M28 132h264" stroke="#8a6a18" stroke-width="6" stroke-linecap="round"/>
+  <path d="M28 118v28M94 120v24M160 118v28M226 120v24M292 118v28" stroke="#8a6a18" stroke-width="6" stroke-linecap="round"/>
+  <path d="M94 112q33-46 66 0" fill="none" stroke="#8a6a18" stroke-width="6" stroke-linecap="round"/>
+  <path d="M152 78l10 16 10-16z" fill="#8a6a18"/>
+  <circle cx="94" cy="132" r="14" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <circle cx="226" cy="132" r="18" fill="none" stroke="#8a6a18" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Des barres croissantes, une place à retrouver">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <rect x="34" y="120" width="56" height="44" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="106" y="92" width="56" height="72" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="178" y="56" width="56" height="108" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="250" y="120" width="56" height="44" rx="10" fill="none" stroke="#8a6a18" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M206 24v18M198 34l8 10 8-10" stroke="#8a6a18" stroke-width="6" stroke-linecap="round" fill="none"/>
+</svg>

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "packages": {
+    ".": {
+      "package-name": "orthobox",
+      "changelog-path": "CHANGELOG.md",
+      "include-component-in-tag": false,
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": false,
+      "draft": false,
+      "prerelease": false,
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug fixes" },
+        { "type": "perf", "section": "Performance" },
+        { "type": "refactor", "section": "Internal refactors", "hidden": false },
+        { "type": "docs", "section": "Documentation", "hidden": false },
+        { "type": "style", "section": "Styling", "hidden": true },
+        { "type": "chore", "section": "Chores", "hidden": true },
+        { "type": "test", "section": "Tests", "hidden": true }
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
+
+// Relative base: the application is purely client-side, so it can be served
+// from any subdirectory (GitHub Pages, Netlify, a USB stick…).
+export default defineConfig({
+  base: './',
+  test: {
+    // Tests cover the logic: game data, draws, session plan.
+    // Interface checks are done in a real browser.
+    include: ['tests/**/*.test.js'],
+    environment: 'node',
+    restoreMocks: true,
+  },
+  plugins: [
+    react(),
+    VitePWA({
+      // ORTHOBOX_NO_PWA=1: build without a service worker, for a hosted
+      // preview where offline caching makes no sense.
+      disable: process.env.ORTHOBOX_NO_PWA === '1',
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'],
+      manifest: {
+        name: 'Orthobox, jeux pour séances d’orthophonie',
+        short_name: 'Orthobox',
+        description:
+          'Galerie de jeux utilisables en séance d’orthophonie : langage oral, langage écrit, fonctions exécutives et cognition mathématique.',
+        lang: 'fr',
+        start_url: './',
+        scope: './',
+        display: 'standalone',
+        orientation: 'any',
+        background_color: '#f6f7fb',
+        theme_color: '#3f5bd9',
+        categories: ['education', 'medical', 'games'],
+        icons: [
+          { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        cleanupOutdatedCaches: true,
+        navigateFallback: 'index.html',
+      },
+      devOptions: { enabled: false },
+    }),
+  ],
+})

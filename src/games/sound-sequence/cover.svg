@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une suite de sons, des cartes à remettre dans l'ordre">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <path d="M28 80h20l26-22v88l-26-22H28z" fill="#f6bdab" stroke="#a44a28" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M88 82a26 26 0 0 1 0 40" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <rect x="140" y="64" width="50" height="86" rx="12" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <rect x="202" y="64" width="50" height="86" rx="12" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <rect x="264" y="64" width="40" height="86" rx="12" fill="none" stroke="#a44a28" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M164 44q32-20 64 0" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M218 30l16 8-12 12z" fill="#a44a28"/>
+</svg>

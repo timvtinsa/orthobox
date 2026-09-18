@@ -1,0 +1,25 @@
+/* Polices embarquées, voir public/fonts/README.md (SIL Open Font License). */
+
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../assets/fonts/Nunito-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/AtkinsonHyperlegible-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/AtkinsonHyperlegible-bold.woff2') format('woff2');
+}

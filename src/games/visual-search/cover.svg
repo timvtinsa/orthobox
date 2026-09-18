@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un objet précis au milieu d'un décor encombré">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <circle cx="48" cy="44" r="16" fill="#cdc3ec"/>
+  <rect x="94" y="28" width="32" height="32" rx="8" fill="#cdc3ec"/>
+  <circle cx="178" cy="40" r="14" fill="#cdc3ec"/>
+  <rect x="226" y="30" width="30" height="30" rx="8" fill="#cdc3ec"/>
+  <circle cx="292" cy="52" r="14" fill="#cdc3ec"/>
+  <rect x="32" y="94" width="30" height="30" rx="8" fill="#cdc3ec"/>
+  <circle cx="106" cy="112" r="15" fill="#cdc3ec"/>
+  <circle cx="258" cy="116" r="16" fill="#cdc3ec"/>
+  <rect x="150" y="152" width="30" height="30" rx="8" fill="#cdc3ec"/>
+  <circle cx="56" cy="164" r="14" fill="#cdc3ec"/>
+  <circle cx="292" cy="162" r="13" fill="#cdc3ec"/>
+  <path d="M196 92l24 42h-48z" fill="#5b45a0"/>
+  <circle cx="196" cy="116" r="42" fill="none" stroke="#5b45a0" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>
