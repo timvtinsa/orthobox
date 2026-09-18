@@ -61,9 +61,9 @@ function GameScreen({ gameId }) {
           <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
             <GameComponent key={runKey} config={config} session={session} />
           </Suspense>
-        </div>
 
-        <GameCompanion session={session} />
+          <GameCompanion session={session} />
+        </div>
       </div>
     )
   }

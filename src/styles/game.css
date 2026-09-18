@@ -494,6 +494,7 @@
 }
 
 .board__area {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -511,11 +512,6 @@
    répéter au dessus de leur matériel. */
 .board > .board__area .game-round {
   display: none;
-}
-
-/* Quand le renard suit le plateau, c'est lui qui ferme le cadre. */
-.board__area:not(:last-child) {
-  border-radius: 0;
 }
 
 /* Sur un plateau, la consigne secondaire est lue par le patient elle aussi :
