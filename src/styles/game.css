@@ -120,6 +120,22 @@
   color: var(--danger);
 }
 
+/* Variante icône + libellé : la forme se voit, le mot se lit, aucun des
+   deux ne porte seul l'identité du jeton. */
+.token--shape {
+  flex-direction: column;
+  gap: 4px;
+  min-width: 92px;
+  padding: 10px 12px 8px;
+}
+
+.token__label {
+  font-size: var(--ui-xs);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
 .token__rank {
   position: absolute;
   top: -8px;
