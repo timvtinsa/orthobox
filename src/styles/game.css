@@ -423,6 +423,73 @@
   color: var(--ink-soft);
 }
 
+.setup__note--shared {
+  padding: 10px 14px;
+  background: var(--category-tint);
+  border: 1px solid var(--category-pastel);
+  border-radius: var(--radius-sm);
+  max-width: none;
+  color: var(--ink);
+}
+
+/* --- Partage de réglages -------------------------------------------
+   Un lien et un code QR encodent uniquement les valeurs des réglages du
+   jeu : ni identifiant, ni résultat, ni horodatage n'y transitent.
+   --------------------------------------------------------------------- */
+
+.share-panel {
+  display: flex;
+  gap: var(--s4);
+  align-items: flex-start;
+  padding: var(--s4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  flex-wrap: wrap;
+}
+
+.share-panel__qr {
+  width: 176px;
+  height: 176px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.share-panel__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  min-width: 220px;
+  flex: 1;
+}
+
+.share-panel__note {
+  margin: 0;
+  font-size: var(--ui-sm);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.share-panel__link-row {
+  display: flex;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+
+.share-panel__link {
+  flex: 1 1 240px;
+  min-width: 0;
+  height: 44px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  color: var(--ink-soft);
+  font-size: var(--ui-sm);
+  font-family: inherit;
+}
+
 /* --- Plateau, régime patient --------------------------------------
    Plus rien du régime praticien dans la zone patient : ni pastille de
    domaine, ni vignette, ni score chiffré au milieu du matériel.

@@ -107,7 +107,25 @@ anything about it.
 
 Values stay raw (`14`, not `'1,4 s'`); only the display is formatted, through
 the `unit` field. A config is therefore serialisable as is inside a saved
-session.
+session — and that same rawness is what lets it travel as a link.
+
+### Sharing a config
+
+`src/lib/share-settings.js` turns a `config` into `URLSearchParams` and back
+(`shareLink`, `settingsFromParams`), one query parameter per setting id. On
+read, every value is re-checked against the game's own `settings`: a number
+outside `[min, max]` is clamped, a choice id the game does not offer is
+dropped, so a hand-edited or stale link can only ever produce a config the
+settings screen would itself have allowed. `GamePage` decodes the current
+`useSearchParams()` once on mount and merges the result over the game's
+defaults; nothing is written back to the URL afterwards.
+
+`StyledQr` (`src/components/StyledQr.jsx`) renders that same link as a QR
+code, entirely as SVG: `qrcode`'s `create()` supplies the bit matrix (no
+canvas, no `fs`), and the dots, the three position rings and the centre badge
+are hand-drawn from it, in the same spirit as the drawing bank. The badge sits
+inside the level-H error budget (up to 30 % of the code may be obscured)
+so styling it never costs the code its ability to scan.
 
 ## Session mode
 
@@ -164,6 +182,10 @@ Only three things are written to the browser: the list of favourite games, the
 session being prepared, and the display mode. No patient data, no score
 history, no network call while in use. `lib/storage.js` guards every access:
 private browsing or blocked storage must never keep a game from working.
+
+The settings-sharing link and QR code follow the same rule from the other
+direction: they carry a game id and its setting values, nothing else — no
+patient, no result, no identifier, no server round trip to produce them.
 
 ## Offline
 

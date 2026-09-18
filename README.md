@@ -101,6 +101,18 @@ and moving to the next game happens when the practitioner decides so. At the
 end, a **summary** lists the score of every game, its success rate and the
 session total, printable and never stored.
 
+## Sharing settings
+
+« Partager ces réglages », on a game's settings screen, turns the current
+values into a link (`#/games/<id>?...`) and a matching QR code, drawn in the
+house style with the Orthobox mark at its centre. Opening that link, or
+scanning the code, reopens the same game with the same settings already
+applied — handy to pass a configuration to a colleague or another tablet.
+
+Only the settings travel: no patient, no result, no identifier. A value the
+game itself would not have offered is dropped on the way in, and the game's
+own default takes over for it.
+
 ## Getting started
 
 ```bash

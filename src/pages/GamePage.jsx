@@ -6,8 +6,8 @@
  * patient sees neither the material nor the expected answer, and the settings
  * disappear once the game starts.
  */
-import { Suspense, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Suspense, useMemo, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import BoardBar from '../components/BoardBar.jsx'
 import CategoryShape from '../components/CategoryShape.jsx'
 import GameBrief from '../components/GameBrief.jsx'
@@ -17,6 +17,7 @@ import Icon from '../components/Icon.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
 import { useGameSession } from '../hooks/useGameSession.js'
+import { settingsFromParams } from '../lib/share-settings.js'
 import NotFoundPage from './NotFoundPage.jsx'
 
 export default function GamePage() {
@@ -33,11 +34,22 @@ function GameScreen({ gameId }) {
   const [runKey, setRunKey] = useState(0)
   const [briefOpen, setBriefOpen] = useState(false)
   const session = useGameSession()
+  const [searchParams] = useSearchParams()
+
+  // Réglages reçus par un lien partagé : lus une fois, jamais réécrits dans
+  // l'URL, et sans effet sur rien d'autre qu'un champ manquant, qui garde le
+  // défaut du jeu.
+  const shared = useMemo(
+    () => (game ? settingsFromParams(game.settings, searchParams) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [game],
+  )
 
   if (!game) return <NotFoundPage />
 
   const category = getCategory(game.category)
   const GameComponent = game.component
+  const initialSettings = shared ? { ...defaultConfig(game.settings), ...shared } : defaultConfig(game.settings)
 
   const start = (settings) => {
     session.reset()
@@ -100,7 +112,12 @@ function GameScreen({ gameId }) {
 
       {briefOpen && <GameBrief game={game} />}
 
-      <GameSetup game={game} initial={defaultConfig(game.settings)} onStart={start} />
+      <GameSetup
+        game={game}
+        initial={initialSettings}
+        sharedApplied={Boolean(shared)}
+        onStart={start}
+      />
     </div>
   )
 }
