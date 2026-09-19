@@ -805,6 +805,27 @@
   color: var(--danger);
 }
 
+/* Nuage de mots et rappel oral : une puce que l'on touche pour la
+   basculer, plutôt qu'une puce d'affichage. Le trait pointillé au repos
+   et plein une fois touchée porte la sélection, pas seulement la teinte. */
+.chip--toggle {
+  border: 2px dashed var(--line-strong);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.chip--toggle:hover {
+  transform: translateY(-1px);
+}
+
+.chip--toggle[aria-pressed='true'] {
+  border-style: solid;
+  border-color: var(--category);
+  background: var(--category-tint);
+  color: var(--category);
+}
+
 /* --- QCM ----------------------------------------------------------- */
 
 .quiz {

@@ -17,10 +17,11 @@ export default {
   materials: [
     'Le bilan sépare les mots retrouvés, les oublis et les mots ajoutés hors liste.',
     'L’orthographe et les accents ne sont pas pris en compte dans la comparaison.',
+    'Trois modes de rappel : la saisie au clavier, un nuage de mots où le patient retrouve les bons parmi des leurres, ou l’oral, où le praticien valide au fur et à mesure sans rien taper.',
     'Variante : refaire un rappel différé en fin de séance, avec la même liste.',
   ],
   instructions:
-    'La liste est affichée pendant le temps choisi, puis masquée. Le patient restitue les mots dont il se souvient, dans l’ordre qu’il veut, et le praticien les saisit au fur et à mesure.',
+    'La liste est affichée pendant le temps choisi, puis masquée. Le patient restitue les mots dont il se souvient, dans l’ordre qu’il veut, selon le mode de rappel choisi.',
   settings: [
     {
       id: 'count',
@@ -41,7 +42,17 @@ export default {
       default: 15,
       unit: 'seconds',
     },
-
+    {
+      id: 'mode',
+      type: 'choice',
+      label: 'Mode de rappel',
+      default: 'text',
+      options: [
+        { id: 'text', label: 'Saisie', hint: 'Le praticien tape les mots dictés par le patient.' },
+        { id: 'cloud', label: 'Nuage de mots', hint: 'Le patient retrouve les bons mots parmi des leurres.' },
+        { id: 'oral', label: 'Oral', hint: 'Le praticien valide chaque mot entendu, sans rien saisir.' },
+      ],
+    },
   ],
   component: lazy(() => import('./FreeRecall.jsx')),
 }
