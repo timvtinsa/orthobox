@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.0](https://github.com/timvtinsa/orthobox/compare/v0.3.0...v0.4.0) (2026-09-19)
+
+
+### Features
+
+* **child-mode:** move the fox's reaction to the centre of the board ([#20](https://github.com/timvtinsa/orthobox/issues/20)) ([1260984](https://github.com/timvtinsa/orthobox/commit/126098454765ffd2739faa46f8aec807914ac373))
+* **free-recall:** add a word-cloud and an oral recall mode ([#22](https://github.com/timvtinsa/orthobox/issues/22)) ([899794a](https://github.com/timvtinsa/orthobox/commit/899794a1c7f3c0cf7614d2481809b425c6a3b6c2))
+* **games:** grow every material bank for more variety per session ([#23](https://github.com/timvtinsa/orthobox/issues/23)) ([bf26a97](https://github.com/timvtinsa/orthobox/commit/bf26a97840d3f3ee201eecbcd93942e3da3a9ae5))
+
+
+### Bug fixes
+
+* **games:** stop repeating the same item within a series ([#19](https://github.com/timvtinsa/orthobox/issues/19)) ([dd244a2](https://github.com/timvtinsa/orthobox/commit/dd244a2b7dfe366368ab9fcb25547e7426ccdd86))
+* **layout:** keep the next button reachable without scrolling ([#21](https://github.com/timvtinsa/orthobox/issues/21)) ([d9b0b15](https://github.com/timvtinsa/orthobox/commit/d9b0b15cb7d4ef5bddcc7f298a90213d29bdba39))
+* **pwa:** match the installed icon to the nav bar mark ([#16](https://github.com/timvtinsa/orthobox/issues/16)) ([078992d](https://github.com/timvtinsa/orthobox/commit/078992da0901db858c5824c5366c0e9d4b6d89a2))
+* **scrambled-syllables:** let two-syllable order stay random ([#17](https://github.com/timvtinsa/orthobox/issues/17)) ([db78de1](https://github.com/timvtinsa/orthobox/commit/db78de19a8b036e76702f4a61b7ad35bee598023))
+* **stroop:** make the yellow ink read as actually yellow ([#18](https://github.com/timvtinsa/orthobox/issues/18)) ([c5d36e9](https://github.com/timvtinsa/orthobox/commit/c5d36e9d9b85f0185154ac87c5b70f2d302d29a3))
+
 ## [0.3.0](https://github.com/timvtinsa/orthobox/compare/v0.2.0...v0.3.0) (2026-09-19)
 
 
