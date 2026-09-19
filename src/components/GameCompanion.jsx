@@ -1,13 +1,14 @@
 /**
- * Child-mode companion: the fox in the corner of the board.
+ * Child-mode companion: the fox stepping in at the centre of the board.
  *
- * It sits inside `.board__area` itself, not in a bar underneath it: same
- * surface, no seam between the fox and the material, so it reads as part of
- * the game screen rather than a toolbar bolted onto it. It is there
- * permanently, small, rather than appearing on success: a character that is
- * already present costs nothing in attention when it reacts. It moves on
- * three occasions only, success, miss and end of game — and stays quiet the
- * rest of the time, no permanent caption competing with the game.
+ * It has no permanent presence: on a tablet, a small corner icon reads as
+ * barely there, so instead the fox only shows up for a reaction, as an
+ * overlay centred on the board itself rather than tucked below the game
+ * material where it competes with the screen's edge. `pointer-events: none`
+ * on `.companion` keeps it from ever stealing a tap meant for the game
+ * beneath it, even while it visually sits over the "suivant" button — the
+ * overlay is gone again well before that matters, on the same reward budget
+ * as before.
  *
  * The rewards were lengthened so a child has time to see them, and the one
  * rule that actually costs session time is kept: a reward never blocks the
@@ -16,8 +17,8 @@
  * behind it.
  *
  * At the end of a game it steps aside: `GameOver` shows the same fox bigger,
- * with the confetti. Two foxes on screen at once would read as two
- * characters rather than one.
+ * centred on its own screen, with the confetti. Two foxes on screen at once
+ * would read as two characters.
  *
  * It knows nothing about the games. It watches the session, which is fed by
  * `session.register()`, so a game needs no extra code to benefit from it and
@@ -32,7 +33,6 @@ import { useMode } from './ModeProvider.jsx'
 // child-mode.css. La fête de fin de partie vit dans GameOver.
 const REWARD_ITEM = 1500
 
-// Rien pour « idle » : au repos le renard ne parle pas, il regarde.
 const LINES = {
   cheer: 'Bravo, c’est ça !',
   tryAgain: 'Essaie encore, regarde bien.',
@@ -45,8 +45,8 @@ export default function GameCompanion({ session }) {
   const { answerCount, lastAnswer, index, total } = session
   const done = total !== null && index >= total
 
-  // La réaction dure le temps du budget, puis le renard revient au repos,
-  // quel que soit le rythme des réponses.
+  // La réaction dure le temps du budget, puis le renard disparaît, quel que
+  // soit le rythme des réponses.
   useEffect(() => {
     if (answerCount === 0) return undefined
     setReacting(true)
@@ -54,20 +54,20 @@ export default function GameCompanion({ session }) {
     return () => window.clearTimeout(id)
   }, [answerCount])
 
-  if (!isChild || done) return null
+  // Rien au repos : le renard n'apparaît que pour intervenir, jamais comme
+  // présence permanente qui se verrait mal sur une tablette.
+  if (!isChild || done || !reacting) return null
 
-  const cheering = reacting && lastAnswer === 'correct'
-  const mood = cheering ? 'cheer' : reacting && lastAnswer === 'wrong' ? 'tryAgain' : 'idle'
+  const cheering = lastAnswer === 'correct'
+  const mood = cheering ? 'cheer' : 'tryAgain'
 
   return (
     <div className="companion">
       <span className="companion__stage">
-        <Mascot mood={mood} size={84} />
+        <Mascot mood={mood} size={104} />
         {cheering && <Sparkles key={answerCount} />}
       </span>
-      {/* La bulle ne vit que le temps de la réaction : au repos, seul le
-          renard reste, dans le coin du plateau plutôt que dans une barre. */}
-      <p className={`companion__line${reacting ? ' companion__line--visible' : ''}`} role="status">
+      <p className="companion__line companion__line--visible" role="status">
         {LINES[mood]}
       </p>
     </div>

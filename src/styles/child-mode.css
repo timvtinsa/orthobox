@@ -218,19 +218,24 @@
   }
 }
 
-/* --- Le renard au bord du plateau -----------------------------------
-   Dans le fil de la page plutôt qu'en survol : il prend sa propre place
-   sous le matériel de jeu, qui reste centré dans l'espace qui lui reste
-   au dessus. Même surface que le plateau, aucun trait qui l'en sépare,
-   mais jamais posé par-dessus un bouton du jeu.
+/* --- Le renard au centre de l'écran ----------------------------------
+   Plus de présence permanente sous le jeu, où une tablette la réduit à
+   presque rien : le renard n'existe que pour intervenir, en recouvrement
+   centré sur le plateau. `pointer-events: none` l'empêche de voler un
+   tapotement destiné au jeu même quand il recouvre visuellement un
+   bouton, et le budget de récompense (`--reward-item`) le fait
+   disparaître bien avant que ça compte.
    ------------------------------------------------------------------- */
 .companion {
-  align-self: flex-start;
-  flex: none;
-  margin-top: var(--s4);
+  position: absolute;
+  inset: 0;
+  z-index: 5;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: var(--s3);
+  pointer-events: none;
 }
 
 /* Les étincelles se posent autour du renard, pas autour de la barre. */
@@ -240,33 +245,32 @@
   flex: none;
 }
 
-/* Une bulle plutôt qu'une ligne de barre d'état : elle n'existe que le
-   temps de la réaction, comme le renard qui saute ou penche la tête. */
 .companion__line {
   position: relative;
-  margin: 0 0 6px;
-  max-width: 42vw;
-  padding: 7px 14px;
+  margin: 0;
+  max-width: 60vw;
+  padding: 10px 18px;
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow);
   font-family: var(--font-patient);
   font-size: var(--pt-sm);
   color: var(--ink-soft);
+  text-align: center;
   opacity: 0;
-  transform: translateY(4px) scale(0.96);
+  transform: scale(0.92);
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
 .companion__line--visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: scale(1);
 }
 
 @media (max-width: 560px) {
   .companion__line {
-    max-width: 56vw;
+    max-width: 78vw;
     font-size: var(--ui-md);
   }
 }
@@ -309,12 +313,5 @@
   100% {
     opacity: 0;
     transform: translateY(200px) rotate(300deg);
-  }
-}
-
-@media (max-width: 560px) {
-  .companion {
-    gap: 10px;
-    padding: var(--s2) var(--s4);
   }
 }
