@@ -11,22 +11,25 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { pick, shuffle } from '../../lib/random.js'
+import { noRepeatSeries, shuffle } from '../../lib/random.js'
 import { SHORT_WORDS, LONG_WORDS } from './data.js'
 
-function buildRound(config) {
-  const entry = pick(config.length === 'long' ? LONG_WORDS : SHORT_WORDS)
-  return {
+/** The whole session's words, drawn upfront so the same word cannot come
+ * back twice within a series while the pool has enough to avoid it. */
+function buildSeries(config) {
+  const pool = config.length === 'long' ? LONG_WORDS : SHORT_WORDS
+  return noRepeatSeries(pool, config.rounds).map((entry) => ({
     // The setting is expressed in tenths of a second.
     duration: config.duration * 100,
     word: entry.word,
     options: shuffle([entry.word, ...entry.distractors]),
-  }
+  }))
 }
 
 export default function FlashReading({ config, session }) {
-  const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [series, setSeries] = useState(() => buildSeries(config))
+  const rounds = useRounds(series.length, session)
+  const round = series[rounds.round]
   const [phase, setPhase] = useState('ready') // ready -> flash -> choice
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
@@ -46,7 +49,6 @@ export default function FlashReading({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
     setPicked(null)
     setPhase('ready')
   }
@@ -55,12 +57,12 @@ export default function FlashReading({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    setSeries(buildSeries(config))
     setPicked(null)
     setPhase('ready')
   }
 
-  if (rounds.isOver) {
+  if (rounds.isOver || !round) {
     return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
   }
 

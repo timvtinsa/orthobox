@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { pick, randomInt, sample, sampleAvoiding, shuffle } from '../src/lib/random.js'
+import { noRepeatSeries, pick, randomInt, sample, sampleAvoiding, shuffle } from '../src/lib/random.js'
 
 const SOURCE = ['a', 'b', 'c', 'd', 'e', 'f']
 
@@ -42,5 +42,25 @@ describe('random helpers', () => {
 
   it('falls back to the whole list when fresh items run out', () => {
     expect(sampleAvoiding(SOURCE, 5, ['a', 'b', 'c', 'd'])).toHaveLength(5)
+  })
+
+  it('never repeats an item before the whole pool has been drawn', () => {
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+      const series = noRepeatSeries(SOURCE, SOURCE.length)
+      expect([...series].sort()).toEqual([...SOURCE].sort())
+    }
+  })
+
+  it('never repeats an item across a bag boundary either', () => {
+    for (let attempt = 0; attempt < 200; attempt += 1) {
+      const series = noRepeatSeries(SOURCE, SOURCE.length * 3)
+      for (let i = 1; i < series.length; i += 1) {
+        expect(series[i]).not.toBe(series[i - 1])
+      }
+    }
+  })
+
+  it('draws the requested count, beyond the pool size', () => {
+    expect(noRepeatSeries(SOURCE, 20)).toHaveLength(20)
   })
 })

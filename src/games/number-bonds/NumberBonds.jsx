@@ -13,11 +13,12 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { buildRound } from './bonds.js'
+import { buildSeries } from './bonds.js'
 
 export default function NumberBonds({ config, session }) {
-  const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [series, setSeries] = useState(() => buildSeries(config))
+  const rounds = useRounds(series.length, session)
+  const round = series[rounds.round]
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -30,7 +31,6 @@ export default function NumberBonds({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
     setPicked(null)
   }
 
@@ -38,11 +38,11 @@ export default function NumberBonds({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    setSeries(buildSeries(config))
     setPicked(null)
   }
 
-  if (rounds.isOver) {
+  if (rounds.isOver || !round) {
     return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
   }
 
