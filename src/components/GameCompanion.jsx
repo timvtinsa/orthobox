@@ -28,10 +28,17 @@ import { useEffect, useState } from 'react'
 import Mascot from './Mascot.jsx'
 import Sparkles from './Sparkles.jsx'
 import { useMode } from './ModeProvider.jsx'
+import { pick } from '../lib/random.js'
 
 // Le budget d'une réaction d'item, en miroir de --reward-item dans
 // child-mode.css. La fête de fin de partie vit dans GameOver.
-const REWARD_ITEM = 1500
+const REWARD_ITEM = 2200
+
+// Trois façons de le dire pour chaque issue, tirées au hasard : une seule
+// animation répétée à chaque bonne réponse d'une série finirait par se voir
+// comme un tic plutôt que comme une réaction.
+const CHEER_MOODS = ['cheer', 'twirl', 'bounce']
+const TRY_AGAIN_MOODS = ['tryAgain', 'nudge', 'wiggle']
 
 const LINES = {
   cheer: 'Bravo, c’est ça !',
@@ -41,25 +48,28 @@ const LINES = {
 export default function GameCompanion({ session }) {
   const { isChild } = useMode()
   const [reacting, setReacting] = useState(false)
+  const [mood, setMood] = useState('cheer')
 
   const { answerCount, lastAnswer, index, total } = session
   const done = total !== null && index >= total
 
   // La réaction dure le temps du budget, puis le renard disparaît, quel que
-  // soit le rythme des réponses.
+  // soit le rythme des réponses. Le tirage de l'animation se fait une fois
+  // par réponse, pas à chaque rendu.
   useEffect(() => {
     if (answerCount === 0) return undefined
+    setMood(pick(lastAnswer === 'correct' ? CHEER_MOODS : TRY_AGAIN_MOODS))
     setReacting(true)
     const id = window.setTimeout(() => setReacting(false), REWARD_ITEM)
     return () => window.clearTimeout(id)
-  }, [answerCount])
+  }, [answerCount, lastAnswer])
 
   // Rien au repos : le renard n'apparaît que pour intervenir, jamais comme
   // présence permanente qui se verrait mal sur une tablette.
   if (!isChild || done || !reacting) return null
 
-  const cheering = lastAnswer === 'correct'
-  const mood = cheering ? 'cheer' : 'tryAgain'
+  const cheering = CHEER_MOODS.includes(mood)
+  const line = cheering ? LINES.cheer : LINES.tryAgain
 
   return (
     <div className="companion">
@@ -68,7 +78,7 @@ export default function GameCompanion({ session }) {
         {cheering && <Sparkles key={answerCount} />}
       </span>
       <p className="companion__line companion__line--visible" role="status">
-        {LINES[mood]}
+        {line}
       </p>
     </div>
   )
