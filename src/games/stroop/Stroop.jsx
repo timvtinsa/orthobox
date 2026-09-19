@@ -17,7 +17,7 @@ const COLORS = [
   { id: 'red', label: 'ROUGE', hex: '#d0342c' },
   { id: 'blue', label: 'BLEU', hex: '#2d5fd0' },
   { id: 'green', label: 'VERT', hex: '#1f8a4c' },
-  { id: 'yellow', label: 'JAUNE', hex: '#c9a600' },
+  { id: 'yellow', label: 'JAUNE', hex: '#e0b800' },
 ]
 
 function buildRound(config) {
