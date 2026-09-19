@@ -13,11 +13,10 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { pick, sample, shuffle } from '../../lib/random.js'
+import { noRepeatSeries, sample, shuffle } from '../../lib/random.js'
 import { PAIRS } from './data.js'
 
-function buildRound() {
-  const pair = pick(PAIRS)
+function buildRoundFor(pair) {
   const flipped = Math.random() < 0.5
   const prompt = flipped ? pair[1] : pair[0]
   const answer = flipped ? pair[0] : pair[1]
@@ -30,9 +29,16 @@ function buildRound() {
   return { prompt, answer, options: shuffle([answer, ...distractors]) }
 }
 
+/** The whole session's pairs, drawn upfront so the same pair cannot come
+ * back twice within a series while the bank has enough to avoid it. */
+function buildSeries(config) {
+  return noRepeatSeries(PAIRS, config.rounds).map(buildRoundFor)
+}
+
 export default function Opposites({ config, session }) {
-  const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(buildRound)
+  const [series, setSeries] = useState(() => buildSeries(config))
+  const rounds = useRounds(series.length, session)
+  const round = series[rounds.round]
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -45,7 +51,6 @@ export default function Opposites({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound())
     setPicked(null)
   }
 
@@ -53,11 +58,11 @@ export default function Opposites({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound())
+    setSeries(buildSeries(config))
     setPicked(null)
   }
 
-  if (rounds.isOver) {
+  if (rounds.isOver || !round) {
     return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
   }
 
