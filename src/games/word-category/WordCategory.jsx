@@ -13,21 +13,27 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { pick, sample, shuffle } from '../../lib/random.js'
+import { noRepeatSeries, pick, sample, shuffle } from '../../lib/random.js'
 import { FAMILIES } from './data.js'
 
-function buildRound(config) {
-  const size = config.size === 'five' ? 5 : 4
-  const family = pick(FAMILIES)
+function buildRoundFor(size, family) {
   const other = pick(FAMILIES.filter((entry) => entry.id !== family.id))
   const kept = sample(family.words, size - 1)
   const intruder = pick(other.words)
   return { family, intruder, options: shuffle([...kept, intruder]) }
 }
 
+/** The whole session's families, drawn upfront so the same family does not
+ * carry several rounds in a row while the bank has enough to avoid it. */
+function buildSeries(config) {
+  const size = config.size === 'five' ? 5 : 4
+  return noRepeatSeries(FAMILIES, config.rounds).map((family) => buildRoundFor(size, family))
+}
+
 export default function WordCategory({ config, session }) {
-  const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [series, setSeries] = useState(() => buildSeries(config))
+  const rounds = useRounds(series.length, session)
+  const round = series[rounds.round]
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -40,7 +46,6 @@ export default function WordCategory({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
     setPicked(null)
   }
 
@@ -48,11 +53,11 @@ export default function WordCategory({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    setSeries(buildSeries(config))
     setPicked(null)
   }
 
-  if (rounds.isOver) {
+  if (rounds.isOver || !round) {
     return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
   }
 

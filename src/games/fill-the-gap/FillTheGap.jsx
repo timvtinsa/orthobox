@@ -11,18 +11,16 @@ import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
-import { shuffle } from '../../lib/random.js'
+import { noRepeatSeries, shuffle } from '../../lib/random.js'
 import { PHRASES } from './data.js'
 
 /** Draws the sentences of the requested series, options already shuffled. */
 function buildSeries(config) {
   const series = PHRASES[config.series] ?? PHRASES.meaning
-  return shuffle(series)
-    .slice(0, config.rounds)
-    .map((sentence) => {
-      const options = shuffle([sentence.answer, ...sentence.distractors])
-      return { ...sentence, options, correct: options.indexOf(sentence.answer) }
-    })
+  return noRepeatSeries(series, config.rounds).map((sentence) => {
+    const options = shuffle([sentence.answer, ...sentence.distractors])
+    return { ...sentence, options, correct: options.indexOf(sentence.answer) }
+  })
 }
 
 /** Whole sentence, gap filled in, for the speech synthesis. */
