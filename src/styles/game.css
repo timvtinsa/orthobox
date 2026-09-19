@@ -577,6 +577,7 @@
 }
 
 .board__area {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -588,9 +589,9 @@
   border-radius: 0 0 var(--radius) var(--radius);
 }
 
-/* Le matériel du jeu occupe l'espace disponible et reste centré dedans ;
-   le renard prend sa propre place en dessous plutôt que de se poser
-   par-dessus, pour qu'il ne recouvre jamais un bouton du jeu. */
+/* Le matériel du jeu occupe tout l'espace disponible et reste centré
+   dedans ; le renard (`.companion`) se pose par dessus en recouvrement
+   centré, seulement le temps d'une réaction. */
 .board__content {
   display: flex;
   flex-direction: column;
