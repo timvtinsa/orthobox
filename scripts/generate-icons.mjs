@@ -69,47 +69,40 @@ function roundedRectDistance(x, y, size, radius) {
   return Math.min(Math.max(cx, cy), 0) + Math.hypot(dx, dy) - radius
 }
 
+// Same drawing as BrandMark.jsx (the nav bar mark), a 40×40 grid scaled up to
+// this 512 grid (×12.8): a tinted rounded square behind four dots. One
+// drawing kept in sync by eye across the two files, since the PNG icons
+// cannot import the SVG component directly.
+const BACKGROUND = [0xa8, 0xc8, 0xec]
+const DOT_RADIUS = 51.2
+const DOTS = [
+  { dx: 166.4 - 256, dy: 204.8 - 256, color: [0x35, 0x60, 0x8f] },
+  { dx: 345.6 - 256, dy: 204.8 - 256, color: [0xf6, 0xbd, 0xab] },
+  { dx: 166.4 - 256, dy: 358.4 - 256, color: [0xb9, 0xd8, 0xc2] },
+  { dx: 345.6 - 256, dy: 358.4 - 256, color: [0xcd, 0xc3, 0xec] },
+]
+
 function drawIcon(size, { maskable = false } = {}) {
   const px = new Uint8Array(size * size * 4)
   const s = size / 512 // scale: the drawing is designed on a 512 grid
   const radius = maskable ? size / 2 : size * 0.22
-  // Safe zone of a maskable icon: the central 80%, so the motif is scaled down.
+  // Safe zone of a maskable icon: the central 80%, so the motif is scaled down
+  // around the icon's centre rather than around the mark's own centre.
   const scale = maskable ? 0.78 : 1
-  const top = [0x5b, 0x74, 0xe8]
-  const bottom = [0x35, 0x3f, 0xa8]
-  const bubble = [0xff, 0xff, 0xff]
-
-  const cxBubble = 256 * s
-  const cyBubble = 236 * s
-  const rxBubble = 168 * s * scale
-  const ryBubble = 132 * s * scale
+  const center = 256 * s
 
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
       const i = (y * size + x) * 4
       const bg = maskable ? 1 : cover(roundedRectDistance(x + 0.5, y + 0.5, size, radius))
       if (bg <= 0) continue
-      const color = mix(top, bottom, y / size)
 
-      // Speech bubble: ellipse plus a triangular tail.
-      const ex = (x + 0.5 - cxBubble) / rxBubble
-      const ey = (y + 0.5 - cyBubble) / ryBubble
-      const ellipse = cover((Math.hypot(ex, ey) - 1) * Math.min(rxBubble, ryBubble))
-      const ty = (y + 0.5 - cyBubble) / s
-      const tx = (x + 0.5 - cxBubble) / s
-      const tail =
-        ty > 90 * scale && ty < 190 * scale && tx > -70 * scale && tx < (150 - ty) * scale ? 1 : 0
-      const shape = Math.max(ellipse, tail)
-
-      let out = color
-      if (shape > 0) {
-        out = mix(color, bubble, shape)
-        // Three dots: the rhythm of speech.
-        for (const dotX of [-70, 0, 70]) {
-          const d = Math.hypot(x + 0.5 - (cxBubble + dotX * s * scale), y + 0.5 - cyBubble)
-          const dot = cover(d - 22 * s * scale)
-          if (dot > 0) out = mix(out, [0x35, 0x3f, 0xa8], dot * shape)
-        }
+      let out = BACKGROUND
+      for (const dot of DOTS) {
+        const cx = center + dot.dx * s * scale
+        const cy = center + dot.dy * s * scale
+        const coverage = cover(Math.hypot(x + 0.5 - cx, y + 0.5 - cy) - DOT_RADIUS * s * scale)
+        if (coverage > 0) out = mix(out, dot.color, coverage)
       }
 
       px[i] = out[0]
