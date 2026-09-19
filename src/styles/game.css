@@ -39,11 +39,17 @@
   font-weight: 800;
 }
 
+/* Collée au bas de l'écran plutôt que simplement au bas du contenu : sur
+   une tablette, un plateau plus haut que l'écran forçait sinon à faire
+   défiler la page entière pour atteindre le bouton suivant. */
 .game-actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
+  position: sticky;
+  bottom: var(--s3);
+  z-index: 3;
 }
 
 .game-final {
@@ -577,6 +583,7 @@
 }
 
 .board__area {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -588,9 +595,9 @@
   border-radius: 0 0 var(--radius) var(--radius);
 }
 
-/* Le matériel du jeu occupe l'espace disponible et reste centré dedans ;
-   le renard prend sa propre place en dessous plutôt que de se poser
-   par-dessus, pour qu'il ne recouvre jamais un bouton du jeu. */
+/* Le matériel du jeu occupe tout l'espace disponible et reste centré
+   dedans ; le renard (`.companion`) se pose par dessus en recouvrement
+   centré, seulement le temps d'une réaction. */
 .board__content {
   display: flex;
   flex-direction: column;
@@ -803,6 +810,27 @@
 .chip--intruder {
   background: var(--danger-tint);
   color: var(--danger);
+}
+
+/* Nuage de mots et rappel oral : une puce que l'on touche pour la
+   basculer, plutôt qu'une puce d'affichage. Le trait pointillé au repos
+   et plein une fois touchée porte la sélection, pas seulement la teinte. */
+.chip--toggle {
+  border: 2px dashed var(--line-strong);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.chip--toggle:hover {
+  transform: translateY(-1px);
+}
+
+.chip--toggle[aria-pressed='true'] {
+  border-style: solid;
+  border-color: var(--category);
+  background: var(--category-tint);
+  color: var(--category);
 }
 
 /* --- QCM ----------------------------------------------------------- */

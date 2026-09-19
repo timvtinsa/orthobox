@@ -66,7 +66,7 @@
    -------------------------------------------------------------------- */
 
 :root {
-  --reward-item: 1500ms;
+  --reward-item: 2200ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -100,19 +100,44 @@
   transform-origin: 50% 92%;
 }
 
+.mascot--twirl svg {
+  animation: mascot-twirl var(--reward-item) cubic-bezier(0.34, 1.4, 0.64, 1) 1;
+  transform-origin: 50% 92%;
+}
+
+.mascot--bounce svg {
+  animation: mascot-bounce var(--reward-item) ease-in-out 1;
+  transform-origin: 50% 92%;
+}
+
 .mascot--tryAgain svg {
   animation: mascot-sway var(--reward-item) ease-in-out 1;
   transform-origin: 50% 92%;
 }
 
+.mascot--nudge svg {
+  animation: mascot-nudge var(--reward-item) ease-in-out 1;
+  transform-origin: 50% 92%;
+}
+
+.mascot--wiggle svg {
+  animation: mascot-wiggle var(--reward-item) ease-in-out 1;
+  transform-origin: 50% 92%;
+}
+
 /* La queue part un peu après le corps : c'est ce décalage qui fait vivant
-   plutôt que mécanique. */
-.mascot--cheer .mascot__tail {
+   plutôt que mécanique. Les trois animations de la réussite partagent le
+   même mouvement de queue. */
+.mascot--cheer .mascot__tail,
+.mascot--twirl .mascot__tail,
+.mascot--bounce .mascot__tail {
   animation: mascot-wag calc(var(--reward-item) / 2) ease-in-out 2;
   transform-origin: 72% 78%;
 }
 
-.mascot--tryAgain .mascot__paw {
+.mascot--tryAgain .mascot__paw,
+.mascot--nudge .mascot__paw,
+.mascot--wiggle .mascot__paw {
   animation: mascot-wave calc(var(--reward-item) / 2) ease-in-out 2;
   transform-origin: 30% 70%;
 }
@@ -185,6 +210,81 @@
   }
 }
 
+/* Un petit tour sur soi, houp-là : la variante « fière de soi » du saut. */
+@keyframes mascot-twirl {
+  0% {
+    transform: rotate(0deg) translateY(0) scale(1);
+  }
+  30% {
+    transform: rotate(150deg) translateY(-10px) scale(1.05);
+  }
+  60% {
+    transform: rotate(300deg) translateY(-4px) scale(1.03);
+  }
+  100% {
+    transform: rotate(360deg) translateY(0) scale(1);
+  }
+}
+
+/* Sautille d'un pied sur l'autre plutôt que tout droit : le même bonheur,
+   un rythme différent du saut vertical. */
+@keyframes mascot-bounce {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-10px, -12px) rotate(-6deg);
+  }
+  40% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  60% {
+    transform: translate(10px, -12px) rotate(6deg);
+  }
+  80% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Un petit hochement, plus doux que le balancement de tête : « c'est pas
+   grave, on regarde encore ». */
+@keyframes mascot-nudge {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(4px) rotate(-3deg);
+  }
+  55% {
+    transform: translateY(0) rotate(2deg);
+  }
+  80% {
+    transform: translateY(2px) rotate(-1deg);
+  }
+}
+
+/* Un dandinement plus vif que le balancement de tête, toujours amical. */
+@keyframes mascot-wiggle {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-6px) rotate(-4deg);
+  }
+  40% {
+    transform: translateX(6px) rotate(4deg);
+  }
+  60% {
+    transform: translateX(-4px) rotate(-3deg);
+  }
+  80% {
+    transform: translateX(4px) rotate(3deg);
+  }
+}
+
 /* --- Étincelles d'un item réussi ------------------------------------ */
 
 .sparkles {
@@ -218,19 +318,24 @@
   }
 }
 
-/* --- Le renard au bord du plateau -----------------------------------
-   Dans le fil de la page plutôt qu'en survol : il prend sa propre place
-   sous le matériel de jeu, qui reste centré dans l'espace qui lui reste
-   au dessus. Même surface que le plateau, aucun trait qui l'en sépare,
-   mais jamais posé par-dessus un bouton du jeu.
+/* --- Le renard au centre de l'écran ----------------------------------
+   Plus de présence permanente sous le jeu, où une tablette la réduit à
+   presque rien : le renard n'existe que pour intervenir, en recouvrement
+   centré sur le plateau. `pointer-events: none` l'empêche de voler un
+   tapotement destiné au jeu même quand il recouvre visuellement un
+   bouton, et le budget de récompense (`--reward-item`) le fait
+   disparaître bien avant que ça compte.
    ------------------------------------------------------------------- */
 .companion {
-  align-self: flex-start;
-  flex: none;
-  margin-top: var(--s4);
+  position: absolute;
+  inset: 0;
+  z-index: 5;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: var(--s3);
+  pointer-events: none;
 }
 
 /* Les étincelles se posent autour du renard, pas autour de la barre. */
@@ -240,33 +345,32 @@
   flex: none;
 }
 
-/* Une bulle plutôt qu'une ligne de barre d'état : elle n'existe que le
-   temps de la réaction, comme le renard qui saute ou penche la tête. */
 .companion__line {
   position: relative;
-  margin: 0 0 6px;
-  max-width: 42vw;
-  padding: 7px 14px;
+  margin: 0;
+  max-width: 60vw;
+  padding: 10px 18px;
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow);
   font-family: var(--font-patient);
   font-size: var(--pt-sm);
   color: var(--ink-soft);
+  text-align: center;
   opacity: 0;
-  transform: translateY(4px) scale(0.96);
+  transform: scale(0.92);
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
 .companion__line--visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: scale(1);
 }
 
 @media (max-width: 560px) {
   .companion__line {
-    max-width: 56vw;
+    max-width: 78vw;
     font-size: var(--ui-md);
   }
 }
@@ -309,12 +413,5 @@
   100% {
     opacity: 0;
     transform: translateY(200px) rotate(300deg);
-  }
-}
-
-@media (max-width: 560px) {
-  .companion {
-    gap: 10px;
-    padding: var(--s2) var(--s4);
   }
 }

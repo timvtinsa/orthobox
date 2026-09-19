@@ -7,7 +7,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import { buildRound as buildClock, speak, STEPS } from '../src/games/clock-reading/clock.js'
-import { buildRound as buildBond, TARGETS } from '../src/games/number-bonds/bonds.js'
+import { buildRound as buildBond, buildSeries as buildBondSeries, TARGETS } from '../src/games/number-bonds/bonds.js'
 import { buildRound as buildLetters, SETS } from '../src/games/letter-discrimination/letters.js'
 import { FAMILIES } from '../src/games/word-category/data.js'
 import { WORDS_BY_SYLLABLES } from '../src/games/syllable-count/data.js'
@@ -82,6 +82,18 @@ describe('le compte est bon', () => {
         const round = buildBond({ target })
         expect(round.given + round.answer, target).toBe(round.target)
         for (const option of round.options) expect(option, target).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  it('never repeats the same calculation twice in a row within a series', () => {
+    for (const target of Object.keys(TARGETS)) {
+      for (let run = 0; run < RUNS; run += 1) {
+        const series = buildBondSeries({ target, rounds: 20 })
+        expect(series, target).toHaveLength(20)
+        for (let i = 1; i < series.length; i += 1) {
+          expect(series[i].given, target).not.toBe(series[i - 1].given)
+        }
       }
     }
   })

@@ -11,7 +11,7 @@ import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
-import { shuffle } from '../../lib/random.js'
+import { noRepeatSeries, shuffle } from '../../lib/random.js'
 import { HOMOPHONES } from './data.js'
 
 /** Draws the sentences for the requested pair (or all six), options
@@ -26,12 +26,10 @@ function buildSeries(config) {
     return sentences.map((sentence) => ({ ...sentence, words }))
   })
 
-  return shuffle(pool)
-    .slice(0, config.rounds)
-    .map((sentence) => {
-      const options = shuffle(sentence.words)
-      return { ...sentence, options, correct: options.indexOf(sentence.answer) }
-    })
+  return noRepeatSeries(pool, config.rounds).map((sentence) => {
+    const options = shuffle(sentence.words)
+    return { ...sentence, options, correct: options.indexOf(sentence.answer) }
+  })
 }
 
 /** Whole sentence, gap filled in, for the speech synthesis. */

@@ -11,7 +11,7 @@ import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
-import { pick, shuffle } from '../../lib/random.js'
+import { noRepeatSeries, shuffle } from '../../lib/random.js'
 import { SENTENCES } from './data.js'
 
 const SIZE_BY_SETTING = { four: 4, five: 5, six: 6 }
@@ -20,9 +20,7 @@ function capitalize(sentence) {
   return sentence.charAt(0).toUpperCase() + sentence.slice(1)
 }
 
-function buildRound(config) {
-  const size = SIZE_BY_SETTING[config.words] ?? 4
-  const words = pick(SENTENCES[size] ?? SENTENCES[4])
+function buildRoundFor(words, size) {
   // One identifier per tile: the same word (an article, most often) may
   // appear twice in the same sentence.
   const tiles = words.map((text, index) => ({ id: `${index}-${text}`, text }))
@@ -34,9 +32,18 @@ function buildRound(config) {
   return { sentence: words.join(' '), tiles: shuffled, size }
 }
 
+/** The whole session's sentences, drawn upfront so the same one cannot come
+ * back twice within a series while the bucket has enough to avoid it. */
+function buildSeries(config) {
+  const size = SIZE_BY_SETTING[config.words] ?? 4
+  const pool = SENTENCES[size] ?? SENTENCES[4]
+  return noRepeatSeries(pool, config.rounds).map((words) => buildRoundFor(words, size))
+}
+
 export default function SentenceOrder({ config, session }) {
-  const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [series, setSeries] = useState(() => buildSeries(config))
+  const rounds = useRounds(series.length, session)
+  const round = series[rounds.round]
   const [placed, setPlaced] = useState([])
   const [result, setResult] = useState(null)
   // Synchronous mirror of `placed`: two taps in the same frame would
@@ -75,7 +82,6 @@ export default function SentenceOrder({ config, session }) {
 
   const goNext = () => {
     rounds.next()
-    setRound(buildRound(config))
     updatePlaced([])
     setResult(null)
   }
@@ -83,12 +89,12 @@ export default function SentenceOrder({ config, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    setSeries(buildSeries(config))
     updatePlaced([])
     setResult(null)
   }
 
-  if (rounds.isOver) {
+  if (rounds.isOver || !round) {
     return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
   }
 

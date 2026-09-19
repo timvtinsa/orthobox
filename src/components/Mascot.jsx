@@ -8,11 +8,13 @@
  * bushy white-tipped tail, black stockings, tall pointed ears with a dark
  * back, a cheek ruff tapering to the chin, a small dark nose, and whiskers.
  *
- * Three moods, built from the same shapes so it is clearly the same animal
- * changing expression:
- *   idle      sitting, watching, breathing
- *   cheer     narrowed eyes, open smile, a hop and a tail wag
- *   tryAgain  raised brows, a paw held out, mouth still smiling
+ * One mood per outcome would get repetitive across a whole series, so each
+ * outcome has three: a shared face (the fox is happy, or it is encouraging —
+ * never sad), carried by three different bits of motion, picked at random by
+ * `GameCompanion`.
+ *   idle                          sitting, watching, breathing
+ *   cheer, twirl, bounce          happy face: narrowed eyes, open smile
+ *   tryAgain, nudge, wiggle       encouraging face: raised brows, a paw held out
  *
  * Expressions rely on line work only: nothing changes colour from one mood to
  * the next, so success is never signalled by colour alone, and the failed mood
@@ -23,8 +25,11 @@ const FUR_INK = '#a44a28'
 const BELLY = '#ffffff'
 const FEATURE = '#33303a'
 
+const HAPPY_MOODS = ['cheer', 'twirl', 'bounce']
+const ENCOURAGING_MOODS = ['tryAgain', 'nudge', 'wiggle']
+
 function Eyes({ mood }) {
-  if (mood === 'cheer') {
+  if (HAPPY_MOODS.includes(mood)) {
     return (
       <g fill="none" stroke={FEATURE} strokeWidth="4" strokeLinecap="round">
         <path d="M39 42q7-7 14 0" />
@@ -39,7 +44,7 @@ function Eyes({ mood }) {
       {/* Le reflet est ce qui rend un oeil vivant plutôt que dessiné. */}
       <circle cx="47.8" cy="41.2" r="1.7" fill="#fff" />
       <circle cx="75.8" cy="41.2" r="1.7" fill="#fff" />
-      {mood === 'tryAgain' && (
+      {ENCOURAGING_MOODS.includes(mood) && (
         <g fill="none" stroke={FEATURE} strokeWidth="3.6" strokeLinecap="round">
           <path d="M37 37l12-5" />
           <path d="M83 37l-12-5" />
@@ -50,7 +55,7 @@ function Eyes({ mood }) {
 }
 
 function Mouth({ mood }) {
-  if (mood === 'cheer') {
+  if (HAPPY_MOODS.includes(mood)) {
     return (
       <path
         d="M49 64q11 12 22 0z"
@@ -63,7 +68,7 @@ function Mouth({ mood }) {
   }
   return (
     <path
-      d={mood === 'tryAgain' ? 'M51 64q9 6 18 0' : 'M51 63q9 8 18 0'}
+      d={ENCOURAGING_MOODS.includes(mood) ? 'M51 64q9 6 18 0' : 'M51 63q9 8 18 0'}
       fill="none"
       stroke={FEATURE}
       strokeWidth="4"
@@ -178,7 +183,7 @@ export default function Mascot({ mood = 'idle', size = 88, className = '' }) {
         <Mouth mood={mood} />
 
         {/* Patte tendue : l'humeur ratée encourage, elle ne gronde pas. */}
-        {mood === 'tryAgain' && (
+        {ENCOURAGING_MOODS.includes(mood) && (
           <g className="mascot__paw">
             <ellipse cx="30" cy="80" rx="9" ry="7" fill={FUR} stroke={FEATURE} strokeWidth="4.5" transform="rotate(-25 30 80)" />
           </g>
