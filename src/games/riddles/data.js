@@ -77,6 +77,42 @@ export const RIDDLES = [
       'Je cache des noisettes pour l’hiver.',
     ],
   },
+  {
+    theme: 'animals',
+    answer: 'le poisson rouge',
+    clues: [
+      'Je vis dans un bocal ou un aquarium.',
+      'Je suis orange et je n’ai pas de paupières.',
+      'Je tourne en rond dans mon bocal.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'la tortue',
+    clues: [
+      'Je suis un reptile très lent.',
+      'J’ai une carapace dure sur le dos.',
+      'Je peux vivre plus de cent ans.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'le perroquet',
+    clues: [
+      'Je suis un oiseau très coloré.',
+      'Je peux répéter les mots que j’entends.',
+      'Dans les histoires de pirates, je me pose souvent sur leur épaule.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'l’ours',
+    clues: [
+      'Je suis un grand animal au poil épais.',
+      'Je dors tout l’hiver dans une grotte.',
+      'J’aime beaucoup le miel.',
+    ],
+  },
 
   // --- Everyday objects ---
   {
@@ -151,6 +187,42 @@ export const RIDDLES = [
       'On peut gommer ce que j’écris.',
     ],
   },
+  {
+    theme: 'objects',
+    answer: 'la lampe de poche',
+    clues: [
+      'Je suis un petit objet qu’on tient dans la main.',
+      'J’ai une pile à l’intérieur.',
+      'Je fais de la lumière quand il fait noir.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le peigne',
+    clues: [
+      'Je suis un petit objet fin avec plein de dents.',
+      'On me passe dans les cheveux.',
+      'Je sers à se coiffer.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'la casserole',
+    clues: [
+      'Je suis un objet de cuisine.',
+      'J’ai un long manche pour ne pas se brûler.',
+      'On me pose sur le feu pour cuire les aliments.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le thermomètre',
+    clues: [
+      'Je suis un petit objet fin et rigide.',
+      'Je mesure la température.',
+      'On me met parfois sous le bras quand on est malade.',
+    ],
+  },
 
   // --- Food, places and jobs ---
   {
@@ -223,6 +295,42 @@ export const RIDDLES = [
       'C’est un métier.',
       'On porte un casque et on roule dans un camion rouge.',
       'On éteint les incendies.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'le pharmacien',
+    clues: [
+      'C’est un métier.',
+      'Il travaille dans un magasin avec une croix verte.',
+      'Il donne les médicaments prescrits par le médecin.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'la fraise',
+    clues: [
+      'Je suis un fruit rouge.',
+      'J’ai plein de petites graines sur ma peau.',
+      'On me mange souvent avec de la chantilly.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'la plage',
+    clues: [
+      'C’est un endroit qu’on aime en été.',
+      'Il y a du sable et des vagues.',
+      'On y construit des châteaux de sable.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'le vétérinaire',
+    clues: [
+      'C’est un métier.',
+      'Il soigne les animaux malades ou blessés.',
+      'On l’emmène chez lui quand notre chat ne va pas bien.',
     ],
   },
 ]

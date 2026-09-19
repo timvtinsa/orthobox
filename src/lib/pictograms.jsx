@@ -516,6 +516,71 @@ const DRAWINGS = {
       </>
     ),
   },
+  sun: {
+    label: 'soleil',
+    draw: (
+      <>
+        <g stroke={INK} strokeWidth="6" strokeLinecap="round">
+          <path d="M60 14v14M60 92v14M106 60H92M28 60H14" />
+          <path d="M93 27l-10 10M37 83l-10 10M93 93l-10-10M37 37l-10-10" />
+        </g>
+        <circle cx="60" cy="60" r="26" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M60 34a26 26 0 0 1 0 52 20 20 0 0 0 0-52z" fill={INK} opacity=".16" />
+      </>
+    ),
+  },
+  carrot: {
+    label: 'carotte',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M50 20q4 10 2 18M60 16q3 12 0 20M70 20q-4 10-2 18" fill="none" stroke={C.sage} strokeWidth="6" strokeLinecap="round" />
+        <path d="M60 38c14 0 22 10 18 34-3 20-10 34-18 34s-15-14-18-34c-4-24 4-34 18-34z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M65 40c10 3 15 13 12 32-3 20-10 34-18 34 10-4 14-18 16-34 2-14 0-25-10-32z" fill={INK} opacity=".16" />
+        <g className="picto__fine" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".45">
+          <path d="M48 56h8M46 68h9M48 80h7" />
+        </g>
+      </>
+    ),
+  },
+  cheese: {
+    label: 'fromage',
+    draw: (
+      <>
+        <ellipse cx="60" cy="100" rx="38" ry="5" fill={INK} opacity=".12" />
+        <path d="M24 92L58 24q2-4 4 0l34 68z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M62 24q2-4 4 0l34 68H62z" fill={INK} opacity=".16" />
+        <circle cx="52" cy="62" r="6" fill="#fff" stroke={INK} strokeWidth="3.5" />
+        <circle cx="70" cy="76" r="8" fill="#fff" stroke={INK} strokeWidth="3.5" />
+        <circle cx="46" cy="80" r="5" fill="#fff" stroke={INK} strokeWidth="3.5" />
+      </>
+    ),
+  },
+  envelope: {
+    label: 'enveloppe',
+    draw: (
+      <>
+        <ellipse cx="60" cy="104" rx="40" ry="5" fill={INK} opacity=".12" />
+        <rect x="18" y="38" width="84" height="58" rx="8" fill={C.blue} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 38h34a8 8 0 0 1 8 8v42a8 8 0 0 1-8 8H60z" fill={INK} opacity=".16" />
+        <path d="M20 40l40 32 40-32" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  leaf: {
+    label: 'feuille',
+    draw: (
+      <>
+        <ellipse cx="60" cy="106" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 20c30 6 42 34 28 62-14 26-46 26-46 0C42 62 40 34 60 20z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 20c30 6 42 34 28 62-8 15-24 21-34 18 14-6 24-20 24-40 0-16-8-32-18-40z" fill={INK} opacity=".16" />
+        <path d="M60 30v70" stroke={INK} strokeWidth="4" strokeLinecap="round" />
+        <g className="picto__fine" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".4">
+          <path d="M60 46l14 8M60 64l16 8M60 46l-14 8M60 64l-16 8" />
+        </g>
+      </>
+    ),
+  },
 }
 
 export const PICTOGRAMS = Object.entries(DRAWINGS).map(([id, { label }]) => ({ id, label }))

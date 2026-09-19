@@ -13,6 +13,9 @@ export const COMMON_WORDS = [
   'chemise', 'dauphin', 'fromage', 'lunettes', 'moulin', 'oreiller', 'pinceau', 'râteau',
   'salade', 'timbre', 'village', 'wagon', 'brosse', 'citron', 'domino', 'escalier',
   'flocon', 'grenier', 'horloge', 'image', 'journal', 'lapin', 'manteau', 'noisette',
+  'ananas', 'robinet', 'ceinture', 'sifflet', 'tabouret', 'éponge', 'chaussette', 'biberon',
+  'cravate', 'tiroir', 'poubelle', 'réveil', 'coquillage', 'papillon', 'tortue', 'cactus',
+  'harmonica', 'montre', 'pantoufle', 'coffre', 'seau', 'igloo', 'tunnel', 'cloche',
 ]
 
 /** Random digit sequence, never repeating the same digit twice in a row. */
