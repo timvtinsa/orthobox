@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/timvtinsa/orthobox/compare/v0.2.0...v0.3.0) (2026-09-19)
+
+
+### Features
+
+* **games:** add « La bonne consigne », a multi-step instruction to carry out ([#13](https://github.com/timvtinsa/orthobox/issues/13)) ([51e5a6e](https://github.com/timvtinsa/orthobox/commit/51e5a6e5440ab052de3b6883ec47ae02928882d8))
+* **games:** add « Le contraire », word retrieval through an antonym ([#11](https://github.com/timvtinsa/orthobox/issues/11)) ([b2a0b43](https://github.com/timvtinsa/orthobox/commit/b2a0b43fbaf68aeb39dd4e396479c8bd67136e66))
+* **games:** add « Les homophones », a spelling choice between two look-alikes ([#12](https://github.com/timvtinsa/orthobox/issues/12)) ([301405a](https://github.com/timvtinsa/orthobox/commit/301405a64611da5be7af50ce85f3405e917b53f0))
+
 ## [0.2.0](https://github.com/timvtinsa/orthobox/compare/v0.1.0...v0.2.0) (2026-09-18)
 
 
