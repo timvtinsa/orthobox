@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Trois formes de couleur reliées par des flèches, dans l'ordre à suivre">
+  <rect width="320" height="200" fill="#fdede7"/>
+
+  <circle cx="62" cy="100" r="30" fill="#3b6fd4" stroke="#a44a28" stroke-width="6"/>
+  <rect x="140" y="70" width="60" height="60" rx="8" fill="#d24b3f" stroke="#a44a28" stroke-width="6"/>
+  <path d="M260 66 L292 128 L228 128 Z" fill="#d9a52c" stroke="#a44a28" stroke-width="6" stroke-linejoin="round"/>
+
+  <path d="M98 100h32" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M124 90l14 10-14 10Z" fill="#a44a28"/>
+
+  <path d="M206 100h12" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M212 90l14 10-14 10Z" fill="#a44a28"/>
+</svg>
