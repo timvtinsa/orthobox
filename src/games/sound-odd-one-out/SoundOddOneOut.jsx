@@ -12,12 +12,11 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { pick, sample, shuffle } from '../../lib/random.js'
+import { noRepeatSeries, pick, sample, shuffle } from '../../lib/random.js'
 import { ONSETS, RHYMES } from './data.js'
 
-function buildRound(config) {
-  const families = config.criterion === 'rhyme' ? RHYMES : ONSETS
-  const [targetFamily, oddFamily] = sample(families, 2)
+function buildRoundFor(config, families, targetFamily) {
+  const oddFamily = pick(families.filter((family) => family !== targetFamily))
   const words = sample(targetFamily.words, config.choices - 1)
   const oddOne = pick(oddFamily.words.filter((word) => !words.includes(word)))
 
@@ -30,9 +29,19 @@ function buildRound(config) {
   }
 }
 
+/** The whole session's target families, drawn upfront so the same sound
+ * family does not carry several rounds in a row while the bank has enough
+ * to avoid it. The odd-one-out family is still drawn fresh each round. */
+function buildSeries(config) {
+  const families = config.criterion === 'rhyme' ? RHYMES : ONSETS
+  const targets = noRepeatSeries(families, config.rounds)
+  return targets.map((targetFamily) => buildRoundFor(config, families, targetFamily))
+}
+
 export default function SoundOddOneOut({ config, session }) {
-  const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [series, setSeries] = useState(() => buildSeries(config))
+  const rounds = useRounds(series.length, session)
+  const round = series[rounds.round]
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -51,7 +60,6 @@ export default function SoundOddOneOut({ config, session }) {
     lock.release()
     setPicked(null)
     rounds.next()
-    setRound(buildRound(config))
   }
 
   const replay = () => {
@@ -59,10 +67,10 @@ export default function SoundOddOneOut({ config, session }) {
     session.reset()
     rounds.restart()
     setPicked(null)
-    setRound(buildRound(config))
+    setSeries(buildSeries(config))
   }
 
-  if (rounds.isOver) {
+  if (rounds.isOver || !round) {
     return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
   }
 

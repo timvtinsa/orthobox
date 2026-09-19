@@ -15,7 +15,7 @@ export default {
     'Repérage des informations explicites',
   ],
   materials: [
-    'Six histoires, deux par longueur. Le texte n’est plus visible pendant les questions.',
+    'Neuf histoires, trois par longueur. Le texte n’est plus visible pendant les questions.',
     'L’ordre des propositions change à chaque passation.',
     'Variante orale : lire le texte au patient, ou utiliser la lecture vocale, pour travailler la compréhension orale.',
     'Variante différée : poser les questions en fin de séance plutôt qu’immédiatement.',

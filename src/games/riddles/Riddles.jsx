@@ -8,13 +8,13 @@ import { useState } from 'react'
 import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
-import { shuffle } from '../../lib/random.js'
+import { noRepeatSeries } from '../../lib/random.js'
 import { RIDDLES, THEMES } from './data.js'
 
 function buildDeck(config) {
   const byTheme = RIDDLES.filter((item) => item.theme === config.theme)
   const pool = config.theme === 'mixed' || byTheme.length === 0 ? RIDDLES : byTheme
-  return shuffle(pool).slice(0, config.rounds)
+  return noRepeatSeries(pool, config.rounds)
 }
 
 export default function Riddles({ config, session }) {

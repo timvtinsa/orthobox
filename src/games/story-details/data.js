@@ -86,6 +86,42 @@ export const STORIES = [
     ],
   },
   {
+    id: 'pique-nique',
+    length: 'short',
+    title: 'Le pique-nique au parc',
+    text: [
+      'Dimanche midi, Nora et son grand frère Hugo sont allés pique-niquer au parc du Lac. Ils ont emporté un panier avec du poulet froid, deux tomates et une grande bouteille d’eau.',
+      'Ils se sont installés sous un grand chêne. Un écureuil roux s’est approché tout près d’eux pour chercher des miettes. Avant de repartir à quinze heures, Hugo a jeté les papiers dans une poubelle jaune.',
+    ],
+    questions: [
+      {
+        question: 'Quel jour Nora et Hugo sont-ils allés pique-niquer ?',
+        options: ['Samedi', 'Dimanche', 'Lundi', 'Mercredi'],
+        answer: 1,
+      },
+      {
+        question: 'Où se sont-ils installés ?',
+        options: ['Sous un chêne', 'Sous un sapin', 'Près de la rivière', 'Sur un banc'],
+        answer: 0,
+      },
+      {
+        question: 'Combien de tomates avaient-ils emportées ?',
+        options: ['Une', 'Deux', 'Trois', 'Quatre'],
+        answer: 1,
+      },
+      {
+        question: 'Quel animal s’est approché d’eux ?',
+        options: ['Un chat', 'Un oiseau', 'Un écureuil roux', 'Un lapin'],
+        answer: 2,
+      },
+      {
+        question: 'À quelle heure sont-ils repartis ?',
+        options: ['Treize heures', 'Quatorze heures', 'Quinze heures', 'Seize heures'],
+        answer: 2,
+      },
+    ],
+  },
+  {
     id: 'panne',
     length: 'medium',
     title: 'La panne de courant',
@@ -192,6 +228,53 @@ export const STORIES = [
           'Il lui prête son vélo',
           'Il l’invite au restaurant',
         ],
+        answer: 1,
+      },
+    ],
+  },
+  {
+    id: 'natation',
+    length: 'medium',
+    title: 'Le cours de natation',
+    text: [
+      'Le mardi après l’école, Malo va à la piscine municipale avec huit autres enfants de sa classe. Son moniteur, monsieur Diallo, leur apprend à nager le dos crawlé depuis trois semaines.',
+      'Ce mardi-là, en arrivant, Malo remarque que l’eau est un peu plus froide que d’habitude : le grand bassin est en réparation, alors le groupe utilise le petit bassin. Monsieur Diallo demande à chacun de faire quatre longueurs avant de commencer les exercices.',
+      'À la fin du cours, Malo est le premier à sortir de l’eau. Il félicite sa camarade Zoé, qui a réussi sa première longueur en dos crawlé toute seule. En rentrant, Malo raconte fièrement sa séance à sa grande sœur Inès.',
+    ],
+    questions: [
+      {
+        question: 'Quel jour Malo va-t-il à la piscine ?',
+        options: ['Lundi', 'Mardi', 'Jeudi', 'Samedi'],
+        answer: 1,
+      },
+      {
+        question: 'Comment s’appelle son moniteur ?',
+        options: ['Monsieur Diallo', 'Monsieur Berger', 'Monsieur Lafont', 'Monsieur Kervella'],
+        answer: 0,
+      },
+      {
+        question: 'Pourquoi le groupe utilise-t-il le petit bassin ?',
+        options: [
+          'Il y a trop d’enfants',
+          'Le grand bassin est en réparation',
+          'L’eau du grand bassin est sale',
+          'C’est l’heure d’un autre cours',
+        ],
+        answer: 1,
+      },
+      {
+        question: 'Combien de longueurs monsieur Diallo demande-t-il de faire avant les exercices ?',
+        options: ['Deux', 'Trois', 'Quatre', 'Six'],
+        answer: 2,
+      },
+      {
+        question: 'Qui sort le premier de l’eau ?',
+        options: ['Zoé', 'Malo', 'Monsieur Diallo', 'Inès'],
+        answer: 1,
+      },
+      {
+        question: 'À qui Malo raconte-t-il sa séance en rentrant ?',
+        options: ['À sa mère', 'À sa grande sœur Inès', 'À son moniteur', 'À Zoé'],
         answer: 1,
       },
     ],
@@ -308,6 +391,64 @@ export const STORIES = [
           'Dans la cuisine',
           'Il était resté à Lyon',
         ],
+        answer: 1,
+      },
+    ],
+  },
+  {
+    id: 'exposition',
+    length: 'long',
+    title: 'L’exposition de peinture',
+    text: [
+      'Pour les vacances de la Toussaint, l’école organise une petite exposition des dessins de tous les élèves, du CP au CM2. Elle a lieu le jeudi, dans la grande salle polyvalente, de quatorze heures à dix-sept heures.',
+      'Léna, en CE2, a peint un paysage de montagne avec un lac bleu turquoise. Elle y a travaillé pendant deux semaines, un peu chaque soir après ses devoirs. Son tableau est accroché juste à côté de celui de son ami Noah, qui a dessiné un dragon vert à trois têtes.',
+      'Les parents sont invités à voter pour leur œuvre préférée en déposant une gommette rouge devant le dessin choisi. À la fin de l’après-midi, la maîtresse, madame Petit, compte les gommettes : c’est le dragon de Noah qui obtient le plus de voix, avec vingt-trois gommettes.',
+      'Pour le féliciter, toute la classe reçoit un livre offert par la mairie. Léna, un peu déçue au début, est finalement très fière d’avoir participé, et elle décide déjà ce qu’elle peindra l’année prochaine.',
+    ],
+    questions: [
+      {
+        question: 'À quelle occasion l’exposition a-t-elle lieu ?',
+        options: ['Noël', 'La Toussaint', 'La fête de l’école', 'Pâques'],
+        answer: 1,
+      },
+      {
+        question: 'De quelle heure à quelle heure a lieu l’exposition ?',
+        options: ['De 13 h à 16 h', 'De 14 h à 17 h', 'De 15 h à 18 h', 'De 14 h à 16 h'],
+        answer: 1,
+      },
+      {
+        question: 'Dans quelle classe est Léna ?',
+        options: ['CP', 'CE1', 'CE2', 'CM1'],
+        answer: 2,
+      },
+      {
+        question: 'Qu’a peint Noah ?',
+        options: [
+          'Un paysage de montagne',
+          'Un dragon vert à trois têtes',
+          'Un bateau',
+          'Un portrait',
+        ],
+        answer: 1,
+      },
+      {
+        question: 'Comment les parents votent-ils pour leur œuvre préférée ?',
+        options: [
+          'Ils lèvent la main',
+          'Ils écrivent un nom sur un papier',
+          'Ils déposent une gommette rouge',
+          'Ils applaudissent',
+        ],
+        answer: 2,
+      },
+      {
+        question: 'Combien de gommettes le dessin gagnant a-t-il obtenues ?',
+        options: ['Treize', 'Dix-huit', 'Vingt-trois', 'Trente'],
+        answer: 2,
+      },
+      {
+        question: 'Qui offre le livre à toute la classe ?',
+        options: ['La maîtresse', 'La mairie', 'Les parents', 'Le directeur'],
         answer: 1,
       },
     ],
