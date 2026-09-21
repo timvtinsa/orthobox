@@ -1363,6 +1363,31 @@
   justify-content: center;
 }
 
+/* --- Le loto sonore -------------------------------------------------- */
+
+.lotto-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius);
+  border: 3px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.lotto-cell:hover:not(:disabled) {
+  border-color: var(--category-pastel);
+  transform: translateY(-2px);
+}
+
+.lotto-cell:disabled {
+  cursor: default;
+}
+
 /* --- Jeu des paires ------------------------------------------------ */
 
 .memory-grid {
