@@ -254,6 +254,11 @@ a {
   font-size: 0.85rem;
 }
 
+.app-footer__version {
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
 /* --- Boutons ---------------------------------------------------- */
 
 .btn {

@@ -7,6 +7,7 @@ import BrandMark from './BrandMark.jsx'
 import UpdatePrompt from './UpdatePrompt.jsx'
 import InstallButton from './InstallButton.jsx'
 import ModeSwitch from './ModeSwitch.jsx'
+import { version } from '../../package.json'
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -44,6 +45,7 @@ export default function Layout() {
       <footer className="app-footer">
         Orthobox, outil libre pour les séances d’orthophonie. Tout fonctionne hors ligne, aucune
         donnée patient n’est enregistrée.
+        <span className="app-footer__version"> · v{version}</span>
       </footer>
 
       <UpdatePrompt />
