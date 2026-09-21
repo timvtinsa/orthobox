@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const THRESHOLD = 6 // pixels before a press becomes a drag
+const TOUCH_HOLD_MS = 200 // a finger must hold still this long before a drag arms
+const TOUCH_MOVE_TOLERANCE = 10 // pixels a finger may wander before the hold is cancelled
 
 /**
  * Hand-rolled drag and drop, on Pointer Events: works with a mouse as well as
@@ -17,6 +19,12 @@ const THRESHOLD = 6 // pixels before a press becomes a drag
  * and the insertion marker).
  *
  * `onDrop({ type, gameId, from, to })` receives the insertion position.
+ *
+ * A finger, unlike a mouse, also means to scroll the page: on a touch
+ * pointer the drag only arms after a short hold (`TOUCH_HOLD_MS`), so a
+ * normal scrolling swipe is left alone and reaches the browser instead of
+ * being captured as a drag. A mouse or a pen, which never scrolls this way,
+ * keeps the immediate distance-threshold behaviour.
  */
 export function useDragSequence({ onDrop }) {
   const [drag, setDrag] = useState(null)
@@ -26,6 +34,8 @@ export function useDragSequence({ onDrop }) {
   const origin = useRef(null)
   const dragRef = useRef(null)
   const targetRef = useRef(null)
+  const armedRef = useRef(false)
+  const holdTimer = useRef(null)
 
   const registerItem = useCallback((index, element) => {
     if (element) items.current.set(index, element)
@@ -45,7 +55,16 @@ export function useDragSequence({ onDrop }) {
   const start = (event, payload) => {
     // Primary button only, so the context menu keeps working.
     if (event.button !== undefined && event.button > 0) return
-    origin.current = { x: event.clientX, y: event.clientY, payload }
+    origin.current = { x: event.clientX, y: event.clientY, payload, pointerType: event.pointerType }
+    clearTimeout(holdTimer.current)
+    if (event.pointerType === 'touch') {
+      armedRef.current = false
+      holdTimer.current = setTimeout(() => {
+        if (origin.current) armedRef.current = true
+      }, TOUCH_HOLD_MS)
+    } else {
+      armedRef.current = true
+    }
   }
 
   useEffect(() => {
@@ -55,7 +74,20 @@ export function useDragSequence({ onDrop }) {
         event.clientX - origin.current.x,
         event.clientY - origin.current.y,
       )
-      if (!dragRef.current && distance < THRESHOLD) return
+
+      if (!dragRef.current) {
+        if (!armedRef.current) {
+          // A touch pointer wandering before the hold delay fires means the
+          // finger is scrolling, not dragging: give up on the drag entirely
+          // and let the browser handle the gesture.
+          if (origin.current.pointerType === 'touch' && distance > TOUCH_MOVE_TOLERANCE) {
+            clearTimeout(holdTimer.current)
+            origin.current = null
+          }
+          return
+        }
+        if (distance < THRESHOLD) return
+      }
 
       dragRef.current = { ...origin.current.payload, x: event.clientX, y: event.clientY }
       setDrag(dragRef.current)
@@ -85,9 +117,11 @@ export function useDragSequence({ onDrop }) {
           to: current.type === 'move' && landing > current.from ? landing - 1 : landing,
         })
       }
+      clearTimeout(holdTimer.current)
       origin.current = null
       dragRef.current = null
       targetRef.current = null
+      armedRef.current = false
       setDrag(null)
       setTarget(null)
     }
