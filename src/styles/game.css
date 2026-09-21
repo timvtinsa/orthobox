@@ -561,6 +561,29 @@
   white-space: nowrap;
 }
 
+@media (max-width: 560px) {
+  /* The title and the round progress compete for the same row: on a
+     phone-width screen, an average title is squeezed down to a couple of
+     letters. Wrapping the progress onto its own row keeps the title
+     readable instead of silently truncating it. */
+  .board-bar {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .board-bar__title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .board-bar__progress {
+    flex-basis: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+}
+
 .frieze {
   display: flex;
   gap: 3px;

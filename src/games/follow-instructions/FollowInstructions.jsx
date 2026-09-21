@@ -90,7 +90,7 @@ export default function FollowInstructions({ config, session }) {
       </p>
 
       <div className="syllable-word">
-        <span className="syllable-word__text">{instruction}</span>
+        <p className="game-prompt">{instruction}</p>
         <SpeakButton text={instruction} label="Écouter la consigne" />
       </div>
 
