@@ -1295,6 +1295,38 @@
   height: auto;
 }
 
+/* --- Le domino des images ------------------------------------------ */
+
+.domino-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.domino-tile {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 2px solid var(--line);
+  background: var(--surface);
+}
+
+.domino-tile__divider {
+  width: 2px;
+  align-self: stretch;
+  background: var(--line-strong);
+  border-radius: 1px;
+}
+
+.choice--domino {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* --- Jeu des paires ------------------------------------------------ */
 
 .memory-grid {
