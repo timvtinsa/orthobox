@@ -14,13 +14,15 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { buildRound, instructionText } from './logic.js'
 import ShapeIcon from './ShapeIcon.jsx'
 
-function Token({ token, onClick, label }) {
+function Token({ token, onClick, label, showLabel }) {
   return (
     <button type="button" className="token token--shape" onClick={onClick} aria-label={label}>
       <ShapeIcon shapeId={token.shapeId} hex={token.hex} />
-      <span className="token__label">
-        {token.shapeLabel} {token.colorLabel}
-      </span>
+      {showLabel && (
+        <span className="token__label">
+          {token.shapeLabel} {token.colorLabel}
+        </span>
+      )}
     </button>
   )
 }
@@ -82,6 +84,7 @@ export default function FollowInstructions({ config, session }) {
 
   const instruction = instructionText(round.target)
   const remaining = round.pool.filter((token) => !placed.some((item) => item.id === token.id))
+  const showLabel = config.showLabels !== 'hidden'
 
   return (
     <div className="game-board">
@@ -104,6 +107,7 @@ export default function FollowInstructions({ config, session }) {
               token={token}
               onClick={() => remove(token)}
               label={`Retirer ${token.shapeLabel} ${token.colorLabel}`}
+              showLabel={showLabel}
             />
           ))
         )}
@@ -111,7 +115,13 @@ export default function FollowInstructions({ config, session }) {
 
       <div className="token-row">
         {remaining.map((token) => (
-          <Token key={token.id} token={token} onClick={() => place(token)} label={`${token.shapeLabel} ${token.colorLabel}`} />
+          <Token
+            key={token.id}
+            token={token}
+            onClick={() => place(token)}
+            label={`${token.shapeLabel} ${token.colorLabel}`}
+            showLabel={showLabel}
+          />
         ))}
       </div>
 
