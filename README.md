@@ -8,6 +8,35 @@ The interface and all game material are in French, since the application is
 built for French-speaking practitioners. The code, the documentation and the
 repository itself are in English.
 
+## Orthobox compared to other French tools
+
+Speech therapists already have French-language options for digital material:
+general school-game sites, subscription rehabilitation platforms, and paid
+tablet apps. Orthobox does not compete on catalogue size; it competes on
+being free, private and usable without a connection. Based on each product's
+own public presentation as of September 2026:
+
+| | Orthobox | [logicieleducatif.fr](https://www.logicieleducatif.fr/) | [HappyNeuron Pro](https://www.happyneuron.com/orthophonie/pro-abonnements-logiciels/) | [DYNSEO](https://www.dynseo.com/) (Coco / Joe / Edith) | [LenaTheo](https://lenatheo.com/) |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| Free | 🟢 | 🟢 | 🔴 from ~59 €/month | 🔴 ~88 € excl. tax/year per tablet | 🔴 ~8.90 €/month¹ |
+| No advertising | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| Works offline, once loaded | 🟢 | 🔴 browser only | 🔴 cloud platform | 🟢 installed tablet app | 🔴 browser only |
+| Built for speech therapy | 🟢 | 🔴 general school exercises | 🟢 | 🟢 | 🟢 |
+| No account or sign-up | 🟢 | 🟢 | 🔴 | 🟢 | 🔴¹ |
+
+¹ LenaTheo offers a small number of games playable free and without an
+account; its full catalogue needs a paid subscription.
+
+Orthobox is the only one of these built specifically for speech therapy that
+also asks for neither payment nor an account, and the only subscription-free
+option that is designed for the clinic rather than for the classroom. It has
+no paid tier and never will: Orthobox stays free and ad-free for every
+practitioner, funded only by whoever chooses to support it.
+
+This table reflects each product's own marketing pages, not a hands-on trial
+of every one of them, and pricing or features may have changed since. If you
+spot something that has changed, an issue or a pull request is welcome.
+
 Games are filed under four domains:
 
 | Domain | What it works on |
