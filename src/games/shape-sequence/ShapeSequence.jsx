@@ -1,162 +1,174 @@
 /**
- * Shape sequence: reproduce a sequence of lit cells, each cell carrying a
- * colour, or a shape and a colour together, instead of the blank cells of
- * « La suite lumineuse ». Choosing the material is what makes the game
- * progressive: colour alone first, shape and colour combined once that is
- * mastered.
+ * Shape sequence: memorise an ordered sequence of colours, or shapes and
+ * colours combined, then reconstitute it in order once it is hidden.
+ *
+ * Structurally close to « La bonne consigne » (tap to place, tap a placed
+ * item to take it back), but the sequence is memorised visually during a
+ * timed study phase instead of read as an instruction. The material setting
+ * is what makes the game progressive: colour alone to start, shape and
+ * colour combined once that is mastered.
  */
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
-import { buildBoard, makeSequence, MAX_SPAN } from './logic.js'
+import StudyPhase from '../../components/StudyPhase.jsx'
+import { useRounds } from '../../hooks/useRounds.js'
+import { buildRound } from './logic.js'
 import ShapeIcon from './ShapeIcon.jsx'
 
-const COLUMNS = { 4: 2, 6: 3 }
-const LIT_DURATION = 450
-const STEP_DURATION = 700
+function itemLabel(item) {
+  return item.shapeLabel ? `${item.shapeLabel} ${item.colorLabel}` : item.colorLabel
+}
+
+function Item({ item, onClick, label, rank, disabled }) {
+  return (
+    <button
+      type="button"
+      className="token token--shape"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+    >
+      {item.shapeId ? (
+        <ShapeIcon shapeId={item.shapeId} hex={item.hex} />
+      ) : (
+        <span className="token__color-swatch" style={{ background: item.hex }} aria-hidden="true" />
+      )}
+      {rank != null && <span className="token__rank">{rank}</span>}
+    </button>
+  )
+}
 
 export default function ShapeSequence({ config, session }) {
-  const cells = Number(config.cells)
-  const columns = COLUMNS[cells] ?? 2
-  const [board, setBoard] = useState(() => buildBoard(config.material, cells))
-  const [sequence, setSequence] = useState(() => makeSequence(cells, config.start))
-  const [phase, setPhase] = useState('show') // show -> repeat -> passed | failed
-  const [step, setStep] = useState(0)
-  const [lit, setLit] = useState(null)
-  const [input, setInput] = useState([])
-  const [over, setOver] = useState(false)
-  // Length of the longest sequence reproduced without a mistake.
-  const [span, setSpan] = useState(0)
-  // Synchronous mirror of `input`: a cell tapped twice in a row must not be
-  // compared twice against the same position of the sequence.
-  const inputRef = useRef([])
+  const rounds = useRounds(config.rounds, session)
+  const [round, setRound] = useState(() => buildRound(config))
+  const [phase, setPhase] = useState('study') // study -> test
+  const [placed, setPlaced] = useState([])
+  const [result, setResult] = useState(null)
+  // Miroir synchrone de `placed` : deux taps dans la même image liraient
+  // sinon deux fois le même état et fausseraient la validation.
+  const placedRef = useRef([])
 
-  // Playback of the sequence to memorise.
-  useEffect(() => {
-    if (phase !== 'show') return undefined
-    if (step >= sequence.length) {
-      setLit(null)
-      setPhase('repeat')
-      return undefined
-    }
-    setLit(sequence[step])
-    const off = window.setTimeout(() => setLit(null), LIT_DURATION)
-    const goNext = window.setTimeout(() => setStep(step + 1), STEP_DURATION)
-    return () => {
-      window.clearTimeout(off)
-      window.clearTimeout(goNext)
-    }
-  }, [phase, step, sequence])
+  const updatePlaced = (next) => {
+    placedRef.current = next
+    setPlaced(next)
+  }
 
-  const expected = config.direction === 'backward' ? [...sequence].reverse() : sequence
-
-  const onPick = (index) => {
-    if (phase !== 'repeat' || inputRef.current.length >= expected.length) return
-    const position = inputRef.current.length
-    const next = [...inputRef.current, index]
-    inputRef.current = next
-    setInput(next)
-
-    if (index !== expected[position]) {
-      session.register(false)
-      setPhase('failed')
-      setOver(true)
-      return
-    }
-    if (next.length === expected.length) {
-      session.register(true)
-      setSpan(Math.max(span, expected.length))
-      setPhase('passed')
+  const place = (item) => {
+    if (result) return
+    if (placedRef.current.some((entry) => entry.id === item.id)) return
+    const next = [...placedRef.current, item]
+    updatePlaced(next)
+    if (next.length === round.target.length) {
+      const isCorrect = next.every((entry, index) => entry.id === round.target[index].id)
+      setResult(isCorrect ? 'correct' : 'wrong')
+      session.register(isCorrect)
     }
   }
 
-  const longerSequence = () => {
-    const size = Math.min(sequence.length + 1, MAX_SPAN)
-    setSequence(makeSequence(cells, size))
-    inputRef.current = []
-    setInput([])
-    setStep(0)
-    setPhase('show')
+  const remove = (item) => {
+    if (result) return
+    updatePlaced(placedRef.current.filter((entry) => entry.id !== item.id))
+  }
+
+  const retry = () => {
+    updatePlaced([])
+    setResult(null)
+  }
+
+  const goNext = () => {
+    rounds.next()
+    setRound(buildRound(config))
+    updatePlaced([])
+    setResult(null)
+    setPhase('study')
   }
 
   const replay = () => {
     session.reset()
-    setBoard(buildBoard(config.material, cells))
-    setSequence(makeSequence(cells, config.start))
-    inputRef.current = []
-    setInput([])
-    setStep(0)
-    setLit(null)
-    setOver(false)
-    setSpan(0)
-    setPhase('show')
+    rounds.restart()
+    setRound(buildRound(config))
+    updatePlaced([])
+    setResult(null)
+    setPhase('study')
   }
 
-  if (over) {
+  if (rounds.isOver) {
+    return <GameOver correct={session.correct} total={session.attempts} onReplay={replay} />
+  }
+
+  if (phase === 'study') {
     return (
-      <GameOver correct={session.correct} total={session.attempts} onReplay={replay}>
-        <p className="muted">
-          {span === 0
-            ? 'Aucune suite complète cette fois, on peut repartir plus lentement.'
-            : `Empan atteint : ${span} ${span > 1 ? 'éléments' : 'élément'}${
-                config.direction === 'backward' ? ' (ordre inverse)' : ''
-              }`}
-        </p>
-      </GameOver>
+      <StudyPhase
+        seconds={config.duration}
+        instruction="Retiens bien l’ordre de cette suite"
+        onDone={() => setPhase('test')}
+      >
+        <div className="token-row">
+          {round.target.map((item, index) => (
+            <Item key={item.id} item={item} label={itemLabel(item)} rank={index + 1} disabled />
+          ))}
+        </div>
+      </StudyPhase>
     )
   }
 
-  const prompt =
-    phase === 'show'
-      ? 'Regarde bien la suite…'
-      : config.direction === 'backward'
-        ? 'À toi : reproduis la suite À L’ENVERS'
-        : 'À toi : reproduis la suite dans le même ordre'
+  const remaining = round.pool.filter((item) => !placed.some((entry) => entry.id === item.id))
 
   return (
     <div className="game-board">
       <p className="game-round">
-        Suite de {sequence.length} · {config.material === 'shapes' ? 'formes et couleurs' : 'couleurs'} ·{' '}
-        {config.direction === 'backward' ? 'ordre inverse' : 'ordre direct'}
+        Suite {rounds.round + 1} sur {rounds.total}
       </p>
-      <p className="game-prompt">{prompt}</p>
+      <p className="game-prompt">Replace les éléments dans l’ordre mémorisé</p>
 
-      <div
-        className="memo-grid"
-        style={{ gridTemplateColumns: `repeat(${columns}, minmax(72px, 110px))` }}
-      >
-        {board.map((cell, index) => (
-          <button
-            key={index}
-            type="button"
-            className={`memo-cell memo-cell--material${lit === index ? ' memo-cell--lit' : ''}${
-              phase === 'repeat' ? ' memo-cell--active' : ''
-            }`}
-            style={cell.shapeId ? undefined : { background: cell.hex }}
-            disabled={phase !== 'repeat'}
-            aria-label={`Case ${index + 1}`}
-            onClick={() => onPick(index)}
-          >
-            {cell.shapeId && <ShapeIcon shapeId={cell.shapeId} hex={cell.hex} />}
-          </button>
+      <div className={`word-slot${result ? ` word-slot--${result}` : ''}`}>
+        {placed.length === 0 ? (
+          <span className="word-slot__hint">Touche les éléments dans l’ordre…</span>
+        ) : (
+          placed.map((item, index) => (
+            <Item
+              key={item.id}
+              item={item}
+              onClick={() => remove(item)}
+              label={`Retirer ${itemLabel(item)}`}
+              rank={index + 1}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="token-row">
+        {remaining.map((item) => (
+          <Item key={item.id} item={item} onClick={() => place(item)} label={itemLabel(item)} />
         ))}
       </div>
 
-      <div className="memo-progress" aria-hidden="true">
-        {expected.map((_, index) => (
-          <span
-            key={index}
-            className={`memo-dot${index < input.length ? ' memo-dot--done' : ''}`}
-          />
-        ))}
-      </div>
-
-      {phase === 'passed' && (
+      {result === 'correct' && (
         <>
-          <Feedback status="correct" message="Suite complète, bravo !" />
+          <Feedback status="correct" message="Bravo, c’est le bon ordre." />
           <div className="game-actions">
-            <button type="button" className="btn btn--lg" onClick={longerSequence}>
-              Suite plus longue
+            <button type="button" className="btn btn--lg" onClick={goNext}>
+              Suite suivante
+            </button>
+          </div>
+        </>
+      )}
+
+      {result === 'wrong' && (
+        <>
+          <Feedback status="wrong" message="Ce n’était pas le bon ordre. L’ordre à retenir était :" />
+          <div className="token-row">
+            {round.target.map((item, index) => (
+              <Item key={item.id} item={item} label={itemLabel(item)} rank={index + 1} disabled />
+            ))}
+          </div>
+          <div className="game-actions">
+            <button type="button" className="btn btn--subtle" onClick={retry}>
+              Réessayer
+            </button>
+            <button type="button" className="btn" onClick={goNext}>
+              Suite suivante
             </button>
           </div>
         </>

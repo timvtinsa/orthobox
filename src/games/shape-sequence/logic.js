@@ -1,39 +1,51 @@
 /**
- * Building the board of « La suite de formes ».
+ * Building a round of « La suite de formes ».
  *
- * The board itself never changes during a game: each cell keeps the same
- * material (a colour, or a shape+colour pair) from the first sequence to the
- * last. Only the sequence of positions lit one after another grows, exactly
- * as in « La suite lumineuse », which this game reuses the mechanic of.
+ * A pool holds more items than the sequence asks for, exactly as in « La
+ * bonne consigne »: the patient has to pick the right ones out, in order,
+ * not just replay everything shown. The material setting is what makes the
+ * game progressive: plain colours to start, shapes and colours combined once
+ * that is mastered.
  */
-import { randomInt, sample, shuffle } from '../../lib/random.js'
+import { shuffle } from '../../lib/random.js'
 import { COLORS, SHAPES } from './data.js'
 
-export const MAX_SPAN = 9
+export const POOL_SIZE = 6
+const LENGTH_BY_LEVEL = { two: 2, three: 3, four: 4, five: 5 }
 
-/** One distinct material per cell: a colour alone, or a shape+colour pair. */
-export function buildBoard(material, cells) {
+function allItems(material) {
   if (material === 'shapes') {
-    const combos = []
+    const items = []
     for (const shape of SHAPES) {
       for (const color of COLORS) {
-        combos.push({ shapeId: shape.id, colorId: color.id, hex: color.hex })
+        items.push({
+          id: `${shape.id}-${color.id}`,
+          shapeId: shape.id,
+          shapeLabel: shape.label,
+          colorLabel: color.label,
+          hex: color.hex,
+        })
       }
     }
-    return sample(combos, cells)
+    return items
   }
-  return shuffle(COLORS)
-    .slice(0, cells)
-    .map((color) => ({ shapeId: null, colorId: color.id, hex: color.hex }))
+  return COLORS.map((color) => ({
+    id: color.id,
+    shapeId: null,
+    shapeLabel: null,
+    colorLabel: color.label,
+    hex: color.hex,
+  }))
 }
 
-/** Random sequence of board positions, never lighting the same cell twice in a row. */
-export function makeSequence(cells, size) {
-  const sequence = []
-  for (let i = 0; i < size; i += 1) {
-    let index = randomInt(0, cells - 1)
-    while (cells > 1 && index === sequence[sequence.length - 1]) index = randomInt(0, cells - 1)
-    sequence.push(index)
-  }
-  return sequence
+export function lengthFor(config) {
+  return LENGTH_BY_LEVEL[config.length] ?? 3
+}
+
+export function buildRound(config) {
+  const length = lengthFor(config)
+  const bank = allItems(config.material)
+  const pool = shuffle(bank).slice(0, Math.min(POOL_SIZE, bank.length))
+  const target = shuffle(pool).slice(0, length)
+  return { pool, target }
 }

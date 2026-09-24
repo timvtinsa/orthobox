@@ -1,56 +1,67 @@
 /**
- * The guarantee « La suite de formes » needs: the board never hands out two
- * identical cells (which would make two positions indistinguishable), and
- * the sequence never asks to repeat the same cell twice in a row.
+ * The guarantee « La suite de formes » needs: the sequence to reconstitute
+ * is always a subset of what is actually on screen, it never repeats an
+ * item, and it never asks for more than the pool actually holds.
  */
 import { describe, expect, it } from 'vitest'
-import { buildBoard, makeSequence } from '../src/games/shape-sequence/logic.js'
+import { buildRound, lengthFor, POOL_SIZE } from '../src/games/shape-sequence/logic.js'
 
+const LENGTHS = ['two', 'three', 'four', 'five']
 const RUNS = 100
 
-describe('board', () => {
-  it('gives every cell a distinct colour, in colour-only material', () => {
-    for (let run = 0; run < RUNS; run += 1) {
-      for (const cells of [4, 6]) {
-        const board = buildBoard('colors', cells)
-        expect(board).toHaveLength(cells)
-        expect(board.every((cell) => cell.shapeId === null)).toBe(true)
-        expect(new Set(board.map((cell) => cell.colorId)).size).toBe(cells)
+describe('rounds', () => {
+  it('gives every length the pool and target size it promises, for both materials', () => {
+    for (const material of ['colors', 'shapes']) {
+      for (const length of LENGTHS) {
+        for (let run = 0; run < RUNS; run += 1) {
+          const round = buildRound({ material, length })
+          expect(round.pool, `${material}/${length}`).toHaveLength(POOL_SIZE)
+          expect(round.target, `${material}/${length}`).toHaveLength(lengthFor({ length }))
+        }
       }
     }
   })
 
-  it('gives every cell a distinct shape+colour pair, in shapes material', () => {
-    for (let run = 0; run < RUNS; run += 1) {
-      for (const cells of [4, 6]) {
-        const board = buildBoard('shapes', cells)
-        expect(board).toHaveLength(cells)
-        expect(board.every((cell) => cell.shapeId !== null)).toBe(true)
-        const ids = board.map((cell) => `${cell.shapeId}-${cell.colorId}`)
-        expect(new Set(ids).size).toBe(cells)
-      }
-    }
-  })
-})
-
-describe('sequence', () => {
-  it('never lights the same cell twice in a row', () => {
-    for (let run = 0; run < RUNS; run += 1) {
-      const sequence = makeSequence(4, 20)
-      expect(sequence).toHaveLength(20)
-      for (let i = 1; i < sequence.length; i += 1) {
-        expect(sequence[i]).not.toBe(sequence[i - 1])
+  it('only ever asks for items actually shown in the pool', () => {
+    for (const material of ['colors', 'shapes']) {
+      for (const length of LENGTHS) {
+        for (let run = 0; run < RUNS; run += 1) {
+          const round = buildRound({ material, length })
+          const poolIds = new Set(round.pool.map((item) => item.id))
+          for (const item of round.target) {
+            expect(poolIds.has(item.id), item.id).toBe(true)
+          }
+        }
       }
     }
   })
 
-  it('only ever points at a cell on the board', () => {
-    for (let run = 0; run < RUNS; run += 1) {
-      const sequence = makeSequence(6, 15)
-      for (const index of sequence) {
-        expect(index).toBeGreaterThanOrEqual(0)
-        expect(index).toBeLessThan(6)
+  it('never asks for the same item twice in one sequence', () => {
+    for (const material of ['colors', 'shapes']) {
+      for (const length of LENGTHS) {
+        for (let run = 0; run < RUNS; run += 1) {
+          const round = buildRound({ material, length })
+          const ids = round.target.map((item) => item.id)
+          expect(new Set(ids).size).toBe(ids.length)
+        }
       }
+    }
+  })
+
+  it('never repeats an item within the pool itself', () => {
+    for (const material of ['colors', 'shapes']) {
+      for (let run = 0; run < RUNS; run += 1) {
+        const round = buildRound({ material, length: 'two' })
+        const ids = round.pool.map((item) => item.id)
+        expect(new Set(ids).size).toBe(ids.length)
+      }
+    }
+  })
+
+  it('gives colour-only items no shape, and shape items a shape', () => {
+    for (let run = 0; run < RUNS; run += 1) {
+      expect(buildRound({ material: 'colors', length: 'two' }).pool.every((item) => item.shapeId === null)).toBe(true)
+      expect(buildRound({ material: 'shapes', length: 'two' }).pool.every((item) => item.shapeId !== null)).toBe(true)
     }
   })
 })
