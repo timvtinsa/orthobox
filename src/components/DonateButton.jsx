@@ -29,8 +29,13 @@ export default function DonateButton() {
         <Modal titleId="donate-title" title="Soutenir Orthobox" onClose={() => setOpen(false)}>
           <p className="modal__text">
             Orthobox est gratuit, sans publicité et sans compte, et le restera : aucune version
-            payante n’est prévue. Le développer, ajouter des jeux et corriger ce qui doit
-            l’être prend du temps ; chaque don y contribue directement.
+            payante n’est prévue.
+          </p>
+
+          <p className="modal__text">
+            Le développer sur mon temps libre, ajouter des jeux et corriger ce qui doit l’être
+            prend du temps. Si Orthobox vous fait gagner du vôtre en séance, un don, même
+            modeste, est un vrai encouragement à continuer à le faire vivre — merci !
           </p>
 
           {SUPPORT_URL ? (
