@@ -65,7 +65,7 @@ export default function WhatsNew() {
   return (
     <Modal
       titleId="whats-new-title"
-      title={`Nouveautés de la version ${currentVersion}`}
+      title={`🎉 Nouveautés de la version ${currentVersion}`}
       onClose={close}
     >
       <ul className="whats-new__list">
