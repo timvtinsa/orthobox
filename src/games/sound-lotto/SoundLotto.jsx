@@ -71,9 +71,11 @@ export default function SoundLotto({ config, session }) {
       </p>
       <p className="game-prompt">Écoute, puis touche la bonne image sur le plateau</p>
 
-      <div className="game-actions">
-        <SpeakButton text={current.label} label="Écouter le mot" className="btn--lg" />
-      </div>
+      {!picked && (
+        <div className="game-actions">
+          <SpeakButton text={current.label} label="Écouter le mot" className="btn--lg" />
+        </div>
+      )}
 
       <div className="memory-grid" style={{ '--columns': columns }}>
         {game.board.map((picture) => {
@@ -103,6 +105,7 @@ export default function SoundLotto({ config, session }) {
             message={picked === current.id ? undefined : `C’était « ${current.label} ».`}
           />
           <div className="game-actions">
+            <SpeakButton text={current.label} label="Réécouter le mot" />
             <button type="button" className="btn btn--lg" onClick={goNext}>
               {rounds.round + 1 < rounds.total ? 'Mot suivant' : 'Voir le résultat'}
             </button>
