@@ -4,6 +4,7 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import BrandMark from './BrandMark.jsx'
+import DonateButton from './DonateButton.jsx'
 import UpdatePrompt from './UpdatePrompt.jsx'
 import InstallButton from './InstallButton.jsx'
 import ModeSwitch from './ModeSwitch.jsx'
@@ -34,6 +35,7 @@ export default function Layout() {
             </NavLink>
           </nav>
           <ModeSwitch />
+          <DonateButton />
           <InstallButton />
         </div>
       </header>
