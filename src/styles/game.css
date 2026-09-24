@@ -114,6 +114,10 @@
   transform: translateY(-2px);
 }
 
+.token:disabled {
+  cursor: default;
+}
+
 .token--placed {
   border-style: dashed;
   color: var(--ink-faint);
@@ -140,6 +144,15 @@
   font-weight: 700;
   line-height: 1.1;
   white-space: nowrap;
+}
+
+/* Un élément « couleur seule » : même gabarit qu'une icône de forme, pour
+   que les deux matériels du jeu de suite s'alignent dans la même grille. */
+.token__color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 3px solid #33303a;
 }
 
 .token__rank {
