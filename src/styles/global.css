@@ -595,6 +595,18 @@ a {
   font-style: italic;
 }
 
+.whats-new__list {
+  margin: 0;
+  padding-left: 20px;
+  text-align: left;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.whats-new__list li + li {
+  margin-top: 6px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

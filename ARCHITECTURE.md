@@ -292,8 +292,14 @@ which unit tests would not catch.
 `.github/workflows/ci.yml` replays lint, tests and build on `main`, on `integ`
 and on every pull request. `.github/workflows/release-please.yml` computes the
 version from the commit messages, keeps `CHANGELOG.md` up to date, and creates
-the tag and the release when the release pull request is merged — then builds
-once more and publishes that same `dist/` to GitHub Pages
-(`actions/upload-pages-artifact` and `actions/deploy-pages`, in a job scoped
-to the `pages`/`id-token` permissions it alone needs), so the zip attached to
-the release and the hosted copy are provably the same build.
+the tag and the release when the release pull request is merged. Right after
+the tag is created, `scripts/build-user-changelog.mjs` walks the commits since
+the previous tag and writes `public/whats-new.json`: a short, French,
+user-facing summary (a `feat`/`fix` commit's `Release-Notes:` trailer, or its
+subject as a fallback; everything else folded into one generic bullet), which
+`src/components/WhatsNew.jsx` shows once, comparing the running version to the
+one last recorded in `localStorage`. The workflow then builds once more and
+publishes that same `dist/` to GitHub Pages (`actions/upload-pages-artifact`
+and `actions/deploy-pages`, in a job scoped to the `pages`/`id-token`
+permissions it alone needs), so the zip attached to the release, the hosted
+copy, and the `whats-new.json` they carry, are provably the same build.

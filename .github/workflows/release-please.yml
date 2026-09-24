@@ -48,6 +48,9 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v5
         with:
+          # Full history and tags: the user-facing changelog step below
+          # walks the commits since the previous tag.
+          fetch-depth: 0
           # The upload below authenticates through GH_TOKEN, not through git.
           persist-credentials: false
 
@@ -61,6 +64,17 @@ jobs:
       - name: Install dependencies
         if: ${{ steps.release.outputs.release_created }}
         run: npm ci
+
+      # A short, French, user-facing summary of the release — never the
+      # technical CHANGELOG.md above — read by the in-app "what's new" popup
+      # and prepended to the GitHub release notes.
+      - name: Build the user-facing changelog
+        if: ${{ steps.release.outputs.release_created }}
+        run: node scripts/build-user-changelog.mjs
+        env:
+          NEW_TAG: ${{ steps.release.outputs.tag_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
 
       # The service worker and the offline install are part of what a release
       # publishes: unlike the hosted preview, this build keeps the PWA.

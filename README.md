@@ -190,6 +190,32 @@ Concretely, on every landing on `main`:
 Publishing therefore stays a deliberate act, while being entirely computed
 from the history.
 
+### The "what's new" popup
+
+`CHANGELOG.md` is a developer-facing log: commit subjects, scopes, PR and
+commit links. A patient's practitioner reading "fix(session): let a phone
+scroll the game catalogue while dragging is active" learns nothing useful
+from it. So a second, short, French, user-facing summary is computed for
+every release, by `scripts/build-user-changelog.mjs`, right after
+release-please creates the tag:
+
+- a `feat` or `fix` commit contributes one bullet, taken from a
+  `Release-Notes: <phrase>` trailer in its body if it has one, or from its
+  subject line otherwise (an English fallback, meant to stay rare — write
+  the trailer);
+- every other commit (`chore`, `refactor`, `docs`, `style`, `test`, `perf`,
+  `ci`, `build`) is folded into a single "Améliorations techniques et
+  corrections internes." bullet, added once if the release has any;
+- the result is written to `public/whats-new.json` (bundled into the
+  release build, never committed to the repository) and prepended to the
+  GitHub release notes.
+
+The application reads that file once on load. The first time it finds the
+running version different from the one it last recorded (in
+`localStorage`), it shows those bullets in a popup
+(`src/components/WhatsNew.jsx`); a first-ever visit only records the
+current version, quietly.
+
 ## Deployment
 
 Every release is published to **GitHub Pages** automatically: once the
@@ -264,7 +290,7 @@ src/
                  pictograms, speech synthesis, sound effects, session plan
   pages/         gallery, game page, session (builder and run)
   styles/        fonts, global styles, gallery, game page
-scripts/         PWA icon generation (PNG, no dependency)
+scripts/         PWA icon generation, the release's user-facing changelog
 ```
 
 ## Technical notes
