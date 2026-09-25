@@ -298,7 +298,12 @@ arithmetic in `useDragSequence` — that piece is exported and tested directly.
 ### Continuous integration
 
 `.github/workflows/ci.yml` replays lint, tests and build on `main`, on `integ`
-and on every pull request. `.github/workflows/release-please.yml` computes the
+and on every pull request. The test step runs `npm run test:coverage` rather
+than `npm test`: the coverage thresholds set in `vite.config.js` (a floor a
+few points under what the suite currently reaches) turn a coverage regression
+into a failed run, the same way a broken test would, and the HTML report is
+kept as a build artifact either way, so a failure can be traced to the file
+that dropped. `.github/workflows/release-please.yml` computes the
 version from the commit messages, keeps `CHANGELOG.md` up to date, and creates
 the tag and the release when the release pull request is merged — then builds
 once more and publishes that same `dist/` to GitHub Pages
