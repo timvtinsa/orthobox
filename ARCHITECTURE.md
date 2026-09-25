@@ -273,6 +273,7 @@ They hold for any addition:
 | `npm run build:preview` | build without a service worker, ready to publish |
 | `npm run lint` | ESLint over the whole repository |
 | `npm test` | unit tests (Vitest) |
+| `npm run test:coverage` | the same, plus a coverage report (`lib`, `hooks`, `games`) |
 
 ### What the tests cover
 
@@ -285,7 +286,14 @@ it.
 
 Rendering, on the other hand, is checked in a real browser, at the three
 reference formats: that is where overflows and too-small targets show up,
-which unit tests would not catch.
+which unit tests would not catch. The coverage report is scoped to `src/lib`,
+`src/hooks` and `src/games` for the same reason: a `.jsx` component renders
+nothing without a DOM, so counting it would only dilute the number with code
+this suite cannot exercise by design. A hook built entirely on React state
+(`useRounds`, `useCountdown`…) is exercised the same way, through the games
+that use it; where a hook carries a piece of pure calculation worth pinning
+down on its own — the score reducer in `useGameSession`, the drop-index
+arithmetic in `useDragSequence` — that piece is exported and tested directly.
 
 ### Continuous integration
 

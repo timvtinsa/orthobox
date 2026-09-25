@@ -12,6 +12,16 @@ export default defineConfig({
     include: ['tests/**/*.test.js'],
     environment: 'node',
     restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      // Scoped to the same "logic" surface the suite itself targets: `.jsx`
+      // components and pages render nothing without a DOM, and are checked
+      // in a real browser instead (see the note above), so counting them
+      // here would only dilute the number with code this suite cannot
+      // exercise by design.
+      include: ['src/lib/**/*.js', 'src/hooks/**/*.js', 'src/games/**/*.js'],
+    },
   },
   plugins: [
     react(),

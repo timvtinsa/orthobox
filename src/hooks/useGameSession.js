@@ -25,23 +25,26 @@ const EMPTY = {
   total: null,
 }
 
+/** The next session state once one more answer is registered. */
+export function nextSessionState(previous, isCorrect) {
+  const streak = isCorrect ? previous.streak + 1 : 0
+  return {
+    ...previous,
+    correct: previous.correct + (isCorrect ? 1 : 0),
+    attempts: previous.attempts + 1,
+    streak,
+    bestStreak: Math.max(previous.bestStreak, streak),
+    lastAnswer: isCorrect ? 'correct' : 'wrong',
+    answerCount: previous.answerCount + 1,
+    results: [...previous.results, isCorrect ? 'ok' : 'err'],
+  }
+}
+
 export function useGameSession() {
   const [state, setState] = useState(EMPTY)
 
   const register = useCallback((isCorrect) => {
-    setState((previous) => {
-      const streak = isCorrect ? previous.streak + 1 : 0
-      return {
-        ...previous,
-        correct: previous.correct + (isCorrect ? 1 : 0),
-        attempts: previous.attempts + 1,
-        streak,
-        bestStreak: Math.max(previous.bestStreak, streak),
-        lastAnswer: isCorrect ? 'correct' : 'wrong',
-        answerCount: previous.answerCount + 1,
-        results: [...previous.results, isCorrect ? 'ok' : 'err'],
-      }
-    })
+    setState((previous) => nextSessionState(previous, isCorrect))
   }, [])
 
   const setProgress = useCallback((index, total) => {
