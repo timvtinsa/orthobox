@@ -12,6 +12,27 @@ export default defineConfig({
     include: ['tests/**/*.test.js'],
     environment: 'node',
     restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'json-summary'],
+      // Scoped to the same "logic" surface the suite itself targets: `.jsx`
+      // components and pages render nothing without a DOM, and are checked
+      // in a real browser instead (see the note above), so counting them
+      // here would only dilute the number with code this suite cannot
+      // exercise by design.
+      include: ['src/lib/**/*.js', 'src/hooks/**/*.js', 'src/games/**/*.js'],
+      // A floor, not a target: kept a few points under what the suite
+      // currently reaches, so normal drift (a line or two of a new branch
+      // left untested) does not fail CI, while a real regression — a new
+      // game landing with no logic tests, a gutted test file — still does.
+      // `npm run test:coverage` fails locally the same way CI does.
+      thresholds: {
+        statements: 80,
+        lines: 80,
+        functions: 85,
+        branches: 85,
+      },
+    },
   },
   plugins: [
     react(),

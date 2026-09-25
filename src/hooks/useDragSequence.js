@@ -5,6 +5,17 @@ const TOUCH_HOLD_MS = 200 // a finger must hold still this long before a drag ar
 const TOUCH_MOVE_TOLERANCE = 10 // pixels a finger may wander before the hold is cancelled
 
 /**
+ * The index to insert a moved item at, once it is picked up out of the list.
+ * Removing it first shifts every position after it up by one, so a landing
+ * spot past its old position must be corrected down by one to land where it
+ * visually appears to. Adding a new item never needs this: nothing is
+ * removed first.
+ */
+export function resolveDropIndex({ type, from }, landing) {
+  return type === 'move' && landing > from ? landing - 1 : landing
+}
+
+/**
  * Hand-rolled drag and drop, on Pointer Events: works with a mouse as well as
  * a finger (native HTML5 drag and drop ignores touch, and the application is
  * used on tablets).
@@ -113,8 +124,7 @@ export function useDragSequence({ onDrop }) {
           type: current.type,
           gameId: current.gameId,
           from: current.from,
-          // Removing the item shifts every position after it.
-          to: current.type === 'move' && landing > current.from ? landing - 1 : landing,
+          to: resolveDropIndex(current, landing),
         })
       }
       clearTimeout(holdTimer.current)
