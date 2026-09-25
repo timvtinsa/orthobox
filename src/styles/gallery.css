@@ -417,6 +417,11 @@
   cursor: grabbing;
 }
 
+/* A shared session preview lists the same rows, read-only: no drag to arm. */
+.sequence__handle--static {
+  cursor: default;
+}
+
 .sequence__rank {
   font-weight: 800;
   color: var(--category);

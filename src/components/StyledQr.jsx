@@ -66,7 +66,12 @@ function Badge({ span }) {
   )
 }
 
-export default function StyledQr({ value, withLogo = true, className = '' }) {
+export default function StyledQr({
+  value,
+  withLogo = true,
+  className = '',
+  label = 'Code QR : lien vers ces réglages',
+}) {
   const qr = useMemo(() => create(value, { errorCorrectionLevel: 'H' }), [value])
   const { modules } = qr
   const n = modules.size
@@ -114,7 +119,7 @@ export default function StyledQr({ value, withLogo = true, className = '' }) {
       viewBox={`0 0 ${total} ${total}`}
       className={`styled-qr${className ? ` ${className}` : ''}`}
       role="img"
-      aria-label="Code QR : lien vers ces réglages"
+      aria-label={label}
     >
       <rect width={total} height={total} rx={QUIET} fill="#fff" />
       <g transform={`translate(${QUIET} ${QUIET})`}>

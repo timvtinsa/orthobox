@@ -146,6 +146,21 @@ Only the settings travel: no patient, no result, no identifier. A value the
 game itself would not have offered is dropped on the way in, and the game's
 own default takes over for it.
 
+### Sharing a whole session
+
+« Partager la séance », on the session-planning screen, does the same for an
+entire plan: every game in it, in order, with each one's own settings, turns
+into a single link (`#/session/shared?p=...`) and QR code. Handy to hand a
+prepared session to a patient so they can run through the same exercises at
+home — scanning the code opens a short recap of what the session contains,
+never the board directly, and starting it there replaces whatever plan was
+already being prepared on that device.
+
+As with a single game's settings, nothing about a patient or a result
+travels in the link, a step naming a game the catalogue no longer has is
+simply left out, and every setting is re-checked against what the game
+itself allows.
+
 ## Getting started
 
 ```bash

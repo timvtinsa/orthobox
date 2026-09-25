@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
+import StyledQr from '../components/StyledQr.jsx'
 import { GAMES, getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
 import {
@@ -14,12 +15,15 @@ import {
   summariseConfig,
   writeSessionPlan,
 } from '../lib/session-plan.js'
+import { sessionShareLink } from '../lib/share-session.js'
 import { useDragSequence } from '../hooks/useDragSequence.js'
 
 export default function SessionBuilderPage() {
   const navigate = useNavigate()
   const [steps, setSteps] = useState(readSessionPlan)
   const [openSettings, setOpenSettings] = useState(null)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const save = (plan) => {
     setSteps(plan)
@@ -66,6 +70,20 @@ export default function SessionBuilderPage() {
   const applySettings = (id, config) => {
     save(steps.map((step) => (step.id === id ? { ...step, config } : step)))
     setOpenSettings(null)
+  }
+
+  const shareLink = steps.length > 0 ? sessionShareLink(steps) : ''
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Presse-papiers indisponible (contexte non sécurisé, permission
+      // refusée) : le champ reste sélectionnable à la main.
+      setCopied(false)
+    }
   }
 
   return (
@@ -196,11 +214,53 @@ export default function SessionBuilderPage() {
               Lancer la séance
             </button>
             {steps.length > 0 && (
+              <button
+                type="button"
+                className="btn btn--ghost"
+                aria-expanded={shareOpen}
+                onClick={() => setShareOpen((open) => !open)}
+              >
+                Partager la séance
+              </button>
+            )}
+            {steps.length > 0 && (
               <button type="button" className="btn btn--ghost" onClick={() => save([])}>
                 Tout effacer
               </button>
             )}
           </div>
+
+          {shareOpen && steps.length > 0 && (
+            <div className="share-panel">
+              <StyledQr
+                value={shareLink}
+                className="share-panel__qr"
+                label="Code QR : lien vers cette séance"
+              />
+
+              <div className="share-panel__details">
+                <p className="share-panel__note">
+                  Le code et le lien ne contiennent que la liste des jeux et leurs réglages :
+                  aucune donnée patient, aucun résultat n’y est attaché. À faire scanner par le
+                  patient, ou à lui envoyer, pour qu’il retrouve la même séance chez lui.
+                </p>
+
+                <div className="share-panel__link-row">
+                  <input
+                    className="share-panel__link"
+                    type="text"
+                    readOnly
+                    value={shareLink}
+                    onFocus={(event) => event.target.select()}
+                    aria-label="Lien vers cette séance"
+                  />
+                  <button type="button" className="btn btn--subtle" onClick={copyLink}>
+                    {copied ? 'Copié' : 'Copier le lien'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="session-column">
