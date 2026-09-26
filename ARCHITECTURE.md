@@ -310,3 +310,12 @@ once more and publishes that same `dist/` to GitHub Pages
 (`actions/upload-pages-artifact` and `actions/deploy-pages`, in a job scoped
 to the `pages`/`id-token` permissions it alone needs), so the zip attached to
 the release and the hosted copy are provably the same build.
+
+`.github/workflows/claude-code-review.yml` posts a first-pass review on every
+pull request, using [Claude Code](https://github.com/anthropics/claude-code-action).
+It comments the same way a human reviewer would (`gh pr comment`, inline
+comments on specific lines) and never pushes a commit or blocks merging on its
+own — a second opinion, not a gate. It needs an `ANTHROPIC_API_KEY` or a
+`CLAUDE_CODE_OAUTH_TOKEN` repository secret to run; without either, the job
+itself fails, but nothing else does — it isn't a required check, so a missing
+secret never blocks a merge.
