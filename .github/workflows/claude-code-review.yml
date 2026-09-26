@@ -1,7 +1,9 @@
 # Automated first-pass review on every pull request, using Claude Code
 # (https://github.com/anthropics/claude-code-action). It leaves PR comments
 # the same way a human reviewer would — it does not block merging and never
-# pushes a commit.
+# pushes a commit. Runs against a Claude subscription (CLAUDE_CODE_OAUTH_TOKEN)
+# rather than metered API billing, and is skipped rather than failed when
+# that token is missing or no longer valid.
 name: Claude code review
 
 on:
@@ -30,14 +32,17 @@ jobs:
           fetch-depth: 1
 
       - name: Review the pull request
+        # Skipped rather than failed when the token is missing or no longer
+        # valid (subscription lapsed, token revoked): `if` only checks that
+        # the secret is set before the step runs, so `continue-on-error`
+        # covers the run-time case, and either way nothing here is a
+        # required check that would block a merge.
+        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
-          # Either secret works; only one needs to be set.
-          # - ANTHROPIC_API_KEY: a key from the Anthropic Console.
-          # - CLAUDE_CODE_OAUTH_TOKEN: `claude setup-token` on a Claude
-          #   subscription, so the review draws from that plan instead of
-          #   pay-as-you-go API billing.
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # `claude setup-token` on a Claude subscription: the review draws
+          # from that plan rather than pay-as-you-go API billing.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             REPO: ${{ github.repository }}
