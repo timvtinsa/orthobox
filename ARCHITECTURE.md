@@ -315,7 +315,9 @@ the release and the hosted copy are provably the same build.
 pull request, using [Claude Code](https://github.com/anthropics/claude-code-action).
 It comments the same way a human reviewer would (`gh pr comment`, inline
 comments on specific lines) and never pushes a commit or blocks merging on its
-own — a second opinion, not a gate. It needs an `ANTHROPIC_API_KEY` or a
-`CLAUDE_CODE_OAUTH_TOKEN` repository secret to run; without either, the job
-itself fails, but nothing else does — it isn't a required check, so a missing
-secret never blocks a merge.
+own — a second opinion, not a gate. It runs against a `CLAUDE_CODE_OAUTH_TOKEN`
+repository secret (a Claude subscription, through `claude setup-token`, rather
+than metered API billing) and is skipped — not failed — when that secret is
+missing, and tolerated as a soft failure (`continue-on-error`) when the token
+is there but no longer valid, so a lapsed subscription never shows up as a
+broken build.
