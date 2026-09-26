@@ -212,7 +212,7 @@ export const SOUNDS = [
   {
     id: 'water',
     label: 'l’eau qui coule',
-    pictogram: 'cloud',
+    pictogram: 'tap',
     duration: 1.8,
     play: (audio, t) => {
       noise(audio, {

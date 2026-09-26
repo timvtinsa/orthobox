@@ -607,6 +607,23 @@ const DRAWINGS = {
       </>
     ),
   },
+  tap: {
+    label: 'robinet',
+    draw: (
+      <>
+        <ellipse cx="60" cy="112" rx="24" ry="4" fill={INK} opacity=".12" />
+        <path d="M40 100q20 8 40 0" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".25" />
+        <path d="M44 92q16 6 32 0" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".2" />
+        <rect x="36" y="16" width="26" height="18" rx="5" fill={C.blue} stroke={INK} strokeWidth="5" />
+        <path d="M50 16v18" stroke={INK} strokeWidth="4" opacity=".18" />
+        <circle cx="30" cy="25" r="9" fill={C.blue} stroke={INK} strokeWidth="4.5" />
+        <path d="M62 25h10a16 16 0 0 1 16 16v14" fill="none" stroke={INK} strokeWidth="13" strokeLinecap="round" />
+        <path d="M62 25h10a16 16 0 0 1 16 16v14" fill="none" stroke={C.blue} strokeWidth="9" strokeLinecap="round" />
+        <path d="M90 56c0 7-6 7-6 0 0-5 3-9 3-9s3 4 3 9z" fill={C.blue} stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
+        <path d="M90 78c0 8-7 8-7 0 0-6 3.5-10 3.5-10s3.5 4 3.5 10z" fill={C.blue} stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
+      </>
+    ),
+  },
 }
 
 export const PICTOGRAMS = Object.entries(DRAWINGS).map(([id, { label }]) => ({ id, label }))
