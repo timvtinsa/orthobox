@@ -569,6 +569,93 @@ const DRAWINGS = {
       </>
     ),
   },
+  banana: {
+    label: 'banane',
+    draw: (
+      <>
+        <ellipse cx="62" cy="106" rx="32" ry="4" fill={INK} opacity=".12" />
+        <path d="M30 26C26 80 56 102 94 94c3-6 1-11-4-10-28 4-44-18-44-58 0-6-13-6-16 0z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M46 62c6 20 22 34 44 32 3-6 1-11-4-10-16 2-30-6-40-22z" fill={INK} opacity=".16" />
+        <path d="M30 26c-3-6 1-10 8-8" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+      </>
+    ),
+  },
+  grapes: {
+    label: 'raisin',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="24" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 44V26" stroke={C.sandInk} strokeWidth="5" strokeLinecap="round" />
+        <path d="M62 30q16-16 28-6-6 16-28 6z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <circle cx="42" cy="52" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="78" cy="52" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="60" cy="50" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="50" cy="72" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="70" cy="72" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="60" cy="90" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <g className="picto__fine">
+          <path d="M84 48a13 13 0 0 1-6 16 13 13 0 0 0 6-16z" fill={INK} opacity=".2" />
+          <path d="M76 68a13 13 0 0 1-6 16 13 13 0 0 0 6-16z" fill={INK} opacity=".2" />
+        </g>
+      </>
+    ),
+  },
+  leek: {
+    label: 'poireau',
+    draw: (
+      <>
+        <ellipse cx="60" cy="110" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M58 56C42 46 30 30 22 12c20 2 34 20 38 42z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M62 56C78 46 90 30 98 12c-20 2-34 20-38 42z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 54c-4-14-4-28-2-42 8 12 10 28 6 42z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M42 52h36v30c0 14-8 22-18 22s-18-8-18-22z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M62 52h16v30c0 14-8 22-18 22 10 0 14-8 14-22z" fill={INK} opacity=".14" />
+        <g className="picto__fine" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".45">
+          <path d="M53 104v6M60 106v6M67 104v6" />
+        </g>
+      </>
+    ),
+  },
+  lemon: {
+    label: 'citron',
+    draw: (
+      <>
+        <ellipse cx="60" cy="104" rx="30" ry="4" fill={INK} opacity=".12" />
+        <path d="M84 46c8-6 13-4 12 3-1 5-7 8-14 7z" fill={C.sand} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <ellipse cx="58" cy="66" rx="33" ry="25" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M62 41c16 2 29 12 29 25s-13 23-29 25c12-4 20-13 20-25s-8-21-20-25z" fill={INK} opacity=".16" />
+        <path d="M44 38q10-14 22-8-6 14-22 8z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  eggplant: {
+    label: 'aubergine',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 36c15 0 23 11 25 24 2 12 5 18 5 26 0 16-14 26-30 26s-30-10-30-26c0-8 3-14 5-26 2-13 10-24 25-24z" fill={C.lavender} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M66 38c12 3 18 13 19 22 2 12 5 18 5 26 0 16-14 26-30 26 14-4 22-13 22-26 0-8-2-16-4-26-2-9-5-17-12-22z" fill={INK} opacity=".16" />
+        <path d="M60 22v16" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M60 38c-12 0-18-6-20-14 10-2 16 2 20 8 4-6 10-10 20-8-2 8-8 14-20 14z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  mushroom: {
+    label: 'champignon',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M43 62h34v24c0 13-7 18-17 18s-17-5-17-18z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M63 62h14v24c0 13-7 18-17 18 9 0 12-6 12-18z" fill={INK} opacity=".14" />
+        <path d="M24 64c0-26 16-42 36-42s36 16 36 42z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 22c20 0 36 16 36 42H74c0-22-5-35-14-42z" fill={INK} opacity=".16" />
+        <g className="picto__fine">
+          <ellipse cx="44" cy="44" rx="6" ry="4" fill="#fff" opacity=".6" transform="rotate(-25 44 44)" />
+          <ellipse cx="62" cy="36" rx="5" ry="3" fill="#fff" opacity=".5" transform="rotate(-10 62 36)" />
+        </g>
+      </>
+    ),
+  },
   cheese: {
     label: 'fromage',
     draw: (

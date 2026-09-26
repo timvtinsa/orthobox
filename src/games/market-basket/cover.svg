@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un panier de fruits et légumes à reproduire dans un panier vide">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <path d="M140 76q36-26 70-2" fill="none" stroke="#5b45a0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M206 62l18 10-16 12z" fill="#5b45a0"/>
+  <circle cx="46" cy="98" r="17" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6"/>
+  <circle cx="98" cy="98" r="17" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6"/>
+  <circle cx="72" cy="86" r="17" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M18 108h108l-15 54H33z" fill="#fff" stroke="#5b45a0" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M194 108h108l-15 54h-78z" fill="none" stroke="#5b45a0" stroke-width="6" stroke-linejoin="round" stroke-dasharray="14 12"/>
+</svg>
