@@ -154,7 +154,7 @@ export const SOUNDS = [
   {
     id: 'doorbell',
     label: 'la sonnette',
-    pictogram: 'bell',
+    pictogram: 'doorbell',
     duration: 1.6,
     play: (audio, t) => {
       metal(audio, { start: t, frequency: 784, duration: 1.1, ratios: [1, 2.01, 2.99, 4.2] })
@@ -199,7 +199,7 @@ export const SOUNDS = [
   {
     id: 'horn',
     label: 'le klaxon',
-    pictogram: 'car',
+    pictogram: 'horn',
     duration: 1.1,
     play: (audio, t) => {
       // A car horn is a chord of two close notes, rich in harmonics.
@@ -240,7 +240,7 @@ export const SOUNDS = [
   {
     id: 'glass',
     label: 'le verre qui tinte',
-    pictogram: 'cup',
+    pictogram: 'glass',
     duration: 1.6,
     play: (audio, t) => {
       metal(audio, { start: t, frequency: 2093, duration: 1.4, volume: 0.1, ratios: [1, 2.76, 5.4] })
@@ -311,7 +311,7 @@ export const SOUNDS = [
   },
   {
     id: 'bell',
-    label: 'la cloche de l’église',
+    label: 'la cloche',
     pictogram: 'bell',
     duration: 2.4,
     play: (audio, t) => {

@@ -624,6 +624,51 @@ const DRAWINGS = {
       </>
     ),
   },
+  horn: {
+    label: 'klaxon',
+    draw: (
+      <>
+        <ellipse cx="58" cy="106" rx="32" ry="4" fill={INK} opacity=".12" />
+        <path d="M18 71a9 6 0 0 1 9-6h1v28h-1a9 6 0 0 1-9-6z" fill={C.sandInk} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M28 65L88 47V107L28 89Z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M28 89L88 107V77L28 89Z" fill={INK} opacity=".15" />
+        <ellipse cx="88" cy="77" rx="8" ry="30" fill={C.sandInk} stroke={INK} strokeWidth="5" />
+        <ellipse cx="88" cy="77" rx="4" ry="24" fill={INK} opacity=".25" />
+        <path d="M102 58q16 19 0 38" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+        <path d="M111 48q26 29 0 58" fill="none" stroke={INK} strokeWidth="4" strokeLinecap="round" opacity=".7" />
+      </>
+    ),
+  },
+  glass: {
+    label: 'verre',
+    draw: (
+      <>
+        <ellipse cx="58" cy="108" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M40 30h40l-6 66a4 4 0 0 1-4 4H50a4 4 0 0 1-4-4z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 30h20l-6 66a4 4 0 0 1-4 4h-6z" fill={INK} opacity=".12" />
+        <path d="M43 54h34" stroke={C.blue} strokeWidth="7" strokeLinecap="round" opacity=".5" />
+        <ellipse cx="60" cy="30" rx="20" ry="5" fill="#eaf2fb" stroke={INK} strokeWidth="5" />
+        <g className="picto__fine">
+          <path d="M92 18L95 25L102 27L95 29L92 36L89 29L82 27L89 25Z" fill={INK} opacity=".55" />
+          <path d="M78 8L79.5 12L83.5 13L79.5 14L78 18L76.5 14L72.5 13L76.5 12Z" fill={INK} opacity=".4" />
+        </g>
+      </>
+    ),
+  },
+  doorbell: {
+    label: 'sonnette',
+    draw: (
+      <>
+        <ellipse cx="55" cy="112" rx="24" ry="4" fill={INK} opacity=".12" />
+        <rect x="34" y="30" width="34" height="56" rx="10" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M50 30h18a10 10 0 0 1 10 10v36a10 10 0 0 1-10 10H50z" fill={INK} opacity=".14" />
+        <circle cx="51" cy="58" r="11" fill="#fff" stroke={INK} strokeWidth="5" />
+        <circle cx="51" cy="58" r="4" fill={C.peachInk} />
+        <path d="M76 46q14 12 0 24" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+        <path d="M84 38q22 20 0 40" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+      </>
+    ),
+  },
 }
 
 export const PICTOGRAMS = Object.entries(DRAWINGS).map(([id, { label }]) => ({ id, label }))
