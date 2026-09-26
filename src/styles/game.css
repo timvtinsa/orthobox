@@ -2142,3 +2142,88 @@
   stroke: var(--state-expected);
   stroke-dasharray: 4 6;
 }
+
+/* --- La somme des dés --------------------------------------------
+   Le dé reste lisible en niveaux de gris : la face est blanche, les
+   points sont à l'encre, et seule la bordure prend la teinte du
+   domaine. Un dé qui roule garde exactement la même emprise qu'un dé
+   posé, sinon le plateau sauterait à chaque lancer.
+   ---------------------------------------------------------------- */
+
+.dice-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  min-height: 104px;
+}
+
+.die {
+  width: 96px;
+  height: 96px;
+  flex: none;
+}
+
+.die__face {
+  fill: var(--surface);
+  stroke: var(--category);
+  stroke-width: 5;
+}
+
+.die__pip {
+  fill: var(--ink);
+}
+
+.die__digit {
+  fill: var(--ink);
+  font-family: var(--font-patient);
+  font-size: 54px;
+  font-weight: 800;
+}
+
+/* Le dé pas encore lancé : une empreinte, pas une face vide qu'on
+   pourrait prendre pour un zéro. */
+.die--resting {
+  display: block;
+  border-radius: 18px;
+  border: 5px dashed var(--line-strong);
+  background: var(--surface-alt);
+}
+
+.sum-slot {
+  display: grid;
+  place-items: center;
+  min-width: 132px;
+  min-height: 84px;
+  padding: 8px 20px;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--line-strong);
+  background: var(--surface-alt);
+  font-family: var(--font-patient);
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.sum-slot__hint {
+  color: var(--ink-faint);
+}
+
+.sum-slot--correct {
+  border-style: var(--state-border-ok);
+  border-color: var(--state-ok);
+  background: var(--state-ok-tint);
+}
+
+.sum-slot--wrong {
+  border-style: var(--state-border-err);
+  border-color: var(--state-err);
+  background: var(--state-err-tint);
+}
+
+@media (max-width: 560px) {
+  .die {
+    width: 76px;
+    height: 76px;
+  }
+}
