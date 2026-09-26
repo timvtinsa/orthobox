@@ -31,7 +31,7 @@ export default {
       default: 'everyday',
       options: [
         { id: 'everyday', label: 'Bruits du quotidien', hint: 'Douze bruits familiers.' },
-        { id: 'animals', label: 'Animaux', hint: 'Cinq animaux, nommés par la voix de l’appareil.' },
+        { id: 'animals', label: 'Animaux', hint: 'Six animaux, nommés par la voix de l’appareil.' },
       ],
     },
     {
