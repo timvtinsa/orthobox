@@ -161,6 +161,25 @@ travels in the link, a step naming a game the catalogue no longer has is
 simply left out, and every setting is re-checked against what the game
 itself allows.
 
+## Installing the PWA
+
+Orthobox installs like a native app, with no app store and no account, and
+then works offline. Short walkthrough (desktop, Android, iPhone/iPad):
+
+![Installing Orthobox on desktop, Android and iOS](docs/install-tutorial.gif)
+
+The full video (with sound-free captions, ~45 s) is at
+[`docs/install-tutorial.mp4`](docs/install-tutorial.mp4). In short:
+
+- **Desktop (Chrome, Edge)** — open the site, click the install icon in the
+  address bar, or « Installer l'application » in the header, and confirm.
+  Orthobox then opens in its own window.
+- **Android (Chrome)** — open the site, tap « Installer l'application » (or
+  the ⋮ menu, then « Ajouter à l'écran d'accueil ») and confirm. An icon is
+  added to the home screen.
+- **iPhone / iPad (Safari)** — open the site, tap the share icon, scroll to
+  « Sur l'écran d'accueil », then confirm with « Ajouter ».
+
 ## Getting started
 
 ```bash
