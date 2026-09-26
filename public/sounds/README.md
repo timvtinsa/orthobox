@@ -43,4 +43,20 @@ Fill in this table as you go:
 
 | File | Source | Author | Licence |
 | --- | --- | --- | --- |
-| | | | |
+| `doorbell.mp3` | | | |
+| `phone.mp3` | | | |
+| `clock.mp3` | | | |
+| `horn.mp3` | | | |
+| `water.mp3` | | | |
+| `glass.mp3` | | | |
+| `drum.mp3` | | | |
+| `whistle.mp3` | | | |
+| `knock.mp3` | | | |
+| `applause.mp3` | | | |
+| `bell.mp3` | | | |
+| `engine.mp3` | | | |
+| `cat.mp3` | | | |
+| `dog.mp3` | | | |
+| `bird.mp3` | | | |
+| `cow.mp3` | | | |
+| `horse.mp3` | | | |
