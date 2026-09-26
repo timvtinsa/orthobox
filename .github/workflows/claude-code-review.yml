@@ -1,0 +1,74 @@
+# Automated first-pass review on every pull request, using Claude Code
+# (https://github.com/anthropics/claude-code-action). It leaves PR comments
+# the same way a human reviewer would — it does not block merging and never
+# pushes a commit. Runs against a Claude subscription (CLAUDE_CODE_OAUTH_TOKEN)
+# rather than metered API billing, and is skipped rather than failed when
+# that token is missing or no longer valid.
+name: Claude code review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main, integ]
+
+# `pull_request`, not `pull_request_target`: the workflow definition always
+# comes from the base branch, never from the PR itself, so a pull request
+# cannot smuggle in a different prompt or a wider set of allowed tools.
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  review:
+    name: Review with Claude
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Review the pull request
+        # Skipped rather than failed when the token is missing or no longer
+        # valid (subscription lapsed, token revoked): `if` only checks that
+        # the secret is set before the step runs, so `continue-on-error`
+        # covers the run-time case, and either way nothing here is a
+        # required check that would block a merge.
+        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        continue-on-error: true
+        uses: anthropics/claude-code-action@v1
+        with:
+          # `claude setup-token` on a Claude subscription: the review draws
+          # from that plan rather than pay-as-you-go API billing.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review this pull request. Orthobox is a 100% client-side PWA
+            (no server, no patient data): weigh anything touching
+            localStorage, a shared/QR-encoded link, or a GitHub Actions
+            workflow more carefully than a purely visual change.
+
+            Focus on:
+            - correctness bugs and edge cases a reviewer would flag
+            - security (XSS, unsanitised input reaching the DOM, secrets or
+              command injection in CI scripts)
+            - test coverage for new logic (see ARCHITECTURE.md — this
+              project only unit-tests `src/lib`, `src/hooks` and
+              `src/games`; rendering is checked in a real browser instead)
+            - unnecessary complexity or duplication
+
+            The PR branch is already checked out in the current working
+            directory.
+
+            Use `gh pr comment` for overall feedback.
+            Use `mcp__github_inline_comment__create_inline_comment` (with
+            `confirmed: true`) to point at specific lines.
+            Only post GitHub comments — don't just narrate your review as
+            plain output.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
