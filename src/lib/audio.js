@@ -355,6 +355,7 @@ export const ANIMALS = [
   { id: 'bird', label: 'l’oiseau', pictogram: 'bird' },
   { id: 'cow', label: 'la vache', pictogram: 'cow' },
   { id: 'horse', label: 'le cheval', pictogram: 'horse' },
+  { id: 'rooster', label: 'le coq', pictogram: 'rooster' },
 ]
 
 // --- Optional audio files ---------------------------------------------

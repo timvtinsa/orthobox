@@ -23,7 +23,7 @@ Animals (no synthesis for those: without a file, the device voice says the name
 of the animal):
 
 ```
-cat.mp3   dog.mp3   bird.mp3   cow.mp3   horse.mp3
+cat.mp3   dog.mp3   bird.mp3   cow.mp3   horse.mp3   rooster.mp3
 ```
 
 ## Advice
@@ -60,3 +60,4 @@ Fill in this table as you go:
 | `bird.mp3` | | | |
 | `cow.mp3` | | | |
 | `horse.mp3` | | | |
+| `rooster.mp3` | | | |

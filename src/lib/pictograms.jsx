@@ -502,6 +502,32 @@ const DRAWINGS = {
       </>
     ),
   },
+  rooster: {
+    label: 'coq',
+    draw: (
+      <>
+        <ellipse cx="60" cy="112" rx="28" ry="4" fill={INK} opacity=".12" />
+        <path d="M32 62q-16-4-20-20 14 2 22 12z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M30 74q-18 2-26-12 14-2 24 4z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M34 86q-16 6-28-4 13-6 25-2z" fill={C.lavender} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M42 40c18 0 32 14 32 34s-14 34-32 34-30-14-30-32 12-36 30-36z" fill="#fff" stroke={INK} strokeWidth="5" />
+        <path d="M52 42c14 4 22 16 22 32 0 18-14 32-32 32 16 0 26-14 26-32 0-14-6-25-16-32z" fill={INK} opacity=".14" />
+        <path d="M40 66q16-10 26 4-14 12-26-4z" fill="#fff" stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <g className="picto__fine" stroke={INK} strokeWidth="2.5" strokeLinecap="round" opacity=".5">
+          <path d="M46 68l14 2M45 74l15 3M46 80l13 3" />
+        </g>
+        <circle cx="58" cy="34" r="17" fill="#fff" stroke={INK} strokeWidth="5" />
+        <circle cx="49" cy="19" r="6" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <circle cx="58" cy="15" r="7" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <circle cx="67" cy="19" r="6" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <ellipse cx="51" cy="47" rx="5" ry="7" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <path d="M76 32l14 5-14 6z" fill={C.sand} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <circle cx="64" cy="30" r="4" fill={INK} />
+        <path d="M30 104v-14M46 104v-14" stroke={C.sandInk} strokeWidth="6" strokeLinecap="round" />
+        <path d="M24 104l8-4 8 4M40 104l6-4 6 4" fill="none" stroke={C.sandInk} strokeWidth="3.5" strokeLinecap="round" />
+      </>
+    ),
+  },
   gift: {
     label: 'cadeau',
     draw: (
