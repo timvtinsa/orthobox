@@ -8,3 +8,8 @@ dev-dist
 dist-preview
 coverage
 .wrangler
+
+# Generated during a release build (see the "Write the user-facing
+# changelog" step of release-please.yml); not meaningful outside of one, so
+# it is never committed.
+/public/whats-new.json
