@@ -36,6 +36,7 @@ export default function Layout() {
             </NavLink>
           </nav>
           <ModeSwitch />
+          <WhatsNew />
           <DonateButton />
           <InstallButton />
         </div>
@@ -52,7 +53,6 @@ export default function Layout() {
       </footer>
 
       <UpdatePrompt />
-      <WhatsNew />
     </div>
   )
 }

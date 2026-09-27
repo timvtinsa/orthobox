@@ -311,22 +311,32 @@ once more and publishes that same `dist/` to GitHub Pages
 to the `pages`/`id-token` permissions it alone needs), so the zip attached to
 the release and the hosted copy are provably the same build.
 
-Right after the tag is created, an `anthropics/claude-code-action` step
-("Write the user-facing changelog") gives Claude (`claude-haiku-4-5` — a
-short summarisation call, no need for a more expensive model) direct,
-narrowly-scoped access to the checked-out repository (`Bash`, restricted to
-read-only `git tag`/`git log`, plus `Write`) and asks it to find the
-commits since the previous tag itself and turn them into a short, French,
-user-facing summary — judging which commits a user would actually notice (a
-new game, a visible fix) versus which are purely internal (a dependency
-bump, a refactor) is exactly the kind of call a mechanical rule handles
-poorly. Claude writes the result directly to `public/whats-new.json`
-(gitignored: meaningful only inside the build that just generated it),
-which is read once by `src/components/WhatsNew.jsx` and shown in a popup
-the first time the app runs on a version different from the one recorded in
-`localStorage`. A later, plain step (`scripts/update-release-notes.mjs`, no
-LLM call) reads that same file back and prepends its highlights to the
-GitHub release notes when there are any.
+Right after the tag is created, a plain step ("Prepare the release commit
+log") computes the commit range since the previous tag and captures every
+commit's subject and body as a step output — deterministic, no LLM
+involved. An `anthropics/claude-code-action` step ("Write the user-facing
+changelog") then gives Claude (`claude-haiku-4-5` — a short summarisation
+call, no need for a more expensive model) that text directly in its prompt
+and asks it to turn it into a short, French, user-facing summary — judging
+which commits a user would actually notice (a new game, a visible fix)
+versus which are purely internal (a dependency bump, a refactor) is exactly
+the kind of call a mechanical rule handles poorly. Claude only needs
+`Write` (no `Bash`): an earlier version had it discover the commit range
+itself, which worked on a small release but silently produced no file at
+all on a much larger one (a long-overdue main sync, dozens of commits) —
+handing it the text directly removes an entire class of "ran out of turns
+before writing anything" failure. Claude writes its result directly to
+`public/whats-new.json` (gitignored: meaningful only inside the build that
+just generated it), which `src/components/WhatsNew.jsx` reads both
+automatically (once, the first time the app runs on a version different
+from the one recorded in `localStorage`) and on demand (a bell icon in the
+header, next to the donate and install buttons — it always opens the
+popup, with a "nothing new" message when there is genuinely no file or no
+highlights, rather than doing nothing and reading as broken). A later,
+plain step (`scripts/update-release-notes.mjs`, no LLM call) reads that
+same file back and prepends its highlights to the GitHub release notes
+when there are any; a missing file there logs a `::warning::` annotation,
+visible in the workflow run, rather than passing silently.
 
 This step authenticates with a `CLAUDE_CODE_OAUTH_TOKEN` repository secret
 — a token tied to a Claude subscription (Pro, Max, Team or Enterprise),
@@ -336,7 +346,8 @@ subscription itself. `continue-on-error: true` keeps it from ever blocking
 a release: if the token is missing, expired, or the call fails for any
 other reason, the step is reported as failed in the workflow run but the
 job carries on regardless, simply without `public/whats-new.json` (and
-so without a user-facing changelog that time).
+so without a user-facing changelog that time — the in-app bell still opens
+and says so, rather than staying silent).
 
 `wrangler.jsonc` is unrelated to that release process: it only configures a
 Cloudflare Workers project, connected directly to this repository through
