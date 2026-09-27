@@ -2144,6 +2144,13 @@
 }
 
 /* --- La somme des dés --------------------------------------------
+   Le dé est un vrai cube à six faces (chaque face un SVG plat, dans le
+   même style que le reste de la banque), tourné en 3D via `rotateX`
+   et `rotateY` sur `.die-cube` : le lancer tourne réellement le solide
+   jusqu'à la face tirée, il ne fait pas défiler des faces plates.
+   Les faces opposées totalisent sept (1↔6, 2↔5, 3↔4), comme sur un
+   vrai dé — voir `FACE_ROTATION` dans `logic.js`, qui doit rester
+   cohérent avec l'agencement des faces dans `Die.jsx`.
    Le dé reste lisible en niveaux de gris : la face est blanche, les
    points sont à l'encre, et seule la bordure prend la teinte du
    domaine. Un dé qui roule garde exactement la même emprise qu'un dé
@@ -2159,10 +2166,59 @@
   min-height: 104px;
 }
 
-.die {
-  width: 96px;
-  height: 96px;
+.die-scene,
+.die-resting {
+  --die-size: 96px;
+  width: var(--die-size);
+  height: var(--die-size);
   flex: none;
+}
+
+.die-scene {
+  perspective: 500px;
+}
+
+.die-cube {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  /* La durée doit rester égale à TUMBLE_MS dans DiceSum.jsx : c'est ce
+     qui déclenche le passage à l'écran de réponse une fois le cube posé. */
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.die-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: block;
+}
+
+.die-face--front {
+  transform: translateZ(calc(var(--die-size) / 2));
+}
+
+.die-face--back {
+  transform: rotateY(180deg) translateZ(calc(var(--die-size) / 2));
+}
+
+.die-face--right {
+  transform: rotateY(90deg) translateZ(calc(var(--die-size) / 2));
+}
+
+.die-face--left {
+  transform: rotateY(-90deg) translateZ(calc(var(--die-size) / 2));
+}
+
+.die-face--top {
+  transform: rotateX(90deg) translateZ(calc(var(--die-size) / 2));
+}
+
+.die-face--bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--die-size) / 2));
 }
 
 .die__face {
@@ -2175,16 +2231,9 @@
   fill: var(--ink);
 }
 
-.die__digit {
-  fill: var(--ink);
-  font-family: var(--font-patient);
-  font-size: 54px;
-  font-weight: 800;
-}
-
 /* Le dé pas encore lancé : une empreinte, pas une face vide qu'on
    pourrait prendre pour un zéro. */
-.die--resting {
+.die-resting {
   display: block;
   border-radius: 18px;
   border: 5px dashed var(--line-strong);
@@ -2222,8 +2271,8 @@
 }
 
 @media (max-width: 560px) {
-  .die {
-    width: 76px;
-    height: 76px;
+  .die-scene,
+  .die-resting {
+    --die-size: 76px;
   }
 }

@@ -1,34 +1,40 @@
 /**
  * The guarantees « La somme des dés » needs: a throw only ever produces real
- * die faces, the display setting decides how each one is written, and the
- * correction reads the typed answer as a quantity rather than as a string.
+ * die faces, the correction reads the typed answer as a quantity rather than
+ * as a string, and the 3D tumble always settles on the face that was drawn.
  */
 import { describe, expect, it } from 'vitest'
 import {
+  FACE_ROTATION,
   FACES,
-  faceDisplay,
   isCorrectAnswer,
   MAX_DICE,
   MIN_DICE,
   maxSum,
   rollDice,
   sumOf,
+  tumbleRotation,
 } from '../src/games/dice-sum/logic.js'
 
 const RUNS = 200
+
+/** Degrees modulo 360, always in `[0, 360)` regardless of sign. */
+function normalize(degrees) {
+  return ((degrees % 360) + 360) % 360
+}
 
 describe('throws', () => {
   it('rolls exactly the number of dice asked for', () => {
     for (let dice = MIN_DICE; dice <= MAX_DICE; dice += 1) {
       for (let run = 0; run < RUNS; run += 1) {
-        expect(rollDice({ dice, display: 'pips' })).toHaveLength(dice)
+        expect(rollDice({ dice })).toHaveLength(dice)
       }
     }
   })
 
   it('never shows a face a die does not have', () => {
     for (let run = 0; run < RUNS; run += 1) {
-      for (const die of rollDice({ dice: MAX_DICE, display: 'pips' })) {
+      for (const die of rollDice({ dice: MAX_DICE })) {
         expect(die.value).toBeGreaterThanOrEqual(1)
         expect(die.value).toBeLessThanOrEqual(FACES)
         expect(Number.isInteger(die.value)).toBe(true)
@@ -57,31 +63,41 @@ describe('throws', () => {
   })
 })
 
-describe('display', () => {
-  it('shows every die the same way outside the mixed setting', () => {
-    expect(rollDice({ dice: 4, display: 'pips' }).every((d) => d.shown === 'pips')).toBe(true)
-    expect(rollDice({ dice: 4, display: 'digits' }).every((d) => d.shown === 'digits')).toBe(true)
+describe('the 3D tumble', () => {
+  it('lands on the rotation that shows the drawn value, however many extra turns it takes', () => {
+    for (let value = 1; value <= FACES; value += 1) {
+      for (let run = 0; run < RUNS; run += 1) {
+        const rotation = tumbleRotation(value)
+        expect(normalize(rotation.x)).toBe(normalize(FACE_ROTATION[value].x))
+        expect(normalize(rotation.y)).toBe(normalize(FACE_ROTATION[value].y))
+      }
+    }
   })
 
-  it('alternates pips and digits when mixed', () => {
-    expect(rollDice({ dice: 4, display: 'mixed' }).map((d) => d.shown)).toEqual([
-      'pips',
-      'digits',
-      'pips',
-      'digits',
-    ])
+  it('only ever adds whole extra turns, never a partial one', () => {
+    for (let value = 1; value <= FACES; value += 1) {
+      for (let run = 0; run < RUNS; run += 1) {
+        const rotation = tumbleRotation(value)
+        expect(Math.abs(rotation.x - FACE_ROTATION[value].x) % 360).toBe(0)
+        expect(Math.abs(rotation.y - FACE_ROTATION[value].y) % 360).toBe(0)
+      }
+    }
   })
 
-  it('defaults to pips when no display is set', () => {
-    expect(faceDisplay(undefined, 0)).toBe('pips')
-    expect(faceDisplay(undefined, 1)).toBe('pips')
+  it('gives each face on the cube a distinct rotation, opposite faces summing to seven', () => {
+    const opposite = { 1: 6, 2: 5, 3: 4, 4: 3, 5: 2, 6: 1 }
+    for (const [value, expected] of Object.entries(opposite)) {
+      expect(Number(value) + expected).toBe(7)
+    }
+    const rotations = Object.values(FACE_ROTATION).map((r) => `${r.x},${r.y}`)
+    expect(new Set(rotations).size).toBe(FACES)
   })
 })
 
 describe('correction', () => {
   const roll = [
-    { id: 0, value: 4, shown: 'pips' },
-    { id: 1, value: 3, shown: 'pips' },
+    { id: 0, value: 4 },
+    { id: 1, value: 3 },
   ]
 
   it('accepts the sum', () => {

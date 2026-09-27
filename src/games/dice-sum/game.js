@@ -8,16 +8,14 @@ export default {
   category: 'math-cognition',
   cover,
   ages: '5 ans et plus',
-  keywords: ['addition', 'subitizing', 'dénombrement', 'calcul mental', 'transcodage'],
+  keywords: ['addition', 'subitizing', 'dénombrement', 'calcul mental'],
   objectives: [
     'Reconnaissance immédiate des constellations du dé',
     'Addition de petites quantités',
-    'Transcodage entre constellation et chiffre',
   ],
   materials: [
     'Le patient lance lui-même : la quantité à additionner est une quantité qu’il a produite, pas une donnée qu’on lui remet.',
     'La réponse s’écrit au pavé plutôt que de se choisir parmi des propositions : une somme fausse ne peut pas se trouver par élimination.',
-    'L’affichage « Mélangé » met un dé en constellation et le suivant en chiffre, ce qui oblige à passer d’une écriture de la quantité à l’autre.',
     'Variante : demander comment le total a été trouvé (compté un à un, surcomptage, résultat connu) avant de valider.',
   ],
   instructions:
@@ -40,17 +38,6 @@ export default {
       max: 20,
       step: 5,
       default: 10,
-    },
-    {
-      id: 'display',
-      type: 'choice',
-      label: 'Affichage',
-      default: 'pips',
-      options: [
-        { id: 'pips', label: 'Constellations', hint: 'Les points du dé, comme sur un vrai dé.' },
-        { id: 'digits', label: 'Chiffres', hint: 'Chaque dé montre son chiffre.' },
-        { id: 'mixed', label: 'Mélangé', hint: 'Un dé en points, le suivant en chiffre.' },
-      ],
     },
   ],
   component: lazy(() => import('./DiceSum.jsx')),
