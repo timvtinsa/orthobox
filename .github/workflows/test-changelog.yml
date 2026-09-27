@@ -1,0 +1,64 @@
+# Temporary, manual-only workflow to dry-run the "Write the user-facing
+# changelog" step of release-please.yml against a real, known commit range,
+# without waiting for an actual release. Not part of the release pipeline;
+# delete this file once the real step is confirmed working.
+name: Test changelog generation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Write the user-facing changelog
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          claude_args: |
+            --model claude-haiku-4-5
+            --allowedTools "Bash(git tag *),Bash(git log *),Write"
+          prompt: |
+            You are writing the "what's new" summary shown once to Orthobox
+            users right after they update to a new version. Orthobox is a
+            French-language web app used during speech-therapy sessions: a
+            toolbox of short games for a speech therapist and their patient,
+            often a child. Your audience is a parent, a speech therapist, or
+            occasionally a curious teenager — never a developer.
+
+            This test release is tagged v0.4.0, and the previous one is
+            v0.3.0. Read every commit in that range with
+            `git log v0.3.0..v0.4.0 --no-merges --format='%s%n%b'`.
+
+            From those commits, write a short list of highlights, each a
+            single short French sentence, for a change a user would
+            actually notice: a new game, a visible interface or usability
+            improvement, or a bug fix that affected what they could do or
+            see. Leave out anything purely internal: dependency bumps, CI or
+            release-workflow changes, refactors, test additions,
+            documentation, build tooling, or performance work invisible to
+            the user. If the release has nothing a user would notice, use
+            an empty list rather than inventing a line. Merge commits that
+            describe facets of the same visible change into a single line
+            rather than listing each separately.
+
+            Write in plain, warm French: one clause per idea, no jargon, no
+            markdown, no emoji, each line capitalised and ending with a
+            period like an ordinary sentence.
+
+            Write the result to public/whats-new.json as valid JSON and
+            nothing else, with exactly this shape:
+            {"version": "0.4.0", "highlights": ["...", "..."]}
+
+      - name: Show the result
+        run: cat public/whats-new.json || echo "::warning::no public/whats-new.json was written"
