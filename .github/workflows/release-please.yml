@@ -6,9 +6,16 @@
 # created when that pull request is merged: publishing stays a deliberate act,
 # while being entirely computed.
 #
-# The same build then does two things with the exact same `dist/`, so the
-# downloadable archive and the hosted copy can never drift apart: it is
-# attached to the GitHub release, and published to GitHub Pages.
+# The same build is then reused for everything downstream, so the downloadable
+# archive and every hosted copy can never drift apart: it is attached to the
+# GitHub release and published to GitHub Pages.
+#
+# Cloudflare is deployed separately, by Cloudflare's own git integration
+# (production branch: main), not from here: it already gives every other
+# branch and pull request its own preview deployment for free, which a
+# release-only step in this workflow cannot reproduce. `wrangler.jsonc`
+# is what makes that pipeline work (it stops Wrangler from trying to
+# auto-configure a Cloudflare Vite plugin integration, which needs Vite 6+).
 name: Release
 
 on:
