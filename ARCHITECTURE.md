@@ -310,3 +310,14 @@ once more and publishes that same `dist/` to GitHub Pages
 (`actions/upload-pages-artifact` and `actions/deploy-pages`, in a job scoped
 to the `pages`/`id-token` permissions it alone needs), so the zip attached to
 the release and the hosted copy are provably the same build.
+
+`wrangler.jsonc` is unrelated to that release process: it only configures a
+Cloudflare Workers project, connected directly to this repository through
+Cloudflare's own Git integration (Workers Builds), that deploys a preview of
+every pull request and of the production branch. Since Orthobox has no
+server-side code, `main` is omitted and the whole file exists to point
+`assets.directory` at `dist/` and to give `npx wrangler preview` — the
+default command Workers Builds runs on every branch that is not the
+production one — the `previews` block it refuses to run without, empty
+because the site has no bindings, vars or secrets a preview would need to
+isolate from production.
