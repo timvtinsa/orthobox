@@ -64,6 +64,10 @@ Settings are presented before the game, on a screen shared by every game: the
 practitioner adjusts them, then presses « Démarrer ». A game without any
 setting declares `settings: []`.
 
+A setting that only means something under another one adds `showIf:
+(config) => …` and stays out of the screen otherwise (a memorisation time
+when nothing is ever memorised, say).
+
 Required fields: `id`, `title`, `tagline`, `category`, `cover`, `component`.
 The registry fails at startup when a field is missing, when the category is
 unknown, or when `id` does not match the folder name.

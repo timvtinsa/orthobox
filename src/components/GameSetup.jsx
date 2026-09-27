@@ -11,6 +11,12 @@
  *
  * The order is imposed here rather than by each manifest: numbers first, then
  * choices, and a choice of more than three options takes a row of its own.
+ *
+ * A field can declare `showIf(config)` to appear only once another field
+ * holds a given value, for a setting that means nothing without it (a
+ * memorisation time when the model is never hidden, say). Hidden fields keep
+ * their value in `config`, so the setting reappears exactly as left if the
+ * condition holds again.
  */
 import { useState } from 'react'
 import { shareLink } from '../lib/share-settings.js'
@@ -56,10 +62,12 @@ export default function GameSetup({
     }
   }
 
-  const fields = [...game.settings].sort((a, b) => {
-    if (a.type === b.type) return 0
-    return a.type === 'number' ? -1 : 1
-  })
+  const fields = game.settings
+    .filter((field) => !field.showIf || field.showIf(config))
+    .sort((a, b) => {
+      if (a.type === b.type) return 0
+      return a.type === 'number' ? -1 : 1
+    })
 
   const isDefault = game.settings.every((field) => config[field.id] === field.default)
 

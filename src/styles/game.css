@@ -2142,3 +2142,33 @@
   stroke: var(--state-expected);
   stroke-dasharray: 4 6;
 }
+
+/* --- Le panier du marché ----------------------------------------
+   Trois zones empilées (la commande, le panier, l'étal). Chacune porte
+   son intitulé en petit : sans lui, deux rangées de fruits identiques
+   ne diraient pas laquelle est le modèle et laquelle est la réponse.
+   ---------------------------------------------------------------- */
+
+.basket-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.basket-panel__title {
+  margin: 0;
+  font-size: var(--ui-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Le marqueur d'état occupe le même angle que le compteur : décalé à
+   gauche, la quantité attendue reste lisible pendant la correction. */
+.token__rank--left {
+  right: auto;
+  left: -8px;
+}
