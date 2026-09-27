@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Orthobox is a static build with no server-side Worker code: `main` is
+  // deliberately omitted, and the HashRouter (see src/main.jsx) means the
+  // asset server never has to fall back to index.html for a client route.
+  "name": "orthobox",
+  // Set this to today's date when bumping it; see
+  // https://developers.cloudflare.com/workers/configuration/compatibility-dates/
+  "compatibility_date": "2026-09-27",
+  "assets": {
+    "directory": "./dist"
+  },
+  // Required so `npx wrangler preview` (Workers Builds' default Preview
+  // command, run for every non-production branch, i.e. every pull request)
+  // has a `previews` block to read — without one it refuses to run at all.
+  // Nothing in it needs to differ from production: the site has no
+  // bindings, vars or secrets to isolate.
+  "preview_urls": true,
+  "previews": {}
+}
