@@ -220,14 +220,15 @@ Concretely, on every landing on `main`:
    `CHANGELOG.md` and the new version in `package.json`;
 2. merging that pull request creates the **tag** and the **GitHub release**,
    then the build is attached to it as an archive;
-3. a single call to Claude (`scripts/build-user-changelog.mjs`, the cheap
-   `claude-haiku-4-5` model) reads the release's commits and writes
-   `public/whats-new.json`, a short, French, user-facing summary — never the
-   same text as `CHANGELOG.md`. The app shows it once, in a popup, the first
-   time it runs on a new version (see `src/components/WhatsNew.jsx`). This
-   step reads an `ANTHROPIC_API_KEY` repository secret, but never blocks the
-   release: if the call fails for any reason, the release still publishes,
-   just without a user-facing changelog that time.
+3. a single Claude Code call (the cheap `claude-haiku-4-5` model, billed
+   against a Claude subscription rather than paid API credits) reads the
+   release's commits directly and writes `public/whats-new.json`, a short,
+   French, user-facing summary — never the same text as `CHANGELOG.md`. The
+   app shows it once, in a popup, the first time it runs on a new version
+   (see `src/components/WhatsNew.jsx`). This step reads a
+   `CLAUDE_CODE_OAUTH_TOKEN` repository secret, but never blocks the
+   release: if it fails for any reason, the release still publishes, just
+   without a user-facing changelog that time.
 
 Publishing therefore stays a deliberate act, while being entirely computed
 from the history.
