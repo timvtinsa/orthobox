@@ -17,7 +17,7 @@ export default {
   materials: [
     'L’étal montre toujours les huit fruits et légumes : il faut choisir les bons, pas recopier une rangée.',
     'Toucher un article du panier en retire un seul exemplaire, ce qui permet de corriger un surcomptage sans tout vider.',
-    'Le réglage « Quantités » fait passer d’une simple identification à un vrai dénombrement.',
+    'Chaque article demandé l’est en une quantité tirée au hasard, de un à cinq : le dénombrement fait toujours partie de l’exercice.',
     'Modèle caché : la commande n’est visible que pendant la mémorisation, le jeu devient une tâche de mémoire de travail.',
     'Variante : faire énoncer la commande à voix haute (« deux pommes et un poireau ») avant de remplir le panier.',
   ],
@@ -41,7 +41,8 @@ export default {
       max: 15,
       default: 6,
       suffix: 's',
-      hint: 'Utilisé seulement quand le modèle est caché.',
+      hint: 'Durée d’affichage de la commande avant qu’elle ne disparaisse.',
+      showIf: (config) => config.model === 'hidden',
     },
     {
       id: 'rounds',
@@ -50,16 +51,6 @@ export default {
       min: 3,
       max: 15,
       default: 6,
-    },
-    {
-      id: 'quantities',
-      type: 'choice',
-      label: 'Quantités',
-      default: 'single',
-      options: [
-        { id: 'single', label: 'Un de chaque', hint: 'Seule l’identification des articles est en jeu.' },
-        { id: 'multiple', label: 'Jusqu’à trois', hint: 'Il faut aussi compter combien d’exemplaires prendre.' },
-      ],
     },
     {
       id: 'model',

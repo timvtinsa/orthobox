@@ -3,8 +3,9 @@
  *
  * The order asks for a few kinds among the eight on the stall, so filling the
  * basket means picking the right ones out rather than taking everything in
- * sight. With the « quantités » setting on, each kind is asked for one to
- * three times, which turns the same board into a counting exercise.
+ * sight. Each kind is asked for a quantity drawn independently between one
+ * and `MAX_PER_KIND`, so counting is always part of the exercise, never a
+ * separate setting to turn on.
  *
  * The basket is held as a plain `{ [id]: count }` map: comparing it to the
  * order is then a set comparison, and an item taken back simply decrements.
@@ -12,16 +13,15 @@
 import { randomInt, sample } from '../../lib/random.js'
 import { PRODUCE } from './data.js'
 
-export const MAX_PER_KIND = 3
+export const MAX_PER_KIND = 5
 
 /** The order to reproduce: `[{ id, one, many, count }]`, stall order kept. */
 export function buildOrder(config) {
   const kinds = Math.min(Math.max(config.kinds ?? 3, 1), PRODUCE.length)
-  const max = config.quantities === 'multiple' ? MAX_PER_KIND : 1
   const drawn = sample(PRODUCE, kinds)
   return PRODUCE.filter((item) => drawn.includes(item)).map((item) => ({
     ...item,
-    count: randomInt(1, max),
+    count: randomInt(1, MAX_PER_KIND),
   }))
 }
 

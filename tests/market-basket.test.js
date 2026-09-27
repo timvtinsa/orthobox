@@ -1,8 +1,8 @@
 /**
  * The guarantees « Le panier du marché » needs: an order never asks for more
- * kinds than the stall holds, never asks for a kind twice, respects the
- * quantity setting, and the correction credits a basket only when it holds
- * exactly the order.
+ * kinds than the stall holds, never asks for a kind twice, draws each kind's
+ * quantity independently within bounds, and the correction credits a basket
+ * only when it holds exactly the order.
  */
 import { describe, expect, it } from 'vitest'
 import { PRODUCE, quantityLabel } from '../src/games/market-basket/data.js'
@@ -20,11 +20,9 @@ const KINDS = [2, 3, 4, 5]
 
 describe('orders', () => {
   it('asks for exactly the number of kinds requested', () => {
-    for (const quantities of ['single', 'multiple']) {
-      for (const kinds of KINDS) {
-        for (let run = 0; run < RUNS; run += 1) {
-          expect(buildOrder({ kinds, quantities }), `${quantities}/${kinds}`).toHaveLength(kinds)
-        }
+    for (const kinds of KINDS) {
+      for (let run = 0; run < RUNS; run += 1) {
+        expect(buildOrder({ kinds }), kinds).toHaveLength(kinds)
       }
     }
   })
@@ -32,7 +30,7 @@ describe('orders', () => {
   it('never asks for the same kind twice in one order', () => {
     for (const kinds of KINDS) {
       for (let run = 0; run < RUNS; run += 1) {
-        const ids = buildOrder({ kinds, quantities: 'multiple' }).map((item) => item.id)
+        const ids = buildOrder({ kinds }).map((item) => item.id)
         expect(new Set(ids).size).toBe(ids.length)
       }
     }
@@ -41,31 +39,32 @@ describe('orders', () => {
   it('only ever asks for produce actually on the stall', () => {
     const stall = new Set(PRODUCE.map((item) => item.id))
     for (let run = 0; run < RUNS; run += 1) {
-      for (const item of buildOrder({ kinds: 5, quantities: 'multiple' })) {
+      for (const item of buildOrder({ kinds: 5 })) {
         expect(stall.has(item.id), item.id).toBe(true)
       }
     }
   })
 
-  it('takes exactly one of each kind when quantities are off', () => {
+  it('stays within one and MAX_PER_KIND for every kind, drawn independently', () => {
     for (let run = 0; run < RUNS; run += 1) {
-      const order = buildOrder({ kinds: 4, quantities: 'single' })
-      expect(order.every((item) => item.count === 1)).toBe(true)
-      expect(orderSize(order)).toBe(4)
-    }
-  })
-
-  it('stays within one and three of each kind when quantities are on', () => {
-    for (let run = 0; run < RUNS; run += 1) {
-      for (const item of buildOrder({ kinds: 5, quantities: 'multiple' })) {
+      for (const item of buildOrder({ kinds: 5 })) {
         expect(item.count).toBeGreaterThanOrEqual(1)
         expect(item.count).toBeLessThanOrEqual(MAX_PER_KIND)
       }
     }
   })
 
+  it('eventually draws every quantity from one to MAX_PER_KIND', () => {
+    const seen = new Set()
+    for (let run = 0; run < RUNS; run += 1) {
+      for (const item of buildOrder({ kinds: 5 })) seen.add(item.count)
+    }
+    const expected = new Set(Array.from({ length: MAX_PER_KIND }, (_, i) => i + 1))
+    expect(seen).toEqual(expected)
+  })
+
   it('never asks for more kinds than the stall holds', () => {
-    const order = buildOrder({ kinds: 99, quantities: 'single' })
+    const order = buildOrder({ kinds: 99 })
     expect(order).toHaveLength(PRODUCE.length)
   })
 })
