@@ -63,6 +63,6 @@ export const FACE_ROTATION = {
  */
 export function tumbleRotation(value) {
   const base = FACE_ROTATION[value]
-  const spin = () => 360 * randomInt(1, 3) * (Math.random() < 0.5 ? 1 : -1)
+  const spin = () => 360 * randomInt(1, 2) * (Math.random() < 0.5 ? 1 : -1)
   return { x: base.x + spin(), y: base.y + spin() }
 }

@@ -2185,7 +2185,7 @@
   transform-style: preserve-3d;
   /* La durée doit rester égale à TUMBLE_MS dans DiceSum.jsx : c'est ce
      qui déclenche le passage à l'écran de réponse une fois le cube posé. */
-  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .die-face {

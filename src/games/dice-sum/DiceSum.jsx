@@ -21,7 +21,7 @@ import Die from './Die.jsx'
 import { FACE_ROTATION, isCorrectAnswer, maxSum, rollDice, sumOf, tumbleRotation } from './logic.js'
 
 // Kept in step with the cube's own transition duration in game.css.
-const TUMBLE_MS = 900
+const TUMBLE_MS = 1500
 
 function prefersReducedMotion() {
   return (
