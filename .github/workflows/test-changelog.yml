@@ -36,7 +36,6 @@ jobs:
           claude_args: |
             --model claude-haiku-4-5
             --allowedTools "Bash(git tag *),Bash(git log *),Write"
-            --debug
           prompt: |
             You are writing the "what's new" summary shown once to Orthobox
             users right after they update to a new version. Orthobox is a
@@ -73,17 +72,16 @@ jobs:
         if: always()
         run: cat public/whats-new.json || echo "::warning::no public/whats-new.json was written"
 
-      - name: Post debug output as a PR comment
+      - name: Post the result as a PR comment
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          log=$(find "$HOME/.claude/debug" -type f -name '*.txt' 2>/dev/null | head -1)
           {
-            echo "Debug log tail (${log:-none found}):"
+            echo "Dry run result (public/whats-new.json):"
+            echo '```json'
+            cat public/whats-new.json 2>/dev/null || echo "(no file written)"
             echo '```'
-            [ -n "$log" ] && tail -c 60000 "$log"
-            echo '```'
-          } > /tmp/debug-comment.md
-          gh pr comment "${{ github.event.pull_request.number }}" --body-file /tmp/debug-comment.md
+          } > /tmp/result-comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file /tmp/result-comment.md
