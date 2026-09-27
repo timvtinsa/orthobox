@@ -314,13 +314,21 @@ builds once more and publishes that same `dist/` to GitHub Pages
 to the `pages`/`id-token` permissions it alone needs), so the zip attached to
 the release and the hosted copy are provably the same build.
 
-That same step also promotes the exact tagged commit to `main`, through a
-pull request opened and merged automatically (`gh pr create` / `gh pr merge`
-with the workflow's own token) — `main`'s branch ruleset requires a pull
-request the same way `integ`'s does, with nobody exempt, so a direct push
-would simply be rejected. `main` never takes ordinary development commits
-directly this way; the only thing that ever lands there is a released
-commit, exactly once per release.
+That same step also promotes the tagged commit to `main`, through a pull
+request opened and merged automatically (`gh pr create` / `gh pr merge` with
+the workflow's own token) — `main`'s branch ruleset requires a pull request
+the same way `integ`'s does, with nobody exempt, so a direct push would
+simply be rejected. `main` never takes ordinary development commits directly
+this way; the only thing that ever lands there is a released commit, exactly
+once per release.
+
+The tag itself is then force-moved to point at that promoted commit
+(`gh api --method PATCH .../git/refs/tags/<tag> -f sha=<main's tip> -F
+force=true`), so it resolves to a commit that is actually on `main`, not
+merely one of its ancestors. This is possible without ever touching a
+protected branch ref: both rulesets' `conditions.ref_name.include` scope
+only to `refs/heads/main` and `refs/heads/integ`, never `refs/tags/*`, so a
+tag move is entirely outside their reach.
 
 `wrangler.jsonc` is unrelated to that release process: it only configures a
 Cloudflare Workers project, connected directly to this repository through

@@ -203,9 +203,10 @@ worker, useful for a hosted preview.
 | `.github/workflows/release-please.yml` | version computation, changelog, tag, release and GitHub Pages deployment |
 
 The repository follows three levels: working branches start from `integ`,
-`integ` is the integration branch, and `main` only ever receives the exact
-commit a release was just tagged on, promoted there automatically right
-after the release pull request (below) is merged.
+`integ` is the integration branch, and `main` only ever receives a release,
+promoted there automatically right after the release pull request (below) is
+merged — the tag is then force-moved to point at that promoted commit, so it
+always resolves to a commit that is actually on `main`.
 
 ### Versions and changelog
 
@@ -221,8 +222,10 @@ Concretely, on every landing on `integ`:
    `CHANGELOG.md` and the new version in `package.json`;
 2. merging that pull request creates the **tag** and the **GitHub release**,
    then the build is attached to it as an archive;
-3. that exact commit is promoted to `main` automatically, in its own pull
-   request — `main` never receives ordinary development commits directly.
+3. that commit is promoted to `main` automatically, in its own pull request,
+   and the tag is force-moved to point at it, so it resolves to a commit
+   that is actually on `main` — `main` never receives ordinary development
+   commits directly.
 
 Publishing therefore stays a deliberate act, while being entirely computed
 from the history.

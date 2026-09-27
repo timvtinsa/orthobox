@@ -12,17 +12,20 @@
 # archive and every hosted copy can never drift apart: it is attached to the
 # GitHub release and published to GitHub Pages.
 #
-# `main` only ever receives the exact commit a release was just tagged on
-# (see "Promote the release to main" below) — it never takes ordinary
-# development commits directly. Cloudflare is deployed separately, by
-# Cloudflare's own git integration (production branch: main), not from here:
-# it already gives every other branch and pull request its own preview
-# deployment for free, which a release-only step in this workflow cannot
-# reproduce. Since Cloudflare deploys automatically the moment `main`
-# changes, that promotion is what actually ships a release to production.
-# `wrangler.jsonc` is what makes that separate pipeline work (it stops
-# Wrangler from trying to auto-configure a Cloudflare Vite plugin
-# integration, which needs Vite 6+).
+# `main` never takes ordinary development commits directly: the only thing
+# that ever lands there is a release, promoted automatically right after
+# release-please tags it on `integ` (see "Promote the release to main"
+# below). The tag itself is then force-moved to point at that new commit on
+# `main` (see "Move the tag onto main"), so the tag always resolves to a
+# commit that is actually on `main`, not merely one of its ancestors.
+# Cloudflare is deployed separately, by Cloudflare's own git integration
+# (production branch: main), not from here: it already gives every other
+# branch and pull request its own preview deployment for free, which a
+# release-only step in this workflow cannot reproduce. Since Cloudflare
+# deploys automatically the moment `main` changes, that promotion is what
+# actually ships a release to production. `wrangler.jsonc` is what makes
+# that separate pipeline work (it stops Wrangler from trying to
+# auto-configure a Cloudflare Vite plugin integration, which needs Vite 6+).
 name: Release
 
 on:
@@ -83,6 +86,24 @@ jobs:
               | grep -oE '[0-9]+$')
           fi
           gh pr merge "$pr" --merge
+
+      # release-please created the tag on `integ`, but the release has to be
+      # identifiable as being on `main`: branch rulesets only scope to
+      # `refs/heads/*` (checked directly against both rulesets' API
+      # configuration), never `refs/tags/*`, so a tag can be force-moved via
+      # the API even though a direct push to `main` or `integ` would be
+      # rejected. `main`'s tip is exactly the commit just promoted above, so
+      # this makes the tag point at a commit that is actually on `main`.
+      - name: Move the tag onto main
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ steps.release.outputs.tag_name }}
+        run: |
+          sha=$(gh api "repos/${GH_REPO}/commits/main" --jq .sha)
+          gh api --method PATCH "repos/${GH_REPO}/git/refs/tags/${TAG_NAME}" \
+            -f sha="$sha" -F force=true
 
       # The steps below only run right after the release pull request has been
       # merged, that is once the tag has been created.

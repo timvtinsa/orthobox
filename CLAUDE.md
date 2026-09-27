@@ -55,11 +55,12 @@ a `!` after the scope a major version.
 
 Working branches start from `integ`, the integration branch, and PRs land
 there. `integ` is also what release-please itself runs against: it opens the
-release pull request there, and merging it is what tags a release. `main`
-only ever receives that exact tagged commit, promoted automatically right
-after — Cloudflare's own Git integration treats `main` as its production
-branch and deploys the moment it changes, so that promotion is what actually
-ships a release.
+release pull request there, and merging it is what tags a release. The
+release is then promoted to `main` automatically, and the tag is force-moved
+to point at that promoted commit, so it always resolves to a commit that is
+actually on `main` — Cloudflare's own Git integration treats `main` as its
+production branch and deploys the moment it changes, so that promotion is
+what actually ships a release.
 
 ## Before delivering
 
