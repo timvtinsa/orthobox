@@ -315,9 +315,14 @@ the release and the hosted copy are provably the same build.
 Cloudflare Workers project, connected directly to this repository through
 Cloudflare's own Git integration (Workers Builds), that deploys a preview of
 every pull request and of the production branch. Since Orthobox has no
-server-side code, `main` is omitted and the whole file exists to point
-`assets.directory` at `dist/` and to give `npx wrangler preview` — the
+server-side code, `main` is omitted and `assets.directory` alone serves
+`dist/`, with `not_found_handling: single-page-application` as a fallback
+for a stray path-based deep link (the app itself only ever needs `/`, since
+it routes on the URL fragment). Declaring `assets` explicitly also stops
+Wrangler from trying to auto-configure a Cloudflare Vite plugin integration
+it would otherwise attempt, which needs Vite 6+. The `preview_urls` and
+`previews` keys are a second, independent fix: `npx wrangler preview` — the
 default command Workers Builds runs on every branch that is not the
-production one — the `previews` block it refuses to run without, empty
-because the site has no bindings, vars or secrets a preview would need to
-isolate from production.
+production one — refuses to run at all without a `previews` block, empty
+here because the site has no bindings, vars or secrets a preview would need
+to isolate from production.
