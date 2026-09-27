@@ -203,8 +203,9 @@ worker, useful for a hosted preview.
 | `.github/workflows/release-please.yml` | version computation, changelog, tag, release and GitHub Pages deployment |
 
 The repository follows three levels: working branches start from `integ`,
-`integ` is the integration branch, and `main` only receives what is ready to
-be published.
+`integ` is the integration branch, and `main` only ever receives the exact
+commit a release was just tagged on, promoted there automatically right
+after the release pull request (below) is merged.
 
 ### Versions and changelog
 
@@ -214,12 +215,14 @@ The version is never picked by hand. Commit messages follow the
 version from them: `fix` gives a patch, `feat` a minor version, a `!` or a
 `BREAKING CHANGE` a major version.
 
-Concretely, on every landing on `main`:
+Concretely, on every landing on `integ`:
 
 1. release-please opens or updates a release pull request, holding the updated
    `CHANGELOG.md` and the new version in `package.json`;
 2. merging that pull request creates the **tag** and the **GitHub release**,
-   then the build is attached to it as an archive.
+   then the build is attached to it as an archive;
+3. that exact commit is promoted to `main` automatically, in its own pull
+   request — `main` never receives ordinary development commits directly.
 
 Publishing therefore stays a deliberate act, while being entirely computed
 from the history.
@@ -230,6 +233,12 @@ Every release is published to **GitHub Pages** automatically: once the
 release pull request is merged, `.github/workflows/release-please.yml` builds
 the application and deploys that exact `dist/` — the same one attached to the
 GitHub release as a zip — with no separate build for the two.
+
+**Cloudflare** hosts the same application separately, through Cloudflare's own
+Git integration (Workers Builds) rather than a step in this workflow: it
+deploys `main` as production, and gives every pull request its own preview.
+`main` only ever moves via the automatic promotion described above, so a
+Cloudflare production deploy and a GitHub release always correspond exactly.
 
 More generally, the build is a static application: the contents of `dist/`
 can be dropped as they are on any hosting (Netlify, a practice intranet, a USB

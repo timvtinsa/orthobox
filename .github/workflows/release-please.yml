@@ -1,34 +1,42 @@
-# Automated publishing, on every landing on main.
+# Automated publishing, on every landing on integ.
 #
 # release-please reads the commit messages (Conventional Commits), derives the
 # next version from them and maintains a release pull request holding the
 # CHANGELOG and the version number. The tag and the GitHub release are only
 # created when that pull request is merged: publishing stays a deliberate act,
-# while being entirely computed.
+# while being entirely computed. It runs against `integ`, not `main`: `integ`
+# is where every feature branch actually lands, so that is where a release's
+# commit history is complete.
 #
 # The same build is then reused for everything downstream, so the downloadable
 # archive and every hosted copy can never drift apart: it is attached to the
 # GitHub release and published to GitHub Pages.
 #
-# Cloudflare is deployed separately, by Cloudflare's own git integration
-# (production branch: main), not from here: it already gives every other
-# branch and pull request its own preview deployment for free, which a
-# release-only step in this workflow cannot reproduce. `wrangler.jsonc`
-# is what makes that pipeline work (it stops Wrangler from trying to
-# auto-configure a Cloudflare Vite plugin integration, which needs Vite 6+).
+# `main` only ever receives the exact commit a release was just tagged on
+# (see "Promote the release to main" below) — it never takes ordinary
+# development commits directly. Cloudflare is deployed separately, by
+# Cloudflare's own git integration (production branch: main), not from here:
+# it already gives every other branch and pull request its own preview
+# deployment for free, which a release-only step in this workflow cannot
+# reproduce. Since Cloudflare deploys automatically the moment `main`
+# changes, that promotion is what actually ships a release to production.
+# `wrangler.jsonc` is what makes that separate pipeline work (it stops
+# Wrangler from trying to auto-configure a Cloudflare Vite plugin
+# integration, which needs Vite 6+).
 name: Release
 
 on:
   push:
-    branches: [main]
+    branches: [integ]
   workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
 
-# Two landings on main in quick succession must not race for the release pull
-# request: they queue instead, and none is cancelled halfway through a tag.
+# Two landings on integ in quick succession must not race for the release
+# pull request: they queue instead, and none is cancelled halfway through a
+# tag.
 concurrency:
   group: release
   cancel-in-progress: false
@@ -48,6 +56,33 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          target-branch: integ
+
+      # `main` requires a pull request for any change, same as `integ` (branch
+      # rulesets, no bypass for anyone) — a direct push here would simply be
+      # rejected, so the promotion itself has to be a real PR. It needs zero
+      # approvals and `main` enforces no status check, so it merges right
+      # away: from a viewer's standpoint this is still one automatic step,
+      # not a wait for review.
+      - name: Promote the release to main
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          # Passed through the environment rather than interpolated straight
+          # into the script, matching the pattern below.
+          TAG_NAME: ${{ steps.release.outputs.tag_name }}
+        run: |
+          existing=$(gh pr list --base main --head integ --state open --json number -q '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            pr="$existing"
+          else
+            pr=$(gh pr create --base main --head integ \
+              --title "chore(main): release ${TAG_NAME}" \
+              --body "Promotes the release just tagged on \`integ\` (${TAG_NAME}) to \`main\`. Cloudflare's Workers Builds integration deploys production from \`main\`, so merging this is what actually ships the release." \
+              | grep -oE '[0-9]+$')
+          fi
+          gh pr merge "$pr" --merge
 
       # The steps below only run right after the release pull request has been
       # merged, that is once the tag has been created.

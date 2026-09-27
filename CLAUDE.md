@@ -53,9 +53,13 @@ a `!` after the scope a major version.
 
 ## Branches
 
-Working branches start from `integ`, the integration branch. `main` only
-receives what is ready to be published, and then triggers the release pull
-request.
+Working branches start from `integ`, the integration branch, and PRs land
+there. `integ` is also what release-please itself runs against: it opens the
+release pull request there, and merging it is what tags a release. `main`
+only ever receives that exact tagged commit, promoted automatically right
+after — Cloudflare's own Git integration treats `main` as its production
+branch and deploys the moment it changes, so that promotion is what actually
+ships a release.
 
 ## Before delivering
 

@@ -303,26 +303,39 @@ than `npm test`: the coverage thresholds set in `vite.config.js` (a floor a
 few points under what the suite currently reaches) turn a coverage regression
 into a failed run, the same way a broken test would, and the HTML report is
 kept as a build artifact either way, so a failure can be traced to the file
-that dropped. `.github/workflows/release-please.yml` computes the
-version from the commit messages, keeps `CHANGELOG.md` up to date, and creates
-the tag and the release when the release pull request is merged — then builds
-once more and publishes that same `dist/` to GitHub Pages
+that dropped.
+
+`.github/workflows/release-please.yml` computes the version from the commit
+messages and keeps `CHANGELOG.md` up to date, against `integ` — every feature
+branch lands there, so that is where a release's commit history is complete.
+Merging the release pull request creates the tag and the GitHub release, then
+builds once more and publishes that same `dist/` to GitHub Pages
 (`actions/upload-pages-artifact` and `actions/deploy-pages`, in a job scoped
 to the `pages`/`id-token` permissions it alone needs), so the zip attached to
 the release and the hosted copy are provably the same build.
 
+That same step also promotes the exact tagged commit to `main`, through a
+pull request opened and merged automatically (`gh pr create` / `gh pr merge`
+with the workflow's own token) — `main`'s branch ruleset requires a pull
+request the same way `integ`'s does, with nobody exempt, so a direct push
+would simply be rejected. `main` never takes ordinary development commits
+directly this way; the only thing that ever lands there is a released
+commit, exactly once per release.
+
 `wrangler.jsonc` is unrelated to that release process: it only configures a
 Cloudflare Workers project, connected directly to this repository through
 Cloudflare's own Git integration (Workers Builds), that deploys a preview of
-every pull request and of the production branch. Since Orthobox has no
-server-side code, `main` is omitted and `assets.directory` alone serves
-`dist/`, with `not_found_handling: single-page-application` as a fallback
-for a stray path-based deep link (the app itself only ever needs `/`, since
-it routes on the URL fragment). Declaring `assets` explicitly also stops
-Wrangler from trying to auto-configure a Cloudflare Vite plugin integration
-it would otherwise attempt, which needs Vite 6+. The `preview_urls` and
-`previews` keys are a second, independent fix: `npx wrangler preview` — the
-default command Workers Builds runs on every branch that is not the
-production one — refuses to run at all without a `previews` block, empty
-here because the site has no bindings, vars or secrets a preview would need
-to isolate from production.
+every pull request and treats `main` as its production branch — deploying
+automatically the moment it changes, which is what actually ships a release
+now that the promotion above exists. Since Orthobox has no server-side code,
+`main` is omitted and `assets.directory` alone serves `dist/`, with
+`not_found_handling: single-page-application` as a fallback for a stray
+path-based deep link (the app itself only ever needs `/`, since it routes on
+the URL fragment). Declaring `assets` explicitly also stops Wrangler from
+trying to auto-configure a Cloudflare Vite plugin integration it would
+otherwise attempt, which needs Vite 6+. The `preview_urls` and `previews`
+keys are a second, independent fix: `npx wrangler preview` — the default
+command Workers Builds runs on every branch that is not the production one —
+refuses to run at all without a `previews` block, empty here because the
+site has no bindings, vars or secrets a preview would need to isolate from
+production.
