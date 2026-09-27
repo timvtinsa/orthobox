@@ -19,34 +19,51 @@ export function settingsToParams(settings, config) {
 }
 
 /**
+ * The settings a plain object of raw values carries, checked field by field
+ * against the game's own definition. `null` when none of them could be read,
+ * so the caller can tell « no link » apart from « a link with every field at
+ * its default ». Shared by every source of untrusted settings — a query
+ * string, a QR-encoded session — so a value is validated the same way
+ * regardless of where it travelled in from.
+ */
+export function sanitizeConfig(settings, raw) {
+  const config = {}
+  let found = false
+
+  for (const field of settings) {
+    if (raw == null || !(field.id in raw)) continue
+    const value = raw[field.id]
+
+    if (field.type === 'number') {
+      const num = Number(value)
+      if (!Number.isFinite(num)) continue
+      const min = field.min ?? -Infinity
+      const max = field.max ?? Infinity
+      const stepped = Number.isInteger(field.step ?? 1) ? Math.round(num) : num
+      config[field.id] = Math.min(max, Math.max(min, stepped))
+      found = true
+    } else if (field.options?.some((option) => option.id === value)) {
+      config[field.id] = value
+      found = true
+    }
+  }
+
+  return found ? config : null
+}
+
+/**
  * The settings a query string carries, checked field by field against the
  * game's own definition. `null` when none of them could be read, so the
  * caller can tell « no link » apart from « a link with every field at its
  * default ».
  */
 export function settingsFromParams(settings, params) {
-  const config = {}
-  let found = false
-
+  const raw = {}
   for (const field of settings) {
-    const raw = params.get(field.id)
-    if (raw === null) continue
-
-    if (field.type === 'number') {
-      const value = Number(raw)
-      if (!Number.isFinite(value)) continue
-      const min = field.min ?? -Infinity
-      const max = field.max ?? Infinity
-      const stepped = Number.isInteger(field.step ?? 1) ? Math.round(value) : value
-      config[field.id] = Math.min(max, Math.max(min, stepped))
-      found = true
-    } else if (field.options?.some((option) => option.id === raw)) {
-      config[field.id] = raw
-      found = true
-    }
+    const value = params.get(field.id)
+    if (value !== null) raw[field.id] = value
   }
-
-  return found ? config : null
+  return sanitizeConfig(settings, raw)
 }
 
 /** The absolute link that reopens a game with a given set of settings. */

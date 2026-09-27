@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Orthobox is a static build (no server-side code), so this Worker only
+  // serves the files from `dist/`. Declaring it explicitly here keeps
+  // Wrangler from trying to auto-configure a Cloudflare Vite plugin
+  // integration, which only supports Vite 6+.
+  "name": "orthobox",
+  "compatibility_date": "2026-09-26",
+  "assets": {
+    "directory": "./dist",
+    // The app uses a hash router (`#/games/...`), so the fragment never
+    // reaches the server and every real request is for `/`. This fallback
+    // only matters for a stray path-based deep link.
+    "not_found_handling": "single-page-application"
+  },
+  // Required so `npx wrangler preview` (Workers Builds' default Preview
+  // command, run for every non-production branch, i.e. every pull request)
+  // has a `previews` block to read — without one it refuses to run at all,
+  // a separate failure from the deploy-path one `assets` above fixes.
+  // Nothing in it needs to differ from production: the site has no
+  // bindings, vars or secrets to isolate.
+  "preview_urls": true,
+  "previews": {}
+}

@@ -4,9 +4,12 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import BrandMark from './BrandMark.jsx'
+import DonateButton from './DonateButton.jsx'
 import UpdatePrompt from './UpdatePrompt.jsx'
+import WhatsNew from './WhatsNew.jsx'
 import InstallButton from './InstallButton.jsx'
 import ModeSwitch from './ModeSwitch.jsx'
+import { version } from '../../package.json'
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -33,6 +36,7 @@ export default function Layout() {
             </NavLink>
           </nav>
           <ModeSwitch />
+          <DonateButton />
           <InstallButton />
         </div>
       </header>
@@ -44,9 +48,11 @@ export default function Layout() {
       <footer className="app-footer">
         Orthobox, outil libre pour les séances d’orthophonie. Tout fonctionne hors ligne, aucune
         donnée patient n’est enregistrée.
+        <span className="app-footer__version"> · v{version}</span>
       </footer>
 
       <UpdatePrompt />
+      <WhatsNew />
     </div>
   )
 }

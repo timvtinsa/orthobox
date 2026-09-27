@@ -408,11 +408,18 @@
   border-radius: var(--radius-sm);
   background: var(--category-tint);
   cursor: grab;
-  touch-action: none;
+  /* pan-y, not none: a quick vertical swipe still scrolls the page, only a
+     held-then-moved finger arms the drag (see useDragSequence.js). */
+  touch-action: pan-y;
 }
 
 .sequence__handle:active {
   cursor: grabbing;
+}
+
+/* A shared session preview lists the same rows, read-only: no drag to arm. */
+.sequence__handle--static {
+  cursor: default;
 }
 
 .sequence__rank {
@@ -516,7 +523,9 @@
   background: var(--surface);
   text-align: left;
   cursor: grab;
-  touch-action: none;
+  /* pan-y, not none: a quick vertical swipe still scrolls the catalogue,
+     only a held-then-moved finger arms the drag (see useDragSequence.js). */
+  touch-action: pan-y;
   transition: border-color 0.15s ease, transform 0.1s ease;
 }
 

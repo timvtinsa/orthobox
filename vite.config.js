@@ -12,6 +12,36 @@ export default defineConfig({
     include: ['tests/**/*.test.js'],
     environment: 'node',
     restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'json-summary'],
+      // Scoped to the same "logic" surface the suite itself targets: `.jsx`
+      // components and pages render nothing without a DOM, and are checked
+      // in a real browser instead (see the note above), so counting them
+      // here would only dilute the number with code this suite cannot
+      // exercise by design.
+      include: ['src/lib/**/*.js', 'src/hooks/**/*.js', 'src/games/**/*.js'],
+      // A floor, not a target: kept a few points under what the suite
+      // currently reaches, so normal drift (a line or two of a new branch
+      // left untested) does not fail CI, while a real regression — a new
+      // game landing with no logic tests, a gutted test file — still does.
+      // `npm run test:coverage` fails locally the same way CI does.
+      //
+      // These numbers dropped sharply (from 80/85/85/80) with the Vite 7 /
+      // Vitest 5 upgrade, with the exact same suite passing the exact same
+      // assertions: @vitest/coverage-v8 now maps a whole multi-line literal
+      // or arrow function to a single statement instead of one per line, so
+      // a file with one big untested block (typically a React hook's body,
+      // never invoked outside a real render, per the note above) now loses a
+      // much bigger share of a much smaller statement count. Re-floor again
+      // after the next `npm run test:coverage` if the suite grows.
+      thresholds: {
+        statements: 50,
+        lines: 50,
+        functions: 50,
+        branches: 60,
+      },
+    },
   },
   plugins: [
     react(),

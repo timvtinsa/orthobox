@@ -8,6 +8,35 @@ The interface and all game material are in French, since the application is
 built for French-speaking practitioners. The code, the documentation and the
 repository itself are in English.
 
+## Orthobox compared to other French tools
+
+Speech therapists already have French-language options for digital material:
+general school-game sites, subscription rehabilitation platforms, and paid
+tablet apps. Orthobox does not compete on catalogue size; it competes on
+being free, private and usable without a connection. Based on each product's
+own public presentation as of September 2026:
+
+| | Orthobox | [logicieleducatif.fr](https://www.logicieleducatif.fr/) | [HappyNeuron Pro](https://www.happyneuron.com/orthophonie/pro-abonnements-logiciels/) | [DYNSEO](https://www.dynseo.com/) (Coco / Joe / Edith) | [LenaTheo](https://lenatheo.com/) |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| Free | 🟢 | 🟢 | 🔴 from ~59 €/month | 🔴 ~88 € excl. tax/year per tablet | 🔴 ~8.90 €/month¹ |
+| No advertising | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| Works offline, once loaded | 🟢 | 🔴 browser only | 🔴 cloud platform | 🟢 installed tablet app | 🔴 browser only |
+| Built for speech therapy | 🟢 | 🔴 general school exercises | 🟢 | 🟢 | 🟢 |
+| No account or sign-up | 🟢 | 🟢 | 🔴 | 🟢 | 🔴¹ |
+
+¹ LenaTheo offers a small number of games playable free and without an
+account; its full catalogue needs a paid subscription.
+
+Orthobox is the only one of these built specifically for speech therapy that
+also asks for neither payment nor an account, and the only subscription-free
+option that is designed for the clinic rather than for the classroom. It has
+no paid tier and never will: Orthobox stays free and ad-free for every
+practitioner, funded only by whoever chooses to support it.
+
+This table reflects each product's own marketing pages, not a hands-on trial
+of every one of them, and pricing or features may have changed since. If you
+spot something that has changed, an issue or a pull request is welcome.
+
 Games are filed under four domains:
 
 | Domain | What it works on |
@@ -117,6 +146,40 @@ Only the settings travel: no patient, no result, no identifier. A value the
 game itself would not have offered is dropped on the way in, and the game's
 own default takes over for it.
 
+### Sharing a whole session
+
+« Partager la séance », on the session-planning screen, does the same for an
+entire plan: every game in it, in order, with each one's own settings, turns
+into a single link (`#/session/shared?p=...`) and QR code. Handy to hand a
+prepared session to a patient so they can run through the same exercises at
+home — scanning the code opens a short recap of what the session contains,
+never the board directly, and starting it there replaces whatever plan was
+already being prepared on that device.
+
+As with a single game's settings, nothing about a patient or a result
+travels in the link, a step naming a game the catalogue no longer has is
+simply left out, and every setting is re-checked against what the game
+itself allows.
+
+## Installing the PWA
+
+Orthobox installs like a native app, with no app store and no account, and
+then works offline. Short walkthrough (desktop, Android, iPhone/iPad):
+
+![Installing Orthobox on desktop, Android and iOS](docs/install-tutorial.gif)
+
+The full video (with sound-free captions, ~45 s) is at
+[`docs/install-tutorial.mp4`](docs/install-tutorial.mp4). In short:
+
+- **Desktop (Chrome, Edge)** — open the site, click the install icon in the
+  address bar, or « Installer l'application » in the header, and confirm.
+  Orthobox then opens in its own window.
+- **Android (Chrome)** — open the site, tap « Installer l'application » (or
+  the ⋮ menu, then « Ajouter à l'écran d'accueil ») and confirm. An icon is
+  added to the home screen.
+- **iPhone / iPad (Safari)** — open the site, tap the share icon, scroll to
+  « Sur l'écran d'accueil », then confirm with « Ajouter ».
+
 ## Getting started
 
 ```bash
@@ -156,7 +219,16 @@ Concretely, on every landing on `main`:
 1. release-please opens or updates a release pull request, holding the updated
    `CHANGELOG.md` and the new version in `package.json`;
 2. merging that pull request creates the **tag** and the **GitHub release**,
-   then the build is attached to it as an archive.
+   then the build is attached to it as an archive;
+3. a single Claude Code call (the cheap `claude-haiku-4-5` model, billed
+   against a Claude subscription rather than paid API credits) reads the
+   release's commits directly and writes `public/whats-new.json`, a short,
+   French, user-facing summary — never the same text as `CHANGELOG.md`. The
+   app shows it once, in a popup, the first time it runs on a new version
+   (see `src/components/WhatsNew.jsx`). This step reads a
+   `CLAUDE_CODE_OAUTH_TOKEN` repository secret, but never blocks the
+   release: if it fails for any reason, the release still publishes, just
+   without a user-facing changelog that time.
 
 Publishing therefore stays a deliberate act, while being entirely computed
 from the history.
@@ -175,6 +247,17 @@ stick). The base is relative and navigation uses a hash router
 
 On first load, the service worker caches the application: the following
 sessions work without a connection.
+
+**Cloudflare** hosts the same application separately, through Cloudflare's own
+Git integration (Workers Builds) rather than a step in this workflow: it
+deploys `main` as production, and gives every pull request its own preview.
+Workers Builds only ever triggers on branch pushes, though, not on tags, so
+its production **Deploy command** is set to
+`scripts/cloudflare-deploy-if-tagged.sh` rather than the default
+`npx wrangler deploy`: that script only actually deploys when the pushed
+commit on `main` is one release-please just tagged, and skips it otherwise —
+so an ordinary landing on `main` never ships untagged code to production, and
+a Cloudflare production deploy always corresponds to a real GitHub release.
 
 ## Visual choices
 

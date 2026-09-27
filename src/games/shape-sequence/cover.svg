@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une suite de formes colorées à reproduire dans le même ordre">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <path d="M46 40q66-24 132 0" fill="none" stroke="#5b45a0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M164 26l18 10-14 14z" fill="#5b45a0"/>
+  <circle cx="54" cy="120" r="34" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6"/>
+  <rect x="122" y="86" width="68" height="68" rx="10" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <path d="M234 86 L268 154 L200 154 Z" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6" stroke-linejoin="round"/>
+  <rect x="266" y="86" width="40" height="68" rx="10" fill="none" stroke="#5b45a0" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>

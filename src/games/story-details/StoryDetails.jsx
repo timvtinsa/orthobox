@@ -9,24 +9,7 @@ import MultipleChoice from '../../components/MultipleChoice.jsx'
 import Feedback from '../../components/Feedback.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
-import { pick, shuffle } from '../../lib/random.js'
-import { STORIES } from './data.js'
-
-function pickStory(length, previous) {
-  const byLength = STORIES.filter((story) => story.length === length)
-  const pool = byLength.length > 0 ? byLength : STORIES
-  const fresh = pool.filter((story) => story.id !== previous)
-  return pick(fresh.length > 0 ? fresh : pool)
-}
-
-/** The option order is shuffled on every run. */
-function prepareQuestions(story) {
-  return story.questions.map((question) => {
-    const right = question.options[question.answer]
-    const options = shuffle(question.options)
-    return { ...question, options, answer: options.indexOf(right) }
-  })
-}
+import { pickStory, prepareQuestions } from './logic.js'
 
 export default function StoryDetails({ config, session }) {
   const [story, setStory] = useState(() => pickStory(config.length))

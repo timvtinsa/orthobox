@@ -1,0 +1,31 @@
+# Automated dependency-update pull requests. Targets `integ`, like every
+# other change: `main` only receives release-please's own release PR.
+#
+# This does not replace enabling Dependabot alerts and security updates in
+# the repository settings (Settings > Code security) — that toggle needs
+# repository-admin access this file cannot grant, and it is what actually
+# notifies of a known vulnerability. This file only keeps routine version
+# drift from piling up unnoticed.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "integ"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "integ"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"

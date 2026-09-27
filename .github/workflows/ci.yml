@@ -44,8 +44,19 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Tests
-        run: npm test
+      # Runs the same tests as `npm test`, plus the coverage thresholds set
+      # in vite.config.js: a pull request that drops coverage below that
+      # floor fails here, the same way it would locally.
+      - name: Tests, with a coverage floor
+        run: npm run test:coverage
+
+      - name: Keep the coverage report
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage
+          path: coverage
+          retention-days: 7
 
       - name: Build
         run: npm run build

@@ -502,6 +502,32 @@ const DRAWINGS = {
       </>
     ),
   },
+  rooster: {
+    label: 'coq',
+    draw: (
+      <>
+        <ellipse cx="60" cy="112" rx="28" ry="4" fill={INK} opacity=".12" />
+        <path d="M32 62q-16-4-20-20 14 2 22 12z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M30 74q-18 2-26-12 14-2 24 4z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M34 86q-16 6-28-4 13-6 25-2z" fill={C.lavender} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M42 40c18 0 32 14 32 34s-14 34-32 34-30-14-30-32 12-36 30-36z" fill="#fff" stroke={INK} strokeWidth="5" />
+        <path d="M52 42c14 4 22 16 22 32 0 18-14 32-32 32 16 0 26-14 26-32 0-14-6-25-16-32z" fill={INK} opacity=".14" />
+        <path d="M40 66q16-10 26 4-14 12-26-4z" fill="#fff" stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <g className="picto__fine" stroke={INK} strokeWidth="2.5" strokeLinecap="round" opacity=".5">
+          <path d="M46 68l14 2M45 74l15 3M46 80l13 3" />
+        </g>
+        <circle cx="58" cy="34" r="17" fill="#fff" stroke={INK} strokeWidth="5" />
+        <circle cx="49" cy="19" r="6" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <circle cx="58" cy="15" r="7" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <circle cx="67" cy="19" r="6" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <ellipse cx="51" cy="47" rx="5" ry="7" fill={C.peach} stroke={INK} strokeWidth="4" />
+        <path d="M76 32l14 5-14 6z" fill={C.sand} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <circle cx="64" cy="30" r="4" fill={INK} />
+        <path d="M30 104v-14M46 104v-14" stroke={C.sandInk} strokeWidth="6" strokeLinecap="round" />
+        <path d="M24 104l8-4 8 4M40 104l6-4 6 4" fill="none" stroke={C.sandInk} strokeWidth="3.5" strokeLinecap="round" />
+      </>
+    ),
+  },
   gift: {
     label: 'cadeau',
     draw: (
@@ -543,6 +569,93 @@ const DRAWINGS = {
       </>
     ),
   },
+  banana: {
+    label: 'banane',
+    draw: (
+      <>
+        <ellipse cx="62" cy="106" rx="32" ry="4" fill={INK} opacity=".12" />
+        <path d="M30 26C26 80 56 102 94 94c3-6 1-11-4-10-28 4-44-18-44-58 0-6-13-6-16 0z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M46 62c6 20 22 34 44 32 3-6 1-11-4-10-16 2-30-6-40-22z" fill={INK} opacity=".16" />
+        <path d="M30 26c-3-6 1-10 8-8" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+      </>
+    ),
+  },
+  grapes: {
+    label: 'raisin',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="24" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 44V26" stroke={C.sandInk} strokeWidth="5" strokeLinecap="round" />
+        <path d="M62 30q16-16 28-6-6 16-28 6z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <circle cx="42" cy="52" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="78" cy="52" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="60" cy="50" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="50" cy="72" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="70" cy="72" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <circle cx="60" cy="90" r="13" fill={C.lavender} stroke={INK} strokeWidth="4.5" />
+        <g className="picto__fine">
+          <path d="M84 48a13 13 0 0 1-6 16 13 13 0 0 0 6-16z" fill={INK} opacity=".2" />
+          <path d="M76 68a13 13 0 0 1-6 16 13 13 0 0 0 6-16z" fill={INK} opacity=".2" />
+        </g>
+      </>
+    ),
+  },
+  leek: {
+    label: 'poireau',
+    draw: (
+      <>
+        <ellipse cx="60" cy="110" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M58 56C42 46 30 30 22 12c20 2 34 20 38 42z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M62 56C78 46 90 30 98 12c-20 2-34 20-38 42z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 54c-4-14-4-28-2-42 8 12 10 28 6 42z" fill={C.sage} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M42 52h36v30c0 14-8 22-18 22s-18-8-18-22z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M62 52h16v30c0 14-8 22-18 22 10 0 14-8 14-22z" fill={INK} opacity=".14" />
+        <g className="picto__fine" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".45">
+          <path d="M53 104v6M60 106v6M67 104v6" />
+        </g>
+      </>
+    ),
+  },
+  lemon: {
+    label: 'citron',
+    draw: (
+      <>
+        <ellipse cx="60" cy="104" rx="30" ry="4" fill={INK} opacity=".12" />
+        <path d="M84 46c8-6 13-4 12 3-1 5-7 8-14 7z" fill={C.sand} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+        <ellipse cx="58" cy="66" rx="33" ry="25" fill={C.sand} stroke={INK} strokeWidth="5" />
+        <path d="M62 41c16 2 29 12 29 25s-13 23-29 25c12-4 20-13 20-25s-8-21-20-25z" fill={INK} opacity=".16" />
+        <path d="M44 38q10-14 22-8-6 14-22 8z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  eggplant: {
+    label: 'aubergine',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M60 36c15 0 23 11 25 24 2 12 5 18 5 26 0 16-14 26-30 26s-30-10-30-26c0-8 3-14 5-26 2-13 10-24 25-24z" fill={C.lavender} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M66 38c12 3 18 13 19 22 2 12 5 18 5 26 0 16-14 26-30 26 14-4 22-13 22-26 0-8-2-16-4-26-2-9-5-17-12-22z" fill={INK} opacity=".16" />
+        <path d="M60 22v16" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <path d="M60 38c-12 0-18-6-20-14 10-2 16 2 20 8 4-6 10-10 20-8-2 8-8 14-20 14z" fill={C.sage} stroke={INK} strokeWidth="4.5" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  mushroom: {
+    label: 'champignon',
+    draw: (
+      <>
+        <ellipse cx="60" cy="108" rx="26" ry="4" fill={INK} opacity=".12" />
+        <path d="M43 62h34v24c0 13-7 18-17 18s-17-5-17-18z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M63 62h14v24c0 13-7 18-17 18 9 0 12-6 12-18z" fill={INK} opacity=".14" />
+        <path d="M24 64c0-26 16-42 36-42s36 16 36 42z" fill={C.peach} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 22c20 0 36 16 36 42H74c0-22-5-35-14-42z" fill={INK} opacity=".16" />
+        <g className="picto__fine">
+          <ellipse cx="44" cy="44" rx="6" ry="4" fill="#fff" opacity=".6" transform="rotate(-25 44 44)" />
+          <ellipse cx="62" cy="36" rx="5" ry="3" fill="#fff" opacity=".5" transform="rotate(-10 62 36)" />
+        </g>
+      </>
+    ),
+  },
   cheese: {
     label: 'fromage',
     draw: (
@@ -578,6 +691,68 @@ const DRAWINGS = {
         <g className="picto__fine" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".4">
           <path d="M60 46l14 8M60 64l16 8M60 46l-14 8M60 64l-16 8" />
         </g>
+      </>
+    ),
+  },
+  tap: {
+    label: 'robinet',
+    draw: (
+      <>
+        <ellipse cx="60" cy="112" rx="24" ry="4" fill={INK} opacity=".12" />
+        <path d="M40 100q20 8 40 0" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".25" />
+        <path d="M44 92q16 6 32 0" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" opacity=".2" />
+        <rect x="36" y="16" width="26" height="18" rx="5" fill={C.blue} stroke={INK} strokeWidth="5" />
+        <path d="M50 16v18" stroke={INK} strokeWidth="4" opacity=".18" />
+        <circle cx="30" cy="25" r="9" fill={C.blue} stroke={INK} strokeWidth="4.5" />
+        <path d="M62 25h10a16 16 0 0 1 16 16v14" fill="none" stroke={INK} strokeWidth="13" strokeLinecap="round" />
+        <path d="M62 25h10a16 16 0 0 1 16 16v14" fill="none" stroke={C.blue} strokeWidth="9" strokeLinecap="round" />
+        <path d="M90 56c0 7-6 7-6 0 0-5 3-9 3-9s3 4 3 9z" fill={C.blue} stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
+        <path d="M90 78c0 8-7 8-7 0 0-6 3.5-10 3.5-10s3.5 4 3.5 10z" fill={C.blue} stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  horn: {
+    label: 'klaxon',
+    draw: (
+      <>
+        <ellipse cx="58" cy="106" rx="32" ry="4" fill={INK} opacity=".12" />
+        <path d="M18 71a9 6 0 0 1 9-6h1v28h-1a9 6 0 0 1-9-6z" fill={C.sandInk} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M28 65L88 47V107L28 89Z" fill={C.sand} stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M28 89L88 107V77L28 89Z" fill={INK} opacity=".15" />
+        <ellipse cx="88" cy="77" rx="8" ry="30" fill={C.sandInk} stroke={INK} strokeWidth="5" />
+        <ellipse cx="88" cy="77" rx="4" ry="24" fill={INK} opacity=".25" />
+        <path d="M102 58q16 19 0 38" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+        <path d="M111 48q26 29 0 58" fill="none" stroke={INK} strokeWidth="4" strokeLinecap="round" opacity=".7" />
+      </>
+    ),
+  },
+  glass: {
+    label: 'verre',
+    draw: (
+      <>
+        <ellipse cx="58" cy="108" rx="22" ry="4" fill={INK} opacity=".12" />
+        <path d="M40 30h40l-6 66a4 4 0 0 1-4 4H50a4 4 0 0 1-4-4z" fill="#fff" stroke={INK} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M60 30h20l-6 66a4 4 0 0 1-4 4h-6z" fill={INK} opacity=".12" />
+        <path d="M43 54h34" stroke={C.blue} strokeWidth="7" strokeLinecap="round" opacity=".5" />
+        <ellipse cx="60" cy="30" rx="20" ry="5" fill="#eaf2fb" stroke={INK} strokeWidth="5" />
+        <g className="picto__fine">
+          <path d="M92 18L95 25L102 27L95 29L92 36L89 29L82 27L89 25Z" fill={INK} opacity=".55" />
+          <path d="M78 8L79.5 12L83.5 13L79.5 14L78 18L76.5 14L72.5 13L76.5 12Z" fill={INK} opacity=".4" />
+        </g>
+      </>
+    ),
+  },
+  doorbell: {
+    label: 'sonnette',
+    draw: (
+      <>
+        <ellipse cx="55" cy="112" rx="24" ry="4" fill={INK} opacity=".12" />
+        <rect x="34" y="30" width="34" height="56" rx="10" fill={C.peach} stroke={INK} strokeWidth="5" />
+        <path d="M50 30h18a10 10 0 0 1 10 10v36a10 10 0 0 1-10 10H50z" fill={INK} opacity=".14" />
+        <circle cx="51" cy="58" r="11" fill="#fff" stroke={INK} strokeWidth="5" />
+        <circle cx="51" cy="58" r="4" fill={C.peachInk} />
+        <path d="M76 46q14 12 0 24" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
+        <path d="M84 38q22 20 0 40" fill="none" stroke={INK} strokeWidth="4.5" strokeLinecap="round" />
       </>
     ),
   },

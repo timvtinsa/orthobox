@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une chaîne de dominos illustrés à prolonger">
+  <rect width="320" height="200" fill="#f0ecfa"/>
+  <path d="M158 46q30-18 60 0" fill="none" stroke="#5b45a0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M218 36l16 12-16 10z" fill="#5b45a0"/>
+  <rect x="12" y="72" width="88" height="56" rx="10" fill="#fff" stroke="#5b45a0" stroke-width="6"/>
+  <line x1="56" y1="72" x2="56" y2="128" stroke="#5b45a0" stroke-width="4"/>
+  <rect x="116" y="72" width="88" height="56" rx="10" fill="#cdc3ec" stroke="#5b45a0" stroke-width="6"/>
+  <line x1="160" y1="72" x2="160" y2="128" stroke="#5b45a0" stroke-width="4"/>
+  <rect x="220" y="72" width="88" height="56" rx="10" fill="none" stroke="#5b45a0" stroke-width="6" stroke-dasharray="14 12"/>
+  <line x1="264" y1="72" x2="264" y2="128" stroke="#5b45a0" stroke-width="4" stroke-dasharray="6 6"/>
+</svg>

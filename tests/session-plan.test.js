@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest'
-import { createStep, moveItem, successRate } from '../src/lib/session-plan.js'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { installStorage, removeStorage } from './fake-storage.js'
+import {
+  createStep,
+  moveItem,
+  readSessionPlan,
+  successRate,
+  summariseConfig,
+  writeSessionPlan,
+} from '../src/lib/session-plan.js'
 
 describe('step ordering', () => {
   const list = ['a', 'b', 'c', 'd']
@@ -42,5 +50,59 @@ describe('success rate', () => {
   it('stays undefined without any attempt', () => {
     expect(successRate({ correct: 0, attempts: 0 })).toBeNull()
     expect(successRate(null)).toBeNull()
+  })
+})
+
+describe('reading and writing the plan', () => {
+  beforeEach(() => installStorage())
+  afterEach(removeStorage)
+
+  it('starts empty', () => {
+    expect(readSessionPlan()).toEqual([])
+  })
+
+  it('reads back exactly what it wrote', () => {
+    const steps = [createStep('stroop', { rounds: 8 })]
+    writeSessionPlan(steps)
+    expect(readSessionPlan()).toEqual(steps)
+  })
+
+  it('falls back to an empty plan for anything that is not a list', () => {
+    window.localStorage.setItem('orthobox:session-plan', JSON.stringify({ not: 'a list' }))
+    expect(readSessionPlan()).toEqual([])
+  })
+})
+
+describe('summariseConfig', () => {
+  const game = {
+    settings: [
+      { id: 'rounds', type: 'number', label: 'Essais', default: 10, unit: null, suffix: null },
+      {
+        id: 'task',
+        type: 'choice',
+        label: 'Tâche',
+        default: 'place',
+        options: [
+          { id: 'place', label: 'Placer' },
+          { id: 'read', label: 'Lire' },
+        ],
+      },
+    ],
+  }
+
+  it('reads a game with no settings as having none', () => {
+    expect(summariseConfig({ settings: [] }, {})).toBe('Aucun réglage')
+  })
+
+  it('summarises every field it can read', () => {
+    expect(summariseConfig(game, { rounds: 8, task: 'read' })).toBe('essais : 8 · Lire')
+  })
+
+  it('reads an all-default config as having no changes to report', () => {
+    expect(summariseConfig(game, {})).toBe('Réglages par défaut')
+  })
+
+  it('leaves out a field a later version of the game no longer declares', () => {
+    expect(summariseConfig(game, { rounds: 8, ghost: 'field' })).toBe('essais : 8')
   })
 })

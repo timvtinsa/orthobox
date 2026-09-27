@@ -41,6 +41,16 @@ export default {
         { id: 'four', label: '4', hint: 'La mémoire de travail est vraiment sollicitée.' },
       ],
     },
+    {
+      id: 'showLabels',
+      type: 'choice',
+      label: 'Noms des formes',
+      default: 'shown',
+      options: [
+        { id: 'shown', label: 'Affichés', hint: 'Le nom accompagne chaque forme.' },
+        { id: 'hidden', label: 'Masqués', hint: 'Seul le dessin de la forme reste visible.' },
+      ],
+    },
   ],
   component: lazy(() => import('./FollowInstructions.jsx')),
 }

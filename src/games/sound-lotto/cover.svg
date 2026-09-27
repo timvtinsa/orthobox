@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Un plateau d’images à retrouver au son">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <path d="M150 46 L166 46 L182 32 L182 80 L166 66 L150 66 Z" fill="#f6bdab" stroke="#a44a28" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M196 38q12 18 0 36" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M208 28q22 28 0 56" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <rect x="60" y="110" width="60" height="60" rx="10" fill="#fff" stroke="#a44a28" stroke-width="6"/>
+  <rect x="130" y="110" width="60" height="60" rx="10" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <rect x="200" y="110" width="60" height="60" rx="10" fill="none" stroke="#a44a28" stroke-width="6" stroke-dasharray="14 12"/>
+</svg>
