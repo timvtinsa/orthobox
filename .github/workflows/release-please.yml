@@ -9,10 +9,13 @@
 # The same build is then reused for everything downstream, so the downloadable
 # archive and every hosted copy can never drift apart: it is attached to the
 # GitHub release and published to GitHub Pages. Along the way, a single call
-# to Claude turns the release's commits into a short, French, user-facing
-# changelog (see "Build the user-facing changelog" below) — the in-app
-# "what's new" popup reads it, and it is never the same text as the
-# technical CHANGELOG.md above.
+# to Claude (the cheap `claude-haiku-4-5`) turns the release's commits into a
+# short, French, user-facing changelog (see "Build the user-facing
+# changelog" below) — the in-app "what's new" popup reads it, and it is
+# never the same text as the technical CHANGELOG.md above. That step never
+# blocks the release: without a working ANTHROPIC_API_KEY, or on any other
+# failure, the release still publishes, just without a user-facing
+# changelog that time.
 #
 # Cloudflare is deployed separately, by Cloudflare's own git integration
 # (production branch: main), not from here: it already gives every other

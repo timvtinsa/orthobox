@@ -17,6 +17,12 @@
  * GH_TOKEN + GH_REPO, if set, also update the GitHub release notes through
  * `gh`; without them the script only writes the JSON file, which is what a
  * local dry run wants.
+ *
+ * A release must never be blocked by this step: if the Claude call fails for
+ * any reason (missing or invalid API key, rate limit, network error), the
+ * script logs a warning and exits successfully without writing
+ * `whats-new.json` — the release still publishes, just without a
+ * user-facing changelog this time.
  */
 import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
@@ -27,7 +33,9 @@ import { z } from 'zod'
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const MODEL = 'claude-opus-5'
+// The cheap tier: this is a short summarisation call, not one that needs
+// Opus-level reasoning.
+const MODEL = 'claude-haiku-4-5'
 
 const HighlightsSchema = z.object({
   highlights: z.array(z.string()),
@@ -84,7 +92,7 @@ export async function generateHighlights(commits) {
     model: MODEL,
     max_tokens: 4096,
     system: SYSTEM_PROMPT,
-    output_config: { effort: 'low', format: zodOutputFormat(HighlightsSchema) },
+    output_config: { format: zodOutputFormat(HighlightsSchema) },
     messages: [{ role: 'user', content: buildPrompt(commits) }],
   })
 
@@ -100,7 +108,15 @@ async function main() {
   const version = newTag.replace(/^v/, '')
 
   const commits = commitLog(newTag, previousTag(newTag))
-  const highlights = await generateHighlights(commits)
+
+  let highlights
+  try {
+    highlights = await generateHighlights(commits)
+  } catch (error) {
+    // See the file-level doc comment: this must not fail the release.
+    console.warn(`Could not generate the user-facing changelog: ${error.message}`)
+    return
+  }
 
   writeFileSync(
     resolve(ROOT, 'public/whats-new.json'),

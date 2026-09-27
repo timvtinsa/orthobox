@@ -313,18 +313,22 @@ the release and the hosted copy are provably the same build.
 
 Right after the tag is created, `scripts/build-user-changelog.mjs` reads the
 release's commits (`git log <previous tag>..<new tag> --no-merges`) and asks
-Claude (`claude-opus-5`, one call, structured output via `zodOutputFormat`)
-to turn them into a short, French, user-facing summary — judging which
-commits a user would actually notice (a new game, a visible fix) versus
-which are purely internal (a dependency bump, a refactor) is exactly the
-kind of call a mechanical rule handles poorly. The result is written to
+Claude (`claude-haiku-4-5` — a short summarisation call, no need for a more
+expensive model — one call, structured output via `zodOutputFormat`) to turn
+them into a short, French, user-facing summary — judging which commits a
+user would actually notice (a new game, a visible fix) versus which are
+purely internal (a dependency bump, a refactor) is exactly the kind of call
+a mechanical rule handles poorly. The result is written to
 `public/whats-new.json` (gitignored: meaningful only inside the build that
 just generated it) and read once by `src/components/WhatsNew.jsx`, which
 shows it in a popup the first time the app runs on a version different from
 the one recorded in `localStorage`. The same highlights are also prepended
-to the GitHub release notes. This step needs an `ANTHROPIC_API_KEY`
-repository secret; without it the build fails at that step rather than
-publishing a release with no user-facing changelog.
+to the GitHub release notes. This step reads an `ANTHROPIC_API_KEY`
+repository secret, but never blocks the release: if the call fails for any
+reason (the secret missing or invalid, a rate limit, a network error), the
+script logs a warning and exits successfully without writing
+`whats-new.json` — the release still publishes, just without a user-facing
+changelog that time.
 
 `wrangler.jsonc` is unrelated to that release process: it only configures a
 Cloudflare Workers project, connected directly to this repository through
