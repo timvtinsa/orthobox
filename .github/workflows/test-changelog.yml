@@ -6,6 +6,12 @@ name: Test changelog generation
 
 on:
   workflow_dispatch:
+  # workflow_dispatch alone can't be triggered via the API until the
+  # workflow file exists on the default branch — this branch-scoped push
+  # trigger is what actually lets a dry run happen from a feature branch.
+  push:
+    branches: [feat/whats-new-popup]
+    paths: [.github/workflows/test-changelog.yml]
 
 permissions:
   contents: read
