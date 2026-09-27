@@ -219,7 +219,13 @@ Concretely, on every landing on `main`:
 1. release-please opens or updates a release pull request, holding the updated
    `CHANGELOG.md` and the new version in `package.json`;
 2. merging that pull request creates the **tag** and the **GitHub release**,
-   then the build is attached to it as an archive.
+   then the build is attached to it as an archive;
+3. a single call to Claude (`scripts/build-user-changelog.mjs`) reads the
+   release's commits and writes `public/whats-new.json`, a short, French,
+   user-facing summary — never the same text as `CHANGELOG.md`. The app shows
+   it once, in a popup, the first time it runs on a new version (see
+   `src/components/WhatsNew.jsx`). This step needs an `ANTHROPIC_API_KEY`
+   repository secret.
 
 Publishing therefore stays a deliberate act, while being entirely computed
 from the history.

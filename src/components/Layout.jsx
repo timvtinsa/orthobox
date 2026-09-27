@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import BrandMark from './BrandMark.jsx'
 import DonateButton from './DonateButton.jsx'
 import UpdatePrompt from './UpdatePrompt.jsx'
+import WhatsNew from './WhatsNew.jsx'
 import InstallButton from './InstallButton.jsx'
 import ModeSwitch from './ModeSwitch.jsx'
 import { version } from '../../package.json'
@@ -51,6 +52,7 @@ export default function Layout() {
       </footer>
 
       <UpdatePrompt />
+      <WhatsNew />
     </div>
   )
 }

@@ -311,6 +311,21 @@ once more and publishes that same `dist/` to GitHub Pages
 to the `pages`/`id-token` permissions it alone needs), so the zip attached to
 the release and the hosted copy are provably the same build.
 
+Right after the tag is created, `scripts/build-user-changelog.mjs` reads the
+release's commits (`git log <previous tag>..<new tag> --no-merges`) and asks
+Claude (`claude-opus-5`, one call, structured output via `zodOutputFormat`)
+to turn them into a short, French, user-facing summary — judging which
+commits a user would actually notice (a new game, a visible fix) versus
+which are purely internal (a dependency bump, a refactor) is exactly the
+kind of call a mechanical rule handles poorly. The result is written to
+`public/whats-new.json` (gitignored: meaningful only inside the build that
+just generated it) and read once by `src/components/WhatsNew.jsx`, which
+shows it in a popup the first time the app runs on a version different from
+the one recorded in `localStorage`. The same highlights are also prepended
+to the GitHub release notes. This step needs an `ANTHROPIC_API_KEY`
+repository secret; without it the build fails at that step rather than
+publishing a release with no user-facing changelog.
+
 `wrangler.jsonc` is unrelated to that release process: it only configures a
 Cloudflare Workers project, connected directly to this repository through
 Cloudflare's own Git integration (Workers Builds), that deploys a preview of
