@@ -1,5 +1,72 @@
 # Changelog
 
+## [0.5.0](https://github.com/timvtinsa/orthobox/compare/v0.4.0...v0.5.0) (2026-09-27)
+
+
+### Features
+
+* **audio:** add real sound recordings for « La suite de sons » ([a1705ea](https://github.com/timvtinsa/orthobox/commit/a1705eacda0ccf764b8b5b19179caa5dd5e53697))
+* **audio:** add real sound recordings for « La suite de sons » ([84c7708](https://github.com/timvtinsa/orthobox/commit/84c770816b28bae5d86e13e9f5d412d2d97fc0d1))
+* **audio:** add the rooster as a sixth animal ([f0c39e6](https://github.com/timvtinsa/orthobox/commit/f0c39e650b4d025045e8a2ab0307d0994f3057a9))
+* **ci:** fail the build on a coverage regression ([36b7e7e](https://github.com/timvtinsa/orthobox/commit/36b7e7ebe4b089b2d39a351b7e4f7a3bf0cabf18))
+* **dice-sum:** throw the dice as a real 3D cube, drop the display setting ([97b262d](https://github.com/timvtinsa/orthobox/commit/97b262d19374d3c77ab667fa952d54e48fbaedd7))
+* **donate:** warm up the closing line, inviting support ([86a8c70](https://github.com/timvtinsa/orthobox/commit/86a8c70d5ed3e63a74fd68e8d66d719e8e23661e))
+* **follow-instructions:** add a setting to hide shape names ([8fb95dc](https://github.com/timvtinsa/orthobox/commit/8fb95dc54c75358d69f2095e06ef237ffcd0c44e))
+* **follow-instructions:** add a setting to hide shape names ([c1f6989](https://github.com/timvtinsa/orthobox/commit/c1f6989af3ae1cb1db20afb71306a10825f0df22))
+* **games:** add « La somme des dés », a throw-and-add game ([e23f673](https://github.com/timvtinsa/orthobox/commit/e23f673d9e1952b51892fc4dc97e336e9ce5276f))
+* **games:** add « La somme des dés », a throw-and-add game ([5f6a56b](https://github.com/timvtinsa/orthobox/commit/5f6a56ba28d003a8a6bdd222722ba53922c23166))
+* **games:** add « La suite de formes », a shape-and-colour memory sequence ([6e97c38](https://github.com/timvtinsa/orthobox/commit/6e97c380cb57f88d61d78c5892235e3fc8df3523))
+* **games:** add « Le domino des images », a picture-domino chain game ([5e6dfa7](https://github.com/timvtinsa/orthobox/commit/5e6dfa7fca9e48e8f0dca108aadf3786d3663663))
+* **games:** add « Le loto sonore », a hear-the-word picture game ([c353887](https://github.com/timvtinsa/orthobox/commit/c353887d261b8ab7e5cb986cdba816eeb8bf3f6e))
+* **games:** add « Le panier du marché », a reproduce-the-order game ([bab67d2](https://github.com/timvtinsa/orthobox/commit/bab67d2874ae81d1d1f6280d58cdd79ab6e43d6c))
+* **games:** add « Le panier du marché », a reproduce-the-order game ([fa7b9da](https://github.com/timvtinsa/orthobox/commit/fa7b9daefc16c2cfce51c606d0a300acd405ccd3))
+* **games:** add La suite de formes, a shape-and-colour memory sequence ([3d7821c](https://github.com/timvtinsa/orthobox/commit/3d7821c8ec2d06d14ae6e2a3c0b864b6b90a1162))
+* **games:** add Le domino des images, a picture-domino chain game ([1ef18c5](https://github.com/timvtinsa/orthobox/commit/1ef18c5bf173f785f87932c280bea1a2b5b53301))
+* **games:** add Le loto sonore, a hear-the-word picture game ([605222a](https://github.com/timvtinsa/orthobox/commit/605222a168ce9dfcf41422eb558789e0eb4eedbd))
+* **layout:** add a discreet donate button and support popup ([4a9e667](https://github.com/timvtinsa/orthobox/commit/4a9e6673a4921951cd25c1e80d82a3b4075e6634))
+* **layout:** add a discreet donate button and support popup ([babb3b7](https://github.com/timvtinsa/orthobox/commit/babb3b71bf0f2e4fb7406fab0c60cc183ae84835))
+* **layout:** show the app version discreetly in the footer ([f515be3](https://github.com/timvtinsa/orthobox/commit/f515be37b5384e1c9421603f66a49dfc6fe65219))
+* **layout:** show the app version discreetly in the footer ([551e6e1](https://github.com/timvtinsa/orthobox/commit/551e6e1088ac0e04fa14f407a5de8dd1e2b9130d))
+* **release:** show a French, user-facing changelog after an update ([6cbfbf0](https://github.com/timvtinsa/orthobox/commit/6cbfbf01efbb01d706c136839ca8532831f5df8c))
+* **release:** show a French, user-facing changelog after an update ([2dc4ab9](https://github.com/timvtinsa/orthobox/commit/2dc4ab94150ff7e1bea2887423c1689429a308f6))
+* **session:** share a whole session by QR code or link ([6bc5db5](https://github.com/timvtinsa/orthobox/commit/6bc5db56b4d11dffc403d6580af84466b4290e68))
+* **session:** share a whole session by QR code or link ([feeeeab](https://github.com/timvtinsa/orthobox/commit/feeeeabe4d17a12f6010339040b5c083c35350fe))
+* **sound-lotto:** add a button to replay the word after answering ([739bf3f](https://github.com/timvtinsa/orthobox/commit/739bf3fbae8b9b93dcfd58e5c0d8d4da6cb720b1))
+
+
+### Bug fixes
+
+* **audio:** give « l’eau qui coule » its own pictogram ([15129da](https://github.com/timvtinsa/orthobox/commit/15129da0ed4aabf1dd11a8c5253a750fa8b65275))
+* **build:** deploy to cloudflare as a static-assets worker ([d95d3ec](https://github.com/timvtinsa/orthobox/commit/d95d3ecafa54827d472614fc7545bf3dafc5bfcb))
+* **build:** deploy to cloudflare as a static-assets worker ([45af8c8](https://github.com/timvtinsa/orthobox/commit/45af8c85a04e491a689c8da8a8a7ffefb43a73ea))
+* **build:** drop the GitHub Actions Cloudflare deploy step ([8198e37](https://github.com/timvtinsa/orthobox/commit/8198e376b3d2d9ff0544db42a5906606a4cc864a))
+* **build:** drop the GitHub Actions Cloudflare deploy step ([d1d68d7](https://github.com/timvtinsa/orthobox/commit/d1d68d762dbe55e97a203b7da157db36579777b2))
+* **ci:** pass the release tag through env rather than inline ([8cd1956](https://github.com/timvtinsa/orthobox/commit/8cd19561c6f213114efd0288310c8874804e2218))
+* **dice-sum:** slow the 3D tumble down ([a7dee60](https://github.com/timvtinsa/orthobox/commit/a7dee60bda3676352311cde3ee41e757caf383d0))
+* **market-basket:** drop the quantities toggle, widen it to 1-5, hide the timer ([3e25332](https://github.com/timvtinsa/orthobox/commit/3e25332791eb5028e970092b502b1d6eeac4d1cf))
+* **market-basket:** show the count badge for a single item too ([831aebd](https://github.com/timvtinsa/orthobox/commit/831aebd213eaf0d60efd52115e6aeb81b15395cc))
+* **release:** call Claude Code with a subscription, not paid API credits ([235afbd](https://github.com/timvtinsa/orthobox/commit/235afbd07ef015298ad5900bd5085f818a50e359))
+* **release:** use the cheap Claude model, never block the release ([4833efa](https://github.com/timvtinsa/orthobox/commit/4833efac357f97c2d3888cd9c776c2e178a220cc))
+* **responsive:** keep the header title and long prompts readable on a phone ([47b37b7](https://github.com/timvtinsa/orthobox/commit/47b37b7b5eaf391d46ee5617900d0a4963e477b1))
+* **responsive:** keep the header title and long prompts readable on a phone ([5091470](https://github.com/timvtinsa/orthobox/commit/5091470546e412e549f496129b953d02ec34b104))
+* **session:** let a phone scroll the game catalogue while dragging is active ([cc7a549](https://github.com/timvtinsa/orthobox/commit/cc7a549a0102f8ac43aee047588db6c4324bdebd))
+* **session:** let a phone scroll the game catalogue while dragging is active ([79aadec](https://github.com/timvtinsa/orthobox/commit/79aadecc63d73feaa843b8f396cc151be3212d6e))
+* **sounds:** differentiate bell/doorbell, horn/engine and glass/cup icons ([d46f41b](https://github.com/timvtinsa/orthobox/commit/d46f41b878b7f0de2d0f0afd16a83dbc0eae5bfc))
+
+
+### Internal refactors
+
+* **shape-sequence:** memorise then reconstitute, instead of Simon-says ([ee716cb](https://github.com/timvtinsa/orthobox/commit/ee716cbfa39943824bb61ad1968b8b8f256849a6))
+
+
+### Documentation
+
+* fix a stale .gitignore comment ([fa72010](https://github.com/timvtinsa/orthobox/commit/fa72010e7362af69329382733b0785d273b617e7))
+* **readme:** add a PWA install walkthrough (video + GIF) ([44bd013](https://github.com/timvtinsa/orthobox/commit/44bd013390bc8c2003d7da7bf2165e9b47e24f09))
+* **readme:** add a PWA install walkthrough (video + GIF) ([61a22aa](https://github.com/timvtinsa/orthobox/commit/61a22aaaed3ffcf308c6e837fa9025c0a0c3c1a1))
+* **readme:** compare Orthobox to French speech-therapy software ([6ed57e7](https://github.com/timvtinsa/orthobox/commit/6ed57e7d0e30b5e7fed1a1b20c0b18bdce683543))
+* **readme:** compare Orthobox to French speech-therapy software ([389875d](https://github.com/timvtinsa/orthobox/commit/389875d28d40342d6b4d1b55766424cd9b2208ae))
+
 ## [0.4.0](https://github.com/timvtinsa/orthobox/compare/v0.3.0...v0.4.0) (2026-09-19)
 
 
