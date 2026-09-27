@@ -8,9 +8,14 @@
 #
 # The same build is then reused for everything downstream, so the downloadable
 # archive and every hosted copy can never drift apart: it is attached to the
-# GitHub release, published to GitHub Pages, and deployed to Cloudflare
-# (`wrangler.jsonc` describes it as a static-assets Worker, so this is the
-# only place that needs to know how to publish it there).
+# GitHub release and published to GitHub Pages.
+#
+# Cloudflare is deployed separately, by Cloudflare's own git integration
+# (production branch: main), not from here: it already gives every other
+# branch and pull request its own preview deployment for free, which a
+# release-only step in this workflow cannot reproduce. `wrangler.jsonc`
+# is what makes that pipeline work (it stops Wrangler from trying to
+# auto-configure a Cloudflare Vite plugin integration, which needs Vite 6+).
 name: Release
 
 on:
@@ -92,20 +97,6 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
-
-      # Deploys the same `dist/` straight from here, rather than relying on
-      # Cloudflare's own build pipeline: that pipeline tries to auto-detect a
-      # Cloudflare Vite plugin integration, which needs Vite 6+ and fails on
-      # this project's Vite 5. Driving `wrangler deploy` ourselves, with the
-      # explicit static-assets config in `wrangler.jsonc`, sidesteps that
-      # detection entirely.
-      - name: Deploy to Cloudflare
-        if: ${{ steps.release.outputs.release_created }}
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
 
   # A separate job so the deployment gets its own `github-pages` environment
   # (the URL shown on the commit and in the repository's Environments tab),
