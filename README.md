@@ -248,6 +248,17 @@ stick). The base is relative and navigation uses a hash router
 On first load, the service worker caches the application: the following
 sessions work without a connection.
 
+**Cloudflare** hosts the same application separately, through Cloudflare's own
+Git integration (Workers Builds) rather than a step in this workflow: it
+deploys `main` as production, and gives every pull request its own preview.
+Workers Builds only ever triggers on branch pushes, though, not on tags, so
+its production **Deploy command** is set to
+`scripts/cloudflare-deploy-if-tagged.sh` rather than the default
+`npx wrangler deploy`: that script only actually deploys when the pushed
+commit on `main` is one release-please just tagged, and skips it otherwise —
+so an ordinary landing on `main` never ships untagged code to production, and
+a Cloudflare production deploy always corresponds to a real GitHub release.
+
 ## Visual choices
 
 - **Pastel palette**: four domain tints (peach, sage, lavender, sand) over a

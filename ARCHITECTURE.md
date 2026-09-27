@@ -353,3 +353,16 @@ default command Workers Builds runs on every branch that is not the
 production one — refuses to run at all without a `previews` block, empty
 here because the site has no bindings, vars or secrets a preview would need
 to isolate from production.
+
+Workers Builds itself triggers on every push to `main`, not only on a tag
+(it has no notion of a tag-based trigger at all) — but a Cloudflare
+production deploy should still only ever correspond to a real release, not
+to every commit release-please's own automation lands on `main`. Rather than
+the default `npx wrangler deploy`, `main`'s production trigger therefore has
+its **Deploy command** (Workers & Pages > Settings > Build) set to
+`scripts/cloudflare-deploy-if-tagged.sh`: it checks whether the checked-out
+commit is one of the repository's tags (`git ls-remote --tags origin`,
+matched against `git rev-parse HEAD`) and only runs `wrangler deploy` when it
+is, exiting successfully without deploying otherwise. This setting lives in
+the Cloudflare dashboard, not in this repository, so it has to be applied by
+hand there once.
