@@ -1,5 +1,5 @@
 /**
- * The guarantee « Le loto sonore » needs: the board never repeats a
+ * The guarantee « Le loto des mots » needs: the board never repeats a
  * picture, and the call order is exactly the board, so every picture is
  * called exactly once.
  */

@@ -1,5 +1,5 @@
 /**
- * Sound lotto: hear a word, find its picture on the board.
+ * Word lotto: hear a word, find its picture on the board.
  *
  * The word is never written on screen, only spoken: the board is a pure
  * listening exercise, not a reading one. Every picture is called exactly
