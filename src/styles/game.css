@@ -170,6 +170,20 @@
   font-weight: 800;
 }
 
+/* The market basket's quantity, not a rank: reads better centred under the
+   item than as a corner badge easy to miss, and "×4" is unambiguous where a
+   bare "4" could pass for the item itself. Static positioning also frees the
+   top-right corner for the correction mark alone, so there is no longer a
+   left/right swap to keep the two apart. */
+.token__rank--quantity {
+  position: static;
+  min-width: 0;
+  height: auto;
+  margin-top: 2px;
+  padding: 1px 7px;
+  border-radius: var(--radius-lg);
+}
+
 .token-row {
   display: flex;
   gap: 12px;
@@ -2298,11 +2312,4 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-faint);
-}
-
-/* Le marqueur d'état occupe le même angle que le compteur : décalé à
-   gauche, la quantité attendue reste lisible pendant la correction. */
-.token__rank--left {
-  right: auto;
-  left: -8px;
 }
