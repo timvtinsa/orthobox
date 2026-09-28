@@ -1,12 +1,17 @@
 /**
- * Number order: click a series of numbers in order.
+ * Number order: drag (or tap) a series of numbers onto a frieze, in order.
  *
  * A series only counts as correct when it is finished without a single
- * mistake, which tells a mastered ordering apart from trial and error.
+ * mistake, which tells a mastered ordering apart from trial and error. The
+ * frieze always lays its empty slots out in the order asked, left to right,
+ * so placing a number there — by drag or by tap — doubles as the visual the
+ * feedback asked for: the growing (or shrinking) line the patient is
+ * building.
  */
 import { useRef, useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
+import { useDragToZone } from '../../hooks/useDragToZone.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { sample, shuffle } from '../../lib/random.js'
 
@@ -72,6 +77,10 @@ export default function NumberOrder({ config, session }) {
     }
   }
 
+  // Re-created every render, on purpose: it must always call the latest
+  // `onPick`, which itself closes over the current round.
+  const { drag, over, zone, start } = useDragToZone({ onDrop: (payload) => onPick(payload.value) })
+
   const resetRound = () => {
     placedRef.current = []
     doneRef.current = false
@@ -109,29 +118,58 @@ export default function NumberOrder({ config, session }) {
         Suite {rounds.round + 1} sur {rounds.total}
       </p>
       <p className="game-prompt">
-        Clique sur les nombres dans l’ordre {round.order}
+        Fais glisser les nombres sur la frise, dans l’ordre {round.order}
       </p>
 
       <div className="token-row">
         {round.tiles.map((value) => {
-          const rank = placed.indexOf(value)
-          const isPlaced = rank !== -1
+          const isPlaced = placed.includes(value)
           return (
             <button
               key={value}
               type="button"
               className={`token${isPlaced ? ' token--placed' : ''}${
                 error === value ? ' token--error' : ''
-              }`}
+              }${drag?.value === value ? ' token--dragging' : ''}`}
               disabled={isPlaced || finished}
               onClick={() => onPick(value)}
+              onPointerDown={(event) => start(event, { value })}
             >
               {format(value, round.step)}
-              {isPlaced && <span className="token__rank">{rank + 1}</span>}
             </button>
           )
         })}
       </div>
+
+      <div className={`frieze-row${over ? ' frieze-row--over' : ''}`} ref={zone}>
+        {round.expected.map((_, index) => {
+          const value = placed[index]
+          const isPending = !finished && index === placed.length
+          const isError = isPending && error !== null
+          return (
+            <div
+              key={index}
+              className={`frieze-slot${value !== undefined ? ' frieze-slot--filled' : ''}${
+                isPending ? ' frieze-slot--pending' : ''
+              }${isError ? ' frieze-slot--error' : ''}`}
+            >
+              {value !== undefined ? format(value, round.step) : (
+                <span className="frieze-slot__rank">{index + 1}</span>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {drag && (
+        <div
+          className="token token--ghost"
+          style={{ left: drag.x, top: drag.y }}
+          aria-hidden="true"
+        >
+          {format(drag.value, round.step)}
+        </div>
+      )}
 
       {error !== null && !finished && (
         <Feedback status="wrong" message="Pas encore celui-là : cherche le suivant." />
