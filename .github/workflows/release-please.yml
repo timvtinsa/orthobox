@@ -64,7 +64,7 @@ jobs:
       # merged, that is once the tag has been created.
       - name: Check out the repository
         if: ${{ steps.release.outputs.release_created }}
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           # Full history and tags: the user-facing changelog step below walks
           # the commits since the previous tag.
