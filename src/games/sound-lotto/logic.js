@@ -1,5 +1,5 @@
 /**
- * Building a game of « Le loto sonore ».
+ * Building a game of « Le loto des mots ».
  *
  * A board of distinct pictures is dealt once; the call order is that same
  * board, shuffled, so every picture is called exactly once, as on a real

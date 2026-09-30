@@ -170,6 +170,20 @@
   font-weight: 800;
 }
 
+/* The market basket's quantity, not a rank: reads better centred under the
+   item than as a corner badge easy to miss, and "×4" is unambiguous where a
+   bare "4" could pass for the item itself. Static positioning also frees the
+   top-right corner for the correction mark alone, so there is no longer a
+   left/right swap to keep the two apart. */
+.token__rank--quantity {
+  position: static;
+  min-width: 0;
+  height: auto;
+  margin-top: 2px;
+  padding: 1px 7px;
+  border-radius: var(--radius-lg);
+}
+
 .token-row {
   display: flex;
   gap: 12px;
@@ -177,6 +191,108 @@
   justify-content: center;
   min-height: 76px;
   align-items: center;
+}
+
+/* --- Number order: drag tiles onto a frieze -------------------------
+   A real number line, arrow included: each slot sits at the position its
+   own target value has between the round's lowest and highest number, so
+   the gaps between slots give an actual sense of scale — two close values
+   sit close together, a wide gap reads as a wide gap — not just an
+   evenly-spaced sequence. Positioning is by value, set inline from JS;
+   this stylesheet only lays out the fixed parts: the line, the arrowhead,
+   and each slot's fixed size once JS has placed it. ---------------------- */
+
+.frieze-row {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  height: 88px;
+  padding: 0 26px;
+  border-radius: var(--radius-lg);
+  border: 3px dashed transparent;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+/* The tile being dragged is hovering over this row: highlighted so the
+   drop feels anchored, the same way a browser highlights a valid target. */
+.frieze-row--over {
+  border-color: var(--category-pastel);
+  background: var(--category-tint);
+}
+
+/* The axis itself: a plain ruled line with an arrowhead at the high end,
+   so the line reads as continuing rather than stopping dead at the last
+   number — the point of a number line is that there is always a next one. */
+.frieze-axis {
+  position: absolute;
+  left: 0;
+  right: 18px;
+  top: 50%;
+  height: 2px;
+  background: var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.frieze-axis::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 11px solid var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.frieze-slot {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 6px;
+  border-radius: var(--radius);
+  border: 3px dashed var(--line-strong);
+  background: var(--surface);
+  font-family: var(--font-patient);
+  font-size: 1.05rem;
+  font-weight: 700;
+  transform: translate(-50%, -50%);
+  transition: left 0.2s ease;
+}
+
+.frieze-slot--filled {
+  border-style: solid;
+  border-color: var(--state-ok);
+  background: var(--state-ok-tint);
+  color: var(--state-ok);
+}
+
+.frieze-slot--pending {
+  border-color: var(--category-pastel);
+}
+
+.frieze-slot--error {
+  border-color: var(--state-err);
+  background: var(--state-err-tint);
+}
+
+/* The tile stays in the row while dragged, faded, so its slot in the pool
+   is still visible; the ghost below is what actually follows the pointer. */
+.token--dragging {
+  opacity: 0.35;
+}
+
+.token--ghost {
+  position: fixed;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(51, 48, 58, 0.22);
 }
 
 .dot {
@@ -2298,11 +2414,4 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-faint);
-}
-
-/* Le marqueur d'état occupe le même angle que le compteur : décalé à
-   gauche, la quantité attendue reste lisible pendant la correction. */
-.token__rank--left {
-  right: auto;
-  left: -8px;
 }
