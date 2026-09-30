@@ -252,12 +252,6 @@
   background: var(--state-err-tint);
 }
 
-.frieze-slot__rank {
-  color: var(--ink-faint);
-  font-size: var(--ui-sm);
-  font-weight: 800;
-}
-
 /* The tile stays in the row while dragged, faded, so its slot in the pool
    is still visible; the ghost below is what actually follows the pointer. */
 .token--dragging {

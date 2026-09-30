@@ -153,9 +153,7 @@ export default function NumberOrder({ config, session }) {
                 isPending ? ' frieze-slot--pending' : ''
               }${isError ? ' frieze-slot--error' : ''}`}
             >
-              {value !== undefined ? format(value, round.step) : (
-                <span className="frieze-slot__rank">{index + 1}</span>
-              )}
+              {value !== undefined ? format(value, round.step) : null}
             </div>
           )
         })}
