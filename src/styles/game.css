@@ -194,20 +194,20 @@
 }
 
 /* --- Number order: drag tiles onto a frieze -------------------------
-   The slots read left to right in the order the round asks for, so
-   filling them in doubles as the number-line visual: the growing (or
-   shrinking) sequence is what makes it a frieze, not a literal ruled line
-   — the largest tile count wraps this row onto several lines on a phone,
-   where a single drawn baseline would only cross one of them. ---------- */
+   A real number line, arrow included: each slot sits at the position its
+   own target value has between the round's lowest and highest number, so
+   the gaps between slots give an actual sense of scale — two close values
+   sit close together, a wide gap reads as a wide gap — not just an
+   evenly-spaced sequence. Positioning is by value, set inline from JS;
+   this stylesheet only lays out the fixed parts: the line, the arrowhead,
+   and each slot's fixed size once JS has placed it. ---------------------- */
 
 .frieze-row {
   position: relative;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: var(--s4);
+  width: 100%;
+  max-width: 560px;
+  height: 88px;
+  padding: 0 26px;
   border-radius: var(--radius-lg);
   border: 3px dashed transparent;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -220,20 +220,49 @@
   background: var(--category-tint);
 }
 
+/* The axis itself: a plain ruled line with an arrowhead at the high end,
+   so the line reads as continuing rather than stopping dead at the last
+   number — the point of a number line is that there is always a next one. */
+.frieze-axis {
+  position: absolute;
+  left: 0;
+  right: 18px;
+  top: 50%;
+  height: 2px;
+  background: var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.frieze-axis::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 11px solid var(--line-strong);
+  transform: translateY(-50%);
+}
+
 .frieze-slot {
-  position: relative;
+  position: absolute;
+  top: 50%;
   z-index: 1;
   display: grid;
   place-items: center;
-  min-width: 64px;
-  height: 64px;
-  padding: 0 10px;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 6px;
   border-radius: var(--radius);
   border: 3px dashed var(--line-strong);
   background: var(--surface);
   font-family: var(--font-patient);
-  font-size: 1.3rem;
+  font-size: 1.05rem;
   font-weight: 700;
+  transform: translate(-50%, -50%);
+  transition: left 0.2s ease;
 }
 
 .frieze-slot--filled {
