@@ -395,8 +395,13 @@ a {
   border: 3px solid var(--line);
   background: var(--surface);
   font-family: var(--font-patient);
-  font-size: var(--pt-md);
-  line-height: 40px;
+  /* Same scale as .game-prompt: a fixed 34px overflowed a long word out of
+     its 150px grid cell on a phone. Never below --pt-sm (24px, the floor
+     for patient-facing text) even when it does; overflow-wrap covers a
+     single word still too wide for its box at that floor. */
+  font-size: clamp(var(--pt-sm), 1rem + 1.6vw, var(--pt-md));
+  line-height: 1.25;
+  overflow-wrap: break-word;
   font-weight: 700;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
