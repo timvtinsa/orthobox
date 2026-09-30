@@ -26,7 +26,11 @@ if (!newTag) throw new Error('NEW_TAG is required (e.g. "v0.5.0")')
 
 const whatsNewPath = resolve(ROOT, 'public/whats-new.json')
 if (!existsSync(whatsNewPath)) {
-  console.log('No public/whats-new.json: nothing to prepend to the release notes.')
+  // Not an error (the Claude step is best-effort), but worth a visible
+  // annotation in the workflow run: this is silent otherwise, and it did
+  // happen once already (v0.5.0) without anyone noticing until a user
+  // reported the in-app popup never showing up.
+  console.log('::warning::No public/whats-new.json: this release has no user-facing changelog.')
   process.exit(0)
 }
 
