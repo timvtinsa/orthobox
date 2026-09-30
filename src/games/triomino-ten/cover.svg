@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Deux triangles divisés en trois collés côte à côte, une place à compléter">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <polygon points="66,50 30,138 102,138" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M66,109L66,50M66,109L30,138M66,109L102,138" fill="none" stroke="#8a6a18" stroke-width="3"/>
+  <polygon points="146,50 110,138 182,138" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M146,109L146,50M146,109L110,138M146,109L182,138" fill="none" stroke="#8a6a18" stroke-width="3"/>
+  <polygon points="226,50 190,138 262,138" fill="none" stroke="#8a6a18" stroke-width="6" stroke-linejoin="round" stroke-dasharray="14 12"/>
+  <polygon points="226,8 208,34 244,34" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M226 38v10M218 48l8 8 8-8" stroke="#8a6a18" stroke-width="6" stroke-linecap="round" fill="none"/>
+</svg>

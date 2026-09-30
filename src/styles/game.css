@@ -1479,6 +1479,115 @@
   justify-content: center;
 }
 
+/* --- Le triomino du 10: chain triangular tiles, drag in the one whose
+   facing third completes the open end to ten --------------------------- */
+
+.triomino-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 2px;
+  justify-content: center;
+}
+
+.triomino-tile {
+  display: block;
+}
+
+.triomino-tile__shape {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 3;
+}
+
+.triomino-tile__lines {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.triomino-tile__digit {
+  font-family: var(--font-patient);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.triomino-tile--ghost .triomino-tile__shape {
+  fill: none;
+  stroke-dasharray: 5 6;
+}
+
+.triomino-tile--ok .triomino-tile__shape {
+  stroke: var(--state-ok);
+  fill: var(--state-ok-tint);
+  stroke-dasharray: none;
+}
+
+.triomino-tile--err .triomino-tile__shape {
+  stroke: var(--state-err);
+  fill: var(--state-err-tint);
+  stroke-dasharray: none;
+}
+
+.triomino-slot {
+  border-radius: var(--radius);
+  transition: transform 0.15s ease;
+}
+
+.triomino-slot--over {
+  transform: translateY(-4px);
+}
+
+.triomino-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.triomino-piece {
+  padding: 4px;
+  border: none;
+  background: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.triomino-piece:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.triomino-piece:disabled {
+  cursor: default;
+}
+
+.triomino-piece--dragging {
+  opacity: 0.35;
+}
+
+.triomino-piece--ok .triomino-tile__shape {
+  stroke: var(--state-ok);
+  fill: var(--state-ok-tint);
+}
+
+.triomino-piece--err .triomino-tile__shape {
+  stroke: var(--state-err);
+  fill: var(--state-err-tint);
+}
+
+.triomino-ghost {
+  position: fixed;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(51, 48, 58, 0.22));
+}
+
 /* --- Le loto sonore -------------------------------------------------- */
 
 .lotto-cell {
