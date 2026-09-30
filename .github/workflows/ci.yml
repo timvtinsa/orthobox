@@ -31,7 +31,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           # The version lives in .nvmrc, so the workstation and the workflow
           # cannot drift apart.
@@ -52,7 +52,7 @@ jobs:
 
       - name: Keep the coverage report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: coverage
@@ -75,7 +75,7 @@ jobs:
           fi
 
       - name: Keep the build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
