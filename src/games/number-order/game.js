@@ -20,7 +20,7 @@ export default {
     'Une suite compte comme réussie si elle est terminée sans aucune erreur.',
   ],
   instructions:
-    'Les nombres sont mélangés. Le patient clique du plus petit au plus grand, ou l’inverse selon le réglage.',
+    'Les nombres sont mélangés. Le patient les fait glisser sur la frise, du plus petit au plus grand ou l’inverse selon le réglage (un simple tapotis fonctionne aussi).',
   settings: [
     {
       id: 'range',
