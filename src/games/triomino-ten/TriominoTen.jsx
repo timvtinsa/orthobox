@@ -94,27 +94,22 @@ function TileMarks({ slot, tile, ghost }) {
   )
 }
 
-/** A single tile, isolated: the pool's candidates and the dragged ghost,
+/** A single isolated tile: the pool's candidates and the dragged ghost,
  * drawn in whichever orientation they would take if attached next. */
-function TriangleTile({ tile, orientation = 'up', size = 78, ghost = false, state }) {
-  const modifier = `${ghost ? ' triomino-tile--ghost' : ''}${state ? ` triomino-tile--${state}` : ''}`
+function TriangleTile({ tile, orientation = 'up', size = 78 }) {
   return (
-    <svg
-      viewBox="0 0 100 96"
-      width={size}
-      height={size * 0.96}
-      className={`triomino-tile${modifier}`}
-      aria-hidden="true"
-    >
-      <TileMarks slot={ISOLATED[orientation]} tile={tile} ghost={ghost} />
+    <svg viewBox="0 0 100 96" width={size} height={size * 0.96} className="triomino-tile" aria-hidden="true">
+      <TileMarks slot={ISOLATED[orientation]} tile={tile} />
     </svg>
   )
 }
 
-/** The whole chain, one shared coordinate system, plus the dashed slot
- * waiting for the next tile — flush against the chain's last real edge, so
- * dropping the right candidate there really glues two faces together. */
-function Strip({ chain, zoneRef, over, pendingState }) {
+/** The whole chain, one shared coordinate system, plus the pending slot —
+ * flush against the chain's last real edge, so completing it really glues
+ * two faces together. Before any attempt it's an empty dashed outline;
+ * once the patient has picked a candidate (by click or by drag), that
+ * candidate's own tile is drawn right there, coloured by whether it fits. */
+function Strip({ chain, zoneRef, over, pendingTile, pendingState }) {
   const slots = []
   for (let k = 0; k <= chain.length; k += 1) slots.push(stripSlot(k))
   const xs = slots.flatMap((slot) => [slot.apex[0], slot.baseLeft[0], slot.baseRight[0]])
@@ -138,6 +133,13 @@ function Strip({ chain, zoneRef, over, pendingState }) {
       {slots.map((slot, k) => {
         if (k === chain.length) {
           const modifier = `${over ? ' triomino-tile--over' : ''}${pendingState ? ` triomino-tile--${pendingState}` : ''}`
+          if (pendingTile) {
+            return (
+              <g key={k} ref={zoneRef} className={`triomino-tile${modifier}`}>
+                <TileMarks slot={slot} tile={pendingTile} />
+              </g>
+            )
+          }
           return (
             <g key={k} ref={zoneRef} className={`triomino-tile triomino-tile--ghost${modifier}`}>
               <TileMarks slot={slot} ghost />
@@ -203,6 +205,7 @@ export default function TriominoTen({ config, session }) {
   }
 
   const attachedState = picked === null ? null : picked === round.correct.id ? 'ok' : 'err'
+  const pickedTile = picked === null ? null : round.options.find((option) => option.id === picked)
 
   return (
     <div className="game-board">
@@ -213,16 +216,16 @@ export default function TriominoTen({ config, session }) {
         Fais glisser le triangle qui, une fois collé, fait dix avec celui-ci.
       </p>
 
-      <Strip chain={chain} zoneRef={zone} over={over} pendingState={attachedState} />
+      <Strip chain={chain} zoneRef={zone} over={over} pendingTile={pickedTile} pendingState={attachedState} />
 
       <div className="triomino-pool">
         {round.options.map((option) => (
           <button
             key={option.id}
             type="button"
-            className={`triomino-piece${
-              picked === option.id ? ` triomino-piece--${attachedState}` : ''
-            }${drag?.tile.id === option.id ? ' triomino-piece--dragging' : ''}`}
+            className={`triomino-piece${picked === option.id ? ' triomino-piece--placed' : ''}${
+              drag?.tile.id === option.id ? ' triomino-piece--dragging' : ''
+            }`}
             disabled={picked !== null}
             onClick={() => attempt(option)}
             onPointerDown={(event) => start(event, { tile: option })}

@@ -1571,14 +1571,10 @@
   opacity: 0.35;
 }
 
-.triomino-piece--ok .triomino-tile__shape {
-  stroke: var(--state-ok);
-  fill: var(--state-ok-tint);
-}
-
-.triomino-piece--err .triomino-tile__shape {
-  stroke: var(--state-err);
-  fill: var(--state-err-tint);
+/* The picked candidate now shows in the chain itself, glued in place: hide
+   its spot in the pool rather than show the same tile twice. */
+.triomino-piece--placed {
+  opacity: 0;
 }
 
 .triomino-ghost {
