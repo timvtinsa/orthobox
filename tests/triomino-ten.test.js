@@ -38,7 +38,7 @@ describe('triomino rounds', () => {
   it('draws every third of every tile from 1 to 9', () => {
     for (let run = 0; run < RUNS; run += 1) {
       const start = firstTile()
-      for (const value of [start.left, start.right, start.top]) {
+      for (const value of [start.left, start.right, start.free]) {
         expect(value).toBeGreaterThanOrEqual(1)
         expect(value).toBeLessThanOrEqual(9)
       }

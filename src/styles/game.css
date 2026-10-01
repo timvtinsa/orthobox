@@ -1482,12 +1482,13 @@
 /* --- Le triomino du 10: chain triangular tiles, drag in the one whose
    facing third completes the open end to ten --------------------------- */
 
-.triomino-chain {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 2px;
-  justify-content: center;
+/* One shared coordinate system for the whole chain: tiles alternate apex up
+   and apex down so each one's edge is pixel-for-pixel the next one's edge,
+   a real tessellation rather than separate icons in a row. */
+.triomino-strip {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 .triomino-tile {
@@ -1520,6 +1521,15 @@
   stroke-dasharray: 5 6;
 }
 
+/* The tile being dragged is hovering over the pending slot: thickened like
+   the frieze row's own drop highlight, kept as a stroke change since this
+   slot shares its edges with its neighbour and cannot move without opening
+   a gap. */
+.triomino-tile--over .triomino-tile__shape {
+  stroke: var(--category-pastel);
+  stroke-width: 5;
+}
+
 .triomino-tile--ok .triomino-tile__shape {
   stroke: var(--state-ok);
   fill: var(--state-ok-tint);
@@ -1530,15 +1540,6 @@
   stroke: var(--state-err);
   fill: var(--state-err-tint);
   stroke-dasharray: none;
-}
-
-.triomino-slot {
-  border-radius: var(--radius);
-  transition: transform 0.15s ease;
-}
-
-.triomino-slot--over {
-  transform: translateY(-4px);
 }
 
 .triomino-pool {

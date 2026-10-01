@@ -13,11 +13,11 @@ function randomDigit() {
   return randomInt(1, 9)
 }
 
-/** A tile: three independent thirds. Only `left` and `right` ever face a
- * neighbour in a left-to-right chain; `top` is still a real third, just one
- * this chain never puts up against another tile. */
+/** A tile: three independent thirds. `left` and `right` are the two that
+ * ever face a neighbour in the chain; `free` is the third, real but always
+ * facing outward. */
 function makeTile(id, left) {
-  return { id, left, right: randomDigit(), top: randomDigit() }
+  return { id, left, right: randomDigit(), free: randomDigit() }
 }
 
 /** The chain's first tile, before any round is played. */
