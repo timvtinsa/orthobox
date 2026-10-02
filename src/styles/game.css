@@ -1479,6 +1479,112 @@
   justify-content: center;
 }
 
+/* --- Le triomino du 10: chain triangular tiles, drag in the one whose
+   facing third completes the open end to ten --------------------------- */
+
+/* One shared coordinate system for the whole chain: tiles alternate apex up
+   and apex down so each one's edge is pixel-for-pixel the next one's edge,
+   a real tessellation rather than separate icons in a row. */
+.triomino-strip {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.triomino-tile {
+  display: block;
+}
+
+.triomino-tile__shape {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 3;
+}
+
+.triomino-tile__lines {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.triomino-tile__digit {
+  font-family: var(--font-patient);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.triomino-tile--ghost .triomino-tile__shape {
+  fill: none;
+  stroke-dasharray: 5 6;
+}
+
+/* The tile being dragged is hovering over the pending slot: thickened like
+   the frieze row's own drop highlight, kept as a stroke change since this
+   slot shares its edges with its neighbour and cannot move without opening
+   a gap. */
+.triomino-tile--over .triomino-tile__shape {
+  stroke: var(--category-pastel);
+  stroke-width: 5;
+}
+
+.triomino-tile--ok .triomino-tile__shape {
+  stroke: var(--state-ok);
+  fill: var(--state-ok-tint);
+  stroke-dasharray: none;
+}
+
+.triomino-tile--err .triomino-tile__shape {
+  stroke: var(--state-err);
+  fill: var(--state-err-tint);
+  stroke-dasharray: none;
+}
+
+.triomino-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.triomino-piece {
+  padding: 4px;
+  border: none;
+  background: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.triomino-piece:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.triomino-piece:disabled {
+  cursor: default;
+}
+
+.triomino-piece--dragging {
+  opacity: 0.35;
+}
+
+/* The picked candidate now shows in the chain itself, glued in place: hide
+   its spot in the pool rather than show the same tile twice. */
+.triomino-piece--placed {
+  opacity: 0;
+}
+
+.triomino-ghost {
+  position: fixed;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(51, 48, 58, 0.22));
+}
+
 /* --- Le loto sonore -------------------------------------------------- */
 
 .lotto-cell {
