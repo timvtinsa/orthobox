@@ -12,15 +12,16 @@ export default {
   objectives: [
     'Compléments à dix',
     'Fait numérique : reconnaître d’un coup d’œil ce qui fait dix',
-    'Attention soutenue sur une chaîne qui s’allonge',
+    'Attention soutenue sur une mosaïque qui s’étend dans toutes les directions',
   ],
   materials: [
-    'Chaque triangle est divisé en trois, un chiffre par tiers ; seuls les deux tiers qui se touchent une fois collés comptent.',
-    'Un seul des triangles proposés complète correctement la chaîne : les autres font un total différent de dix.',
+    'Chaque triangle est divisé en trois, un chiffre par tiers ; seul le tiers qui touche la mosaïque compte à chaque pose.',
+    'Un seul des triangles proposés complète correctement l’emplacement en pointillé : les autres font un total différent de dix.',
+    'La mosaïque peut grandir d’un côté, de l’autre ou au-dessus et en dessous : le prochain emplacement n’est jamais toujours au même endroit.',
     'Variante : faire annoncer le calcul à voix haute avant de faire glisser le triangle.',
   ],
   instructions:
-    'Une chaîne de triangles s’allonge. Le dernier triangle posé montre un chiffre sur son bord libre : il faut faire glisser, parmi plusieurs triangles proposés, celui dont le chiffre complète ce bord pour faire dix.',
+    'Une mosaïque de triangles grandit peu à peu, dans toutes les directions. Un emplacement en pointillé montre où poser le prochain : il faut faire glisser, parmi plusieurs triangles proposés, celui dont le chiffre complète le tiers du voisin pour faire dix.',
   settings: [
     {
       id: 'rounds',

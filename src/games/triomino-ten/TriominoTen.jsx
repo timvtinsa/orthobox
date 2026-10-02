@@ -1,51 +1,28 @@
 /**
- * Triomino du 10: extend a real strip of triangular tiles, apex up then
- * apex down in turn so each one shares a full edge with its neighbour, by
- * dragging in the one candidate whose facing third completes the open edge
+ * Triomino du 10: grow a real mosaic of triangular tiles — left, right or
+ * across any already-placed one, not only to the right — by dragging in
+ * the one candidate whose facing third completes the neighbour it touches
  * to ten.
  *
  * Each tile is split into three thirds by cevians from its centre to its
- * three corners. Whatever a tile's orientation, `left` is the third against
- * the previous tile, `right` the third against the next one, `free` the
- * third on the tile's own outer edge, which this strip never touches.
+ * three corners. Whatever a tile's position, `left` is the third against
+ * its left neighbour, `right` against its right one, `free` the third
+ * facing across to the row above or below — whichever one its own base
+ * edge actually borders.
  */
-import { useAnswerLock } from '../../hooks/useAnswerLock.js'
-import { useDragToZone } from '../../hooks/useDragToZone.js'
-import { useRounds } from '../../hooks/useRounds.js'
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
+import { useAnswerLock } from '../../hooks/useAnswerLock.js'
+import { useDragToZone } from '../../hooks/useDragToZone.js'
+import { useRounds } from '../../hooks/useRounds.js'
+import { isUp, key, openSlots, tileSlot } from './grid.js'
 import { buildRound, firstTile } from './logic.js'
-
-const TILE_WIDTH = 88
-const TOP_Y = 8
-const BOTTOM_Y = 88
-const MARGIN = 6
-
-function bottomX(i) {
-  return MARGIN + i * TILE_WIDTH
-}
-
-function topX(i) {
-  return MARGIN + TILE_WIDTH / 2 + i * TILE_WIDTH
-}
-
-/** The three corners (apex, baseLeft, baseRight) of the k-th tile of a
- * horizontal strip: apex up on even tiles, apex down on odd ones, each
- * sharing a full edge with the tile before and after it — a real
- * tessellation, not a row of separate icons. */
-function stripSlot(k) {
-  if (k % 2 === 0) {
-    const m = k / 2
-    return { apex: [topX(m), TOP_Y], baseLeft: [bottomX(m), BOTTOM_Y], baseRight: [bottomX(m + 1), BOTTOM_Y] }
-  }
-  const m = (k - 1) / 2
-  return { apex: [bottomX(m + 1), BOTTOM_Y], baseLeft: [topX(m), TOP_Y], baseRight: [topX(m + 1), TOP_Y] }
-}
+import { pick } from '../../lib/random.js'
 
 const ISOLATED = {
-  up: { apex: [50, TOP_Y], baseLeft: [6, BOTTOM_Y], baseRight: [94, BOTTOM_Y] },
-  down: { apex: [50, BOTTOM_Y], baseLeft: [6, TOP_Y], baseRight: [94, TOP_Y] },
+  up: { apex: [50, 8], baseLeft: [6, 88], baseRight: [94, 88] },
+  down: { apex: [50, 88], baseLeft: [6, 8], baseRight: [94, 8] },
 }
 
 function mid(...points) {
@@ -104,67 +81,87 @@ function TriangleTile({ tile, orientation = 'up', size = 78 }) {
   )
 }
 
-/** The whole chain, one shared coordinate system, plus the pending slot —
- * flush against the chain's last real edge, so completing it really glues
- * two faces together. Before any attempt it's an empty dashed outline;
- * once the patient has picked a candidate (by click or by drag), that
- * candidate's own tile is drawn right there, coloured by whether it fits. */
-function Strip({ chain, zoneRef, over, pendingTile, pendingState }) {
-  const slots = []
-  for (let k = 0; k <= chain.length; k += 1) slots.push(stripSlot(k))
-  const xs = slots.flatMap((slot) => [slot.apex[0], slot.baseLeft[0], slot.baseRight[0]])
-  const viewWidth = Math.max(...xs) + MARGIN
-  const viewHeight = BOTTOM_Y + MARGIN
+/** The whole mosaic, one shared coordinate system, plus the pending slot —
+ * flush against whichever neighbour it touches, left, right or across, so
+ * completing it really glues two matching faces together. Before any
+ * attempt it's an empty dashed outline; once the patient has picked a
+ * candidate (by click or by drag), that candidate's own tile is drawn
+ * right there, coloured by whether it fits. */
+function Board({ tiles, pendingSlot, zoneRef, over, pendingTile, pendingState }) {
+  const placed = [...tiles.entries()].map(([tileKey, tile]) => {
+    const [row, col] = tileKey.split(',').map(Number)
+    return { key: tileKey, slot: tileSlot(row, col), tile }
+  })
+  const pendingGeometry = tileSlot(pendingSlot.row, pendingSlot.col)
+
+  const corners = [
+    ...placed.flatMap((entry) => [entry.slot.apex, entry.slot.baseLeft, entry.slot.baseRight]),
+    pendingGeometry.apex,
+    pendingGeometry.baseLeft,
+    pendingGeometry.baseRight,
+  ]
+  const PAD = 10
+  const minX = Math.min(...corners.map((point) => point[0])) - PAD
+  const maxX = Math.max(...corners.map((point) => point[0])) + PAD
+  const minY = Math.min(...corners.map((point) => point[1])) - PAD
+  const maxY = Math.max(...corners.map((point) => point[1])) + PAD
+  const viewWidth = maxX - minX
+  const viewHeight = maxY - minY
   // Same unit scale as an isolated pool tile (viewBox 100 wide at `size`
-  // CSS px, see TriangleTile), so a chained tile and a pooled one read as
-  // the same size — only capped so a long chain stays on screen instead of
-  // pushing the pool below the fold.
-  const pixelWidth = Math.min(viewWidth * 0.85, 680)
-  const pixelHeight = (pixelWidth / viewWidth) * viewHeight
+  // CSS px, see TriangleTile), so a placed tile and a pooled one read as
+  // the same size — only capped so a board that has grown a lot in every
+  // direction still stays on screen, on both axes.
+  const scale = Math.min(0.85, 520 / viewWidth, 520 / viewHeight)
+  const pixelWidth = viewWidth * scale
+  const pixelHeight = viewHeight * scale
+  const pendingModifier = `${over ? ' triomino-tile--over' : ''}${pendingState ? ` triomino-tile--${pendingState}` : ''}`
 
   return (
     <svg
-      viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+      viewBox={`${minX} ${minY} ${viewWidth} ${viewHeight}`}
       width={pixelWidth}
       height={pixelHeight}
       className="triomino-strip"
       preserveAspectRatio="xMidYMid meet"
     >
-      {slots.map((slot, k) => {
-        if (k === chain.length) {
-          const modifier = `${over ? ' triomino-tile--over' : ''}${pendingState ? ` triomino-tile--${pendingState}` : ''}`
-          if (pendingTile) {
-            return (
-              <g key={k} ref={zoneRef} className={`triomino-tile${modifier}`}>
-                <TileMarks slot={slot} tile={pendingTile} />
-              </g>
-            )
-          }
-          return (
-            <g key={k} ref={zoneRef} className={`triomino-tile triomino-tile--ghost${modifier}`}>
-              <TileMarks slot={slot} ghost />
-            </g>
-          )
-        }
-        return (
-          <g key={k} className="triomino-tile">
-            <TileMarks slot={slot} tile={chain[k]} />
-          </g>
-        )
-      })}
+      {placed.map((entry) => (
+        <g key={entry.key} className="triomino-tile">
+          <TileMarks slot={entry.slot} tile={entry.tile} />
+        </g>
+      ))}
+      {pendingTile ? (
+        <g ref={zoneRef} className={`triomino-tile${pendingModifier}`}>
+          <TileMarks slot={pendingGeometry} tile={pendingTile} />
+        </g>
+      ) : (
+        <g ref={zoneRef} className={`triomino-tile triomino-tile--ghost${pendingModifier}`}>
+          <TileMarks slot={pendingGeometry} ghost />
+        </g>
+      )}
     </svg>
   )
+}
+
+function startBoard() {
+  const tiles = new Map([[key(0, 0), firstTile()]])
+  const slot = pick(openSlots(tiles))
+  return { tiles, slot }
 }
 
 export default function TriominoTen({ config, session }) {
   const optionCount = config.options === 'four' ? 4 : 3
   const rounds = useRounds(config.rounds, session)
-  const [chain, setChain] = useState(() => [firstTile()])
-  const [round, setRound] = useState(() => buildRound(chain[0].right, optionCount))
+
+  const [tiles, setTiles] = useState(() => startBoard().tiles)
+  const [activeSlot, setActiveSlot] = useState(() => pick(openSlots(tiles)))
+  const [round, setRound] = useState(() => {
+    const neighbourValue = tiles.get(activeSlot.neighbourKey)[activeSlot.neighbourEdge]
+    return buildRound(neighbourValue, activeSlot.newEdge, optionCount)
+  })
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
-  const nextOrientation = chain.length % 2 === 0 ? 'up' : 'down'
+  const activeOrientation = isUp(activeSlot.row, activeSlot.col) ? 'up' : 'down'
 
   const attempt = (tile) => {
     if (!lock.take()) return
@@ -179,10 +176,13 @@ export default function TriominoTen({ config, session }) {
   const goNext = () => {
     lock.release()
     const attached = picked === round.correct.id
-    const nextChain = attached ? [...chain, round.correct] : chain
-    setChain(nextChain)
+    const nextTiles = attached ? new Map(tiles).set(key(activeSlot.row, activeSlot.col), round.correct) : tiles
+    const nextSlot = pick(openSlots(nextTiles))
+    const nextNeighbourValue = nextTiles.get(nextSlot.neighbourKey)[nextSlot.neighbourEdge]
+    setTiles(nextTiles)
+    setActiveSlot(nextSlot)
     rounds.next()
-    setRound(buildRound(nextChain[nextChain.length - 1].right, optionCount))
+    setRound(buildRound(nextNeighbourValue, nextSlot.newEdge, optionCount))
     setPicked(null)
   }
 
@@ -190,9 +190,11 @@ export default function TriominoTen({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    const startChain = [firstTile()]
-    setChain(startChain)
-    setRound(buildRound(startChain[0].right, optionCount))
+    const { tiles: startTiles, slot: startSlot } = startBoard()
+    const startNeighbourValue = startTiles.get(startSlot.neighbourKey)[startSlot.neighbourEdge]
+    setTiles(startTiles)
+    setActiveSlot(startSlot)
+    setRound(buildRound(startNeighbourValue, startSlot.newEdge, optionCount))
     setPicked(null)
   }
 
@@ -216,7 +218,14 @@ export default function TriominoTen({ config, session }) {
         Fais glisser le triangle qui, une fois collé, fait dix avec celui-ci.
       </p>
 
-      <Strip chain={chain} zoneRef={zone} over={over} pendingTile={pickedTile} pendingState={attachedState} />
+      <Board
+        tiles={tiles}
+        pendingSlot={activeSlot}
+        zoneRef={zone}
+        over={over}
+        pendingTile={pickedTile}
+        pendingState={attachedState}
+      />
 
       <div className="triomino-pool">
         {round.options.map((option) => (
@@ -231,14 +240,14 @@ export default function TriominoTen({ config, session }) {
             onPointerDown={(event) => start(event, { tile: option })}
             aria-label={`Triangle : ${option.left}, ${option.right}, ${option.free}`}
           >
-            <TriangleTile tile={option} orientation={nextOrientation} />
+            <TriangleTile tile={option} orientation={activeOrientation} />
           </button>
         ))}
       </div>
 
       {drag && (
         <div className="triomino-ghost" style={{ left: drag.x, top: drag.y }} aria-hidden="true">
-          <TriangleTile tile={drag.tile} orientation={nextOrientation} />
+          <TriangleTile tile={drag.tile} orientation={activeOrientation} />
         </div>
       )}
 
