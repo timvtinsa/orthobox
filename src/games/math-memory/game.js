@@ -42,8 +42,9 @@ export default {
       options: [
         { id: 'addition', label: 'Additions', hint: 'Uniquement des additions.' },
         { id: 'subtraction', label: 'Soustractions', hint: 'Uniquement des soustractions.' },
-        { id: 'mixed', label: 'Les deux', hint: 'Additions et soustractions mêlées.' },
+        { id: 'mixed', label: 'Addi. et soustr.', hint: 'Additions et soustractions mêlées.' },
         { id: 'multiplication', label: 'Tables', hint: 'Multiplications dans les tables.' },
+        { id: 'all', label: 'Tout mélangé', hint: 'Additions, soustractions et tables, au hasard.' },
       ],
     },
     {

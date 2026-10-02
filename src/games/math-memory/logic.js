@@ -23,7 +23,12 @@ export const PAIRS = { easy: 3, medium: 6, hard: 10 }
 export const COLUMNS = { easy: 3, medium: 4, hard: 5 }
 
 function buildOperation(operationType, range) {
-  const operation = operationType === 'mixed' ? pick(['addition', 'subtraction']) : operationType
+  const operation =
+    operationType === 'all'
+      ? pick(['addition', 'subtraction', 'multiplication'])
+      : operationType === 'mixed'
+        ? pick(['addition', 'subtraction'])
+        : operationType
 
   if (operation === 'multiplication') {
     const a = pick(range.tables)

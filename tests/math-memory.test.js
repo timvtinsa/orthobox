@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest'
 import { COLUMNS, PAIRS, buildOperations, deal } from '../src/games/math-memory/logic.js'
 
 const LEVELS = ['easy', 'medium', 'hard']
-const OPERATIONS = ['addition', 'subtraction', 'mixed', 'multiplication']
+const OPERATIONS = ['addition', 'subtraction', 'mixed', 'multiplication', 'all']
 const RUNS = 50
 
 function evaluate(label) {
@@ -57,29 +57,31 @@ describe('math-memory deck building', () => {
   it('deals a well-formed deck: two cards per pair, matching values, no duplicate results', () => {
     for (let run = 0; run < RUNS; run += 1) {
       for (const level of LEVELS) {
-        const pairs = PAIRS[level]
-        const cards = deal({ level, operation: 'mixed' })
-        expect(cards).toHaveLength(pairs * 2)
+        for (const operation of OPERATIONS) {
+          const pairs = PAIRS[level]
+          const cards = deal({ level, operation })
+          expect(cards, `${level}/${operation}`).toHaveLength(pairs * 2)
 
-        const byPair = new Map()
-        for (const card of cards) {
-          const group = byPair.get(card.pair) ?? []
-          group.push(card)
-          byPair.set(card.pair, group)
-        }
-        expect(byPair.size).toBe(pairs)
+          const byPair = new Map()
+          for (const card of cards) {
+            const group = byPair.get(card.pair) ?? []
+            group.push(card)
+            byPair.set(card.pair, group)
+          }
+          expect(byPair.size, `${level}/${operation}`).toBe(pairs)
 
-        const results = new Set()
-        for (const [, group] of byPair) {
-          expect(group).toHaveLength(2)
-          const number = group.find((c) => c.kind === 'number')
-          const op = group.find((c) => c.kind === 'operation')
-          expect(number).toBeTruthy()
-          expect(op).toBeTruthy()
-          expect(evaluate(op.display)).toBe(Number(number.display))
-          results.add(number.display)
+          const results = new Set()
+          for (const [, group] of byPair) {
+            expect(group, `${level}/${operation}`).toHaveLength(2)
+            const number = group.find((c) => c.kind === 'number')
+            const op = group.find((c) => c.kind === 'operation')
+            expect(number, `${level}/${operation}`).toBeTruthy()
+            expect(op, `${level}/${operation}`).toBeTruthy()
+            expect(evaluate(op.display), `${level}/${operation}`).toBe(Number(number.display))
+            results.add(number.display)
+          }
+          expect(results.size, `${level}/${operation}`).toBe(pairs)
         }
-        expect(results.size).toBe(pairs)
       }
     }
   })
