@@ -1657,6 +1657,21 @@
   opacity: 0.25;
 }
 
+/* « Le memory des calculs »: a card's content is text, not a pictogram —
+   a number reads bigger than an operation, which has more characters to
+   fit in the same card. */
+.memory-card__text {
+  font-family: var(--font-patient);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 5.5vw, 1.6rem);
+  color: var(--category);
+  text-align: center;
+}
+
+.memory-card__text--operation {
+  font-size: clamp(0.85rem, 4.2vw, 1.15rem);
+}
+
 /* --- Tri des formes ------------------------------------------------ */
 
 .sorting-tray {
