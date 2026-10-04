@@ -16,12 +16,14 @@ function expectedAnswer(round) {
   const first = DAYS.indexOf(named.sort((a, b) => round.prompt.indexOf(a) - round.prompt.indexOf(b))[0])
   const gap = Number(round.prompt.match(/(?:dans|il y a) (\d) jours/)?.[1])
   switch (round.kind) {
-    case 'next':
     case 'tomorrow':
       return DAYS[wrap(first + 1)]
-    case 'previous':
     case 'yesterday':
       return DAYS[wrap(first - 1)]
+    case 'afterTomorrow':
+      return DAYS[wrap(first + 2)]
+    case 'beforeYesterday':
+      return DAYS[wrap(first - 2)]
     case 'between':
       return DAYS[wrap(first + 1)]
     case 'later':

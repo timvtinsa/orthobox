@@ -14,9 +14,9 @@ export const DAYS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'
 const ORDINALS = ['premier', 'deuxième', 'troisième', 'quatrième', 'cinquième', 'sixième', 'septième']
 
 export const KINDS_BY_LEVEL = {
-  easy: ['next', 'previous'],
-  medium: ['next', 'previous', 'tomorrow', 'yesterday', 'between'],
-  hard: ['tomorrow', 'yesterday', 'between', 'later', 'earlier', 'position'],
+  easy: ['tomorrow', 'yesterday'],
+  medium: ['tomorrow', 'yesterday', 'afterTomorrow', 'beforeYesterday', 'between'],
+  hard: ['afterTomorrow', 'beforeYesterday', 'between', 'later', 'earlier', 'position'],
 }
 
 /** Position on the week's cycle, whatever the offset's sign or size. */
@@ -29,20 +29,6 @@ function build(kind) {
   const day = DAYS[from]
 
   switch (kind) {
-    case 'next':
-      return {
-        prompt: `Quel jour vient après ${day} ?`,
-        answer: wrap(from + 1),
-        pivots: [from],
-        explain: (answer) => `Après ${day} vient ${answer}.`,
-      }
-    case 'previous':
-      return {
-        prompt: `Quel jour vient avant ${day} ?`,
-        answer: wrap(from - 1),
-        pivots: [from],
-        explain: (answer) => `Avant ${day} vient ${answer}.`,
-      }
     case 'tomorrow':
       return {
         prompt: `Aujourd’hui, c’est ${day}. Quel jour sera-t-on demain ?`,
@@ -56,6 +42,20 @@ function build(kind) {
         answer: wrap(from - 1),
         pivots: [from],
         explain: (answer) => `Si on est ${day}, hier on était ${answer}.`,
+      }
+    case 'afterTomorrow':
+      return {
+        prompt: `Aujourd’hui, c’est ${day}. Quel jour sera-t-on après-demain ?`,
+        answer: wrap(from + 2),
+        pivots: [from],
+        explain: (answer) => `Si on est ${day}, après-demain on sera ${answer}.`,
+      }
+    case 'beforeYesterday':
+      return {
+        prompt: `Aujourd’hui, c’est ${day}. Quel jour était-on avant-hier ?`,
+        answer: wrap(from - 2),
+        pivots: [from],
+        explain: (answer) => `Si on est ${day}, avant-hier on était ${answer}.`,
       }
     case 'between': {
       const to = wrap(from + 2)

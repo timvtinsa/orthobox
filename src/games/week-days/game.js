@@ -4,15 +4,15 @@ import cover from './cover.svg'
 export default {
   id: 'week-days',
   title: 'Les jours de la semaine',
-  tagline: 'Se repérer dans la semaine : avant, après, demain, dans trois jours.',
+  tagline: 'Se repérer dans la semaine : hier, demain, après-demain, dans trois jours.',
   category: 'math-cognition',
   cover,
   ages: '6 ans et plus',
   keywords: ['jours', 'semaine', 'temps', 'repérage temporel', 'chaîne ordonnée'],
   objectives: [
     'Connaissance de la chaîne ordonnée des jours',
-    'Repérage temporel : hier, demain, dans quelques jours',
-    'Calcul sur un cycle : après dimanche, on revient à lundi',
+    'Repérage temporel : hier, demain, avant-hier, après-demain, dans quelques jours',
+    'Calcul sur un cycle : demain d’un dimanche, c’est lundi',
   ],
   materials: [
     'La bande de la semaine montre le jour de départ : elle sert d’appui avant de calculer sans.',
@@ -29,8 +29,8 @@ export default {
       label: 'Niveau',
       default: 'easy',
       options: [
-        { id: 'easy', label: 'Facile', hint: 'Le jour d’avant, le jour d’après.' },
-        { id: 'medium', label: 'Moyen', hint: 'Hier, demain, le jour entre deux jours.' },
+        { id: 'easy', label: 'Facile', hint: 'Hier et demain.' },
+        { id: 'medium', label: 'Moyen', hint: 'Avant-hier, après-demain, le jour entre deux jours.' },
         { id: 'hard', label: 'Difficile', hint: 'Dans plusieurs jours, il y a plusieurs jours, le rang dans la semaine.' },
       ],
     },
