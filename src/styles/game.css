@@ -2589,34 +2589,16 @@
 
 /* --- Les quatre saisons ----------------------------------------------- */
 
-/* The cycle as a strip of four. The season the question starts from is
-   marked by a heavier border and a filled box — not by colour alone. */
-.season-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(4px, 1vw, 8px);
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
-}
-
-.season-strip__item {
+.season-picture {
   display: grid;
   place-items: center;
-  padding: 10px 2px;
-  border-radius: var(--radius);
-  border: 2px solid var(--line);
-  background: var(--surface);
-  font-size: var(--ui-xs);
-  font-weight: 700;
-  color: var(--ink-faint);
 }
 
-.season-strip__item--pivot {
-  border: 4px solid var(--category);
-  background: var(--category-pastel);
-  color: var(--category);
+.season-scene {
+  width: min(100%, 360px);
+  height: auto;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .season-prompt {

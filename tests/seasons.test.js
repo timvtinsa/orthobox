@@ -1,48 +1,35 @@
+/**
+ * The guarantees « Les quatre saisons » needs: whatever the question, the
+ * right season is offered exactly once, it really is the season the question
+ * asks for (recomputed here from the picture, the clue or the month, not
+ * trusted from the code), and every object belongs to one season only.
+ */
 import { describe, expect, it } from 'vitest'
-import { CLUES, KINDS_BY_LEVEL, MONTHS, SEASONS, buildRound, buildSeries, seasonOfMonth, wrap } from '../src/games/seasons/logic.js'
+import { OBJECT_SEASONS } from '../src/games/seasons/drawings.jsx'
+import { CLUES, KINDS_BY_LEVEL, MONTHS, SEASONS, buildRound, buildSeries, seasonOfMonth } from '../src/games/seasons/logic.js'
 
 const RUNS = 300
-const NAMES = { 'le printemps': 0, 'l’été': 1, 'l’automne': 2, 'l’hiver': 3 }
-const COUNTS = { deux: 2, trois: 3 }
-
-/** Names mentioned in a prompt, in order of appearance. */
-function mentioned(prompt) {
-  return Object.keys(NAMES)
-    .map((name) => ({ name, at: prompt.indexOf(name) }))
-    .filter((hit) => hit.at >= 0)
-    .sort((a, b) => a.at - b.at)
-    .map((hit) => NAMES[hit.name])
-}
+const KINDS = [...new Set(Object.values(KINDS_BY_LEVEL).flat())]
 
 function expectedAnswer(round) {
-  const [from, to] = mentioned(round.prompt)
   switch (round.kind) {
-    case 'next':
-      return wrap(from + 1)
-    case 'previous':
-      return wrap(from - 1)
-    case 'between':
-      return wrap(to - 1)
-    case 'later':
-      return wrap(from + COUNTS[round.prompt.match(/(deux|trois) saisons/)[1]])
-    case 'earlier':
-      return wrap(from - COUNTS[round.prompt.match(/(deux|trois) saisons/)[1]])
+    case 'object':
+      return OBJECT_SEASONS.findIndex((ids) => ids.includes(round.picture.id))
+    case 'landscape':
+      return round.picture.season
     case 'month': {
       const month = MONTHS.findIndex((name) => round.prompt.includes(`en ${name} `))
       return [2, 3, 4].includes(month) ? 0 : [5, 6, 7].includes(month) ? 1 : [8, 9, 10].includes(month) ? 2 : 3
     }
-    default: {
-      const season = CLUES.findIndex((clues) => clues.some((clue) => round.prompt.includes(clue)))
-      return season
-    }
+    default:
+      return CLUES.findIndex((clues) => clues.some((clue) => round.prompt.includes(clue)))
   }
 }
 
 describe('seasons', () => {
-  it('wraps around the year in both directions', () => {
-    expect(wrap(4)).toBe(0)
-    expect(wrap(-1)).toBe(3)
-    expect(wrap(-6)).toBe(2)
+  it('asks no before/after question', () => {
+    expect(KINDS).toEqual(expect.arrayContaining(['object', 'landscape', 'clue', 'month']))
+    expect(KINDS).toHaveLength(4)
   })
 
   it('places each month in its meteorological season', () => {
@@ -52,8 +39,14 @@ describe('seasons', () => {
     ])
   })
 
+  it('gives every season several objects, none shared between seasons', () => {
+    OBJECT_SEASONS.forEach((ids) => expect(ids.length).toBeGreaterThanOrEqual(3))
+    const all = OBJECT_SEASONS.flat()
+    expect(new Set(all).size).toBe(all.length)
+  })
+
   it('offers each season once and the right one among them', () => {
-    for (const kind of new Set(Object.values(KINDS_BY_LEVEL).flat())) {
+    for (const kind of KINDS) {
       for (let run = 0; run < RUNS; run += 1) {
         const round = buildRound(kind)
         expect([...round.options].sort()).toEqual([...SEASONS].sort())
@@ -62,12 +55,19 @@ describe('seasons', () => {
     }
   })
 
+  it('shows a picture for objects and landscapes only', () => {
+    for (const kind of KINDS) {
+      const round = buildRound(kind)
+      expect(Boolean(round.picture)).toBe(kind === 'object' || kind === 'landscape')
+    }
+  })
+
   it('explains the answer', () => {
-    for (const kind of new Set(Object.values(KINDS_BY_LEVEL).flat())) {
+    for (const kind of KINDS) {
       for (let run = 0; run < RUNS; run += 1) {
         const round = buildRound(kind)
-        expect(round.explanation.length).toBeGreaterThan(10)
         expect(round.explanation).not.toContain('undefined')
+        expect(round.explanation.length).toBeGreaterThan(10)
       }
     }
   })
@@ -79,7 +79,7 @@ describe('seasons', () => {
         expect(series).toHaveLength(12)
         series.forEach((round, index) => {
           expect(KINDS_BY_LEVEL[level]).toContain(round.kind)
-          if (index > 0) expect(round.prompt).not.toBe(series[index - 1].prompt)
+          if (index > 0) expect(round.prompt === series[index - 1].prompt && round.picture?.id === series[index - 1].picture?.id && round.picture?.season === series[index - 1].picture?.season).toBe(false)
         })
       }
     }

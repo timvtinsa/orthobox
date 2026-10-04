@@ -1,9 +1,6 @@
 /**
- * The four seasons: where a season sits on the cycle of the year, and what
- * belongs to it.
- *
- * A strip of the four seasons can back the question up, with the one it
- * starts from marked; the practitioner can hide it once the order is secure.
+ * The four seasons: naming the season of a landscape, an object, a clue or a
+ * month. Pictures are shown above the question and never name the answer.
  */
 import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
@@ -13,24 +10,15 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
+import { Landscape, SeasonObject } from './drawings.jsx'
 import { SEASONS, buildSeries } from './logic.js'
 
-function SeasonStrip({ pivots }) {
+function Picture({ picture }) {
+  if (!picture) return null
   return (
-    <ol className="season-strip" aria-label="Les saisons, en cycle">
-      {SEASONS.map((season, index) => {
-        const isPivot = pivots.includes(index)
-        return (
-          <li
-            key={season}
-            className={`season-strip__item${isPivot ? ' season-strip__item--pivot' : ''}`}
-            aria-current={isPivot ? 'true' : undefined}
-          >
-            {season}
-          </li>
-        )
-      })}
-    </ol>
+    <div className="season-picture">
+      {picture.type === 'landscape' ? <Landscape season={picture.season} /> : <SeasonObject id={picture.id} size={128} />}
+    </div>
   )
 }
 
@@ -71,7 +59,7 @@ export default function Seasons({ config, session }) {
         Question {rounds.round + 1} sur {rounds.total}
       </p>
 
-      {config.support === 'strip' && <SeasonStrip pivots={round.pivots} />}
+      <Picture picture={round.picture} />
 
       <div className="season-prompt">
         <p className="game-prompt">{round.prompt}</p>

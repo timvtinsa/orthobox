@@ -1,19 +1,17 @@
 /**
  * Building rounds of « Les quatre saisons ».
  *
- * The year is a cycle of four seasons: after winter comes spring again. A
- * round is one question about a season's place on that cycle, or about what
- * happens in it (a clue, a month). Seasons follow the meteorological
- * calendar — the one children learn at school: spring is March to May,
- * summer June to August, autumn September to November, winter December to
- * February. The answer is computed once, so the right option is always
- * offered exactly once.
+ * A round names one season out of the four. It asks for it from a landscape,
+ * from an object found in that season, from a clue sentence or from a month.
+ * Seasons follow the meteorological calendar — the one children learn at
+ * school: spring is March to May, summer June to August, autumn September to
+ * November, winter December to February. The answer is computed once, so the
+ * right option is always offered exactly once.
  */
 import { noRepeatSeries, pick, randomInt, shuffle } from '../../lib/random.js'
+import { OBJECT_SEASONS, objectLabel } from './drawings.jsx'
 
 export const SEASONS = ['printemps', 'été', 'automne', 'hiver']
-
-const WITH_ARTICLE = ['le printemps', 'l’été', 'l’automne', 'l’hiver']
 
 export const MONTHS = [
   'janvier',
@@ -59,16 +57,9 @@ export const CLUES = [
 ]
 
 export const KINDS_BY_LEVEL = {
-  easy: ['next', 'previous', 'clue'],
-  medium: ['next', 'previous', 'clue', 'month', 'between'],
-  hard: ['clue', 'month', 'between', 'later', 'earlier'],
-}
-
-const COUNT_WORDS = { 2: 'deux', 3: 'trois' }
-
-/** Position on the year's cycle, whatever the offset's sign or size. */
-export function wrap(index) {
-  return ((index % 4) + 4) % 4
+  easy: ['object', 'landscape'],
+  medium: ['object', 'landscape', 'clue'],
+  hard: ['object', 'landscape', 'clue', 'month'],
 }
 
 /** The meteorological season of a month (0 = January). */
@@ -77,48 +68,24 @@ export function seasonOfMonth(month) {
 }
 
 function build(kind) {
-  const from = randomInt(0, 3)
-  const name = WITH_ARTICLE[from]
-
   switch (kind) {
-    case 'next':
+    case 'object': {
+      const answer = randomInt(0, 3)
+      const id = pick(OBJECT_SEASONS[answer])
       return {
-        prompt: `Quelle saison vient après ${name} ?`,
-        answer: wrap(from + 1),
-        pivots: [from],
-        explain: () => `Après ${name} vient ${WITH_ARTICLE[wrap(from + 1)]}.`,
-      }
-    case 'previous':
-      return {
-        prompt: `Quelle saison vient avant ${name} ?`,
-        answer: wrap(from - 1),
-        pivots: [from],
-        explain: () => `Avant ${name} vient ${WITH_ARTICLE[wrap(from - 1)]}.`,
-      }
-    case 'between':
-      return {
-        prompt: `Quelle saison vient après ${name} et avant ${WITH_ARTICLE[wrap(from + 2)]} ?`,
-        answer: wrap(from + 1),
-        pivots: [from, wrap(from + 2)],
-        explain: () =>
-          `Entre ${name} et ${WITH_ARTICLE[wrap(from + 2)]}, il y a ${WITH_ARTICLE[wrap(from + 1)]}.`,
-      }
-    case 'later': {
-      const gap = randomInt(2, 3)
-      return {
-        prompt: `Quelle saison arrive ${COUNT_WORDS[gap]} saisons après ${name} ?`,
-        answer: wrap(from + gap),
-        pivots: [from],
-        explain: () => `${COUNT_WORDS[gap]} saisons après ${name} arrive ${WITH_ARTICLE[wrap(from + gap)]}.`,
+        prompt: 'Dans quelle saison trouve-t-on cet objet ?',
+        answer,
+        picture: { type: 'object', id },
+        explain: () => `${capitalize(objectLabel(id))} : c’est ${seasonLabel(answer)}.`,
       }
     }
-    case 'earlier': {
-      const gap = randomInt(2, 3)
+    case 'landscape': {
+      const answer = randomInt(0, 3)
       return {
-        prompt: `Quelle saison y avait-il ${COUNT_WORDS[gap]} saisons avant ${name} ?`,
-        answer: wrap(from - gap),
-        pivots: [from],
-        explain: () => `${COUNT_WORDS[gap]} saisons avant ${name}, c’était ${WITH_ARTICLE[wrap(from - gap)]}.`,
+        prompt: 'Quelle saison voit-on sur ce paysage ?',
+        answer,
+        picture: { type: 'landscape', season: answer },
+        explain: () => `Ce paysage, c’est ${seasonLabel(answer)}.`,
       }
     }
     case 'month': {
@@ -126,8 +93,8 @@ function build(kind) {
       return {
         prompt: `En quelle saison est-on en ${MONTHS[month]} ?`,
         answer: seasonOfMonth(month),
-        pivots: [],
-        explain: () => `${MONTHS[month][0].toUpperCase()}${MONTHS[month].slice(1)} est un mois ${seasonLabel(seasonOfMonth(month))}.`,
+        picture: null,
+        explain: () => `${capitalize(MONTHS[month])} est un mois ${seasonLabel(seasonOfMonth(month))}.`,
       }
     }
     default: {
@@ -136,15 +103,19 @@ function build(kind) {
       return {
         prompt: `De quelle saison parle-t-on ? « ${clue} »`,
         answer,
-        pivots: [],
+        picture: null,
         explain: () => `Ce sont des choses qu’on voit ou qu’on fait ${seasonLabel(answer)}.`,
       }
     }
   }
 }
 
+function capitalize(text) {
+  return `${text[0].toUpperCase()}${text.slice(1)}`
+}
+
 /** « au printemps », « en été », « en automne », « en hiver ». */
-function seasonLabel(season) {
+export function seasonLabel(season) {
   return season === 0 ? 'au printemps' : `en ${SEASONS[season]}`
 }
 
@@ -157,7 +128,7 @@ export function buildRound(kind) {
     answer,
     // All four seasons are offered: the question is which, not whether.
     options: shuffle([...SEASONS]),
-    pivots: question.pivots,
+    picture: question.picture,
     explanation: question.explain(),
   }
 }
