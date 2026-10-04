@@ -5,7 +5,7 @@ export default {
   id: 'week-days',
   title: 'Les jours de la semaine',
   tagline: 'Se repérer dans la semaine : hier, demain, après-demain, dans trois jours.',
-  category: 'math-cognition',
+  category: 'executive-functions',
   cover,
   ages: '6 ans et plus',
   keywords: ['jours', 'semaine', 'temps', 'repérage temporel', 'chaîne ordonnée'],
