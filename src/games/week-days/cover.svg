@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Les sept jours de la semaine en rang, un jour à retrouver">
+  <rect width="320" height="200" fill="#fbf5e4"/>
+  <rect x="14" y="76" width="36" height="52" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="58" y="76" width="36" height="52" rx="10" fill="#8a6a18" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="102" y="76" width="36" height="52" rx="10" fill="none" stroke="#8a6a18" stroke-width="6" stroke-dasharray="14 12"/>
+  <rect x="146" y="76" width="36" height="52" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="190" y="76" width="36" height="52" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6"/>
+  <rect x="234" y="76" width="36" height="52" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6" stroke-dasharray="4 8"/>
+  <rect x="278" y="76" width="36" height="52" rx="10" fill="#f4dfa8" stroke="#8a6a18" stroke-width="6" stroke-dasharray="4 8"/>
+  <path d="M76 58q22-32 42-4" fill="none" stroke="#8a6a18" stroke-width="6" stroke-linecap="round"/>
+  <path d="M112 44l14 10-16 8z" fill="#8a6a18"/>
+</svg>
