@@ -11,7 +11,7 @@ import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
 import { Landscape, SeasonObject } from './drawings.jsx'
-import { SEASONS, buildSeries } from './logic.js'
+import { buildSeries } from './logic.js'
 
 function Picture({ picture }) {
   if (!picture) return null
