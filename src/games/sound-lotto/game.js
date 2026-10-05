@@ -3,7 +3,7 @@ import cover from './cover.svg'
 
 export default {
   id: 'sound-lotto',
-  title: 'Le loto sonore',
+  title: 'Le loto des mots',
   tagline: 'Écouter un mot, puis retrouver son image sur le plateau.',
   category: 'oral-language',
   cover,

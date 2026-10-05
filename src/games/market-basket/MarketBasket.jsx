@@ -34,11 +34,7 @@ function Item({ item, count, state, onClick, label, disabled }) {
       {state && <StateMark state={state} size={26} />}
       <Pictogram id={item.id} size={52} />
       <span className="token__label">{item.one}</span>
-      {count > 0 && (
-        // The state mark sits in the same corner: pushed aside, the count
-        // stays readable, which is the whole point of the correction.
-        <span className={`token__rank${state ? ' token__rank--left' : ''}`}>{count}</span>
-      )}
+      {count > 0 && <span className="token__rank token__rank--quantity">×{count}</span>}
     </button>
   )
 }

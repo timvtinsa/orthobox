@@ -221,11 +221,12 @@ Concretely, on every landing on `main`:
 2. merging that pull request creates the **tag** and the **GitHub release**,
    then the build is attached to it as an archive;
 3. a single Claude Code call (the cheap `claude-haiku-4-5` model, billed
-   against a Claude subscription rather than paid API credits) reads the
-   release's commits directly and writes `public/whats-new.json`, a short,
-   French, user-facing summary — never the same text as `CHANGELOG.md`. The
-   app shows it once, in a popup, the first time it runs on a new version
-   (see `src/components/WhatsNew.jsx`). This step reads a
+   against a Claude subscription rather than paid API credits) turns the
+   release's commits into `public/whats-new.json`, a short, French,
+   user-facing summary — never the same text as `CHANGELOG.md`. The app
+   shows it once, in a popup, the first time it runs on a new version, and
+   on demand from the bell icon in the header (see
+   `src/components/WhatsNew.jsx`). This step reads a
    `CLAUDE_CODE_OAUTH_TOKEN` repository secret, but never blocks the
    release: if it fails for any reason, the release still publishes, just
    without a user-facing changelog that time.

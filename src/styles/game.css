@@ -170,6 +170,20 @@
   font-weight: 800;
 }
 
+/* The market basket's quantity, not a rank: reads better centred under the
+   item than as a corner badge easy to miss, and "×4" is unambiguous where a
+   bare "4" could pass for the item itself. Static positioning also frees the
+   top-right corner for the correction mark alone, so there is no longer a
+   left/right swap to keep the two apart. */
+.token__rank--quantity {
+  position: static;
+  min-width: 0;
+  height: auto;
+  margin-top: 2px;
+  padding: 1px 7px;
+  border-radius: var(--radius-lg);
+}
+
 .token-row {
   display: flex;
   gap: 12px;
@@ -177,6 +191,108 @@
   justify-content: center;
   min-height: 76px;
   align-items: center;
+}
+
+/* --- Number order: drag tiles onto a frieze -------------------------
+   A real number line, arrow included: each slot sits at the position its
+   own target value has between the round's lowest and highest number, so
+   the gaps between slots give an actual sense of scale — two close values
+   sit close together, a wide gap reads as a wide gap — not just an
+   evenly-spaced sequence. Positioning is by value, set inline from JS;
+   this stylesheet only lays out the fixed parts: the line, the arrowhead,
+   and each slot's fixed size once JS has placed it. ---------------------- */
+
+.frieze-row {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  height: 88px;
+  padding: 0 26px;
+  border-radius: var(--radius-lg);
+  border: 3px dashed transparent;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+/* The tile being dragged is hovering over this row: highlighted so the
+   drop feels anchored, the same way a browser highlights a valid target. */
+.frieze-row--over {
+  border-color: var(--category-pastel);
+  background: var(--category-tint);
+}
+
+/* The axis itself: a plain ruled line with an arrowhead at the high end,
+   so the line reads as continuing rather than stopping dead at the last
+   number — the point of a number line is that there is always a next one. */
+.frieze-axis {
+  position: absolute;
+  left: 0;
+  right: 18px;
+  top: 50%;
+  height: 2px;
+  background: var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.frieze-axis::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 11px solid var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.frieze-slot {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 6px;
+  border-radius: var(--radius);
+  border: 3px dashed var(--line-strong);
+  background: var(--surface);
+  font-family: var(--font-patient);
+  font-size: 1.05rem;
+  font-weight: 700;
+  transform: translate(-50%, -50%);
+  transition: left 0.2s ease;
+}
+
+.frieze-slot--filled {
+  border-style: solid;
+  border-color: var(--state-ok);
+  background: var(--state-ok-tint);
+  color: var(--state-ok);
+}
+
+.frieze-slot--pending {
+  border-color: var(--category-pastel);
+}
+
+.frieze-slot--error {
+  border-color: var(--state-err);
+  background: var(--state-err-tint);
+}
+
+/* The tile stays in the row while dragged, faded, so its slot in the pool
+   is still visible; the ghost below is what actually follows the pointer. */
+.token--dragging {
+  opacity: 0.35;
+}
+
+.token--ghost {
+  position: fixed;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(51, 48, 58, 0.22);
 }
 
 .dot {
@@ -1363,6 +1479,112 @@
   justify-content: center;
 }
 
+/* --- Le triomino du 10: chain triangular tiles, drag in the one whose
+   facing third completes the open end to ten --------------------------- */
+
+/* One shared coordinate system for the whole chain: tiles alternate apex up
+   and apex down so each one's edge is pixel-for-pixel the next one's edge,
+   a real tessellation rather than separate icons in a row. */
+.triomino-strip {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.triomino-tile {
+  display: block;
+}
+
+.triomino-tile__shape {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 3;
+}
+
+.triomino-tile__lines {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.triomino-tile__digit {
+  font-family: var(--font-patient);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.triomino-tile--ghost .triomino-tile__shape {
+  fill: none;
+  stroke-dasharray: 5 6;
+}
+
+/* The tile being dragged is hovering over the pending slot: thickened like
+   the frieze row's own drop highlight, kept as a stroke change since this
+   slot shares its edges with its neighbour and cannot move without opening
+   a gap. */
+.triomino-tile--over .triomino-tile__shape {
+  stroke: var(--category-pastel);
+  stroke-width: 5;
+}
+
+.triomino-tile--ok .triomino-tile__shape {
+  stroke: var(--state-ok);
+  fill: var(--state-ok-tint);
+  stroke-dasharray: none;
+}
+
+.triomino-tile--err .triomino-tile__shape {
+  stroke: var(--state-err);
+  fill: var(--state-err-tint);
+  stroke-dasharray: none;
+}
+
+.triomino-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.triomino-piece {
+  padding: 4px;
+  border: none;
+  background: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.triomino-piece:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.triomino-piece:disabled {
+  cursor: default;
+}
+
+.triomino-piece--dragging {
+  opacity: 0.35;
+}
+
+/* The picked candidate now shows in the chain itself, glued in place: hide
+   its spot in the pool rather than show the same tile twice. */
+.triomino-piece--placed {
+  opacity: 0;
+}
+
+.triomino-ghost {
+  position: fixed;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(51, 48, 58, 0.22));
+}
+
 /* --- Le loto sonore -------------------------------------------------- */
 
 .lotto-cell {
@@ -1433,6 +1655,21 @@
   border-radius: 50%;
   background: var(--category);
   opacity: 0.25;
+}
+
+/* « Le memory des calculs »: a card's content is text, not a pictogram —
+   a number reads bigger than an operation, which has more characters to
+   fit in the same card. */
+.memory-card__text {
+  font-family: var(--font-patient);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 5.5vw, 1.6rem);
+  color: var(--category);
+  text-align: center;
+}
+
+.memory-card__text--operation {
+  font-size: clamp(0.85rem, 4.2vw, 1.15rem);
 }
 
 /* --- Tri des formes ------------------------------------------------ */
@@ -2300,9 +2537,77 @@
   color: var(--ink-faint);
 }
 
-/* Le marqueur d'état occupe le même angle que le compteur : décalé à
-   gauche, la quantité attendue reste lisible pendant la correction. */
-.token__rank--left {
-  right: auto;
-  left: -8px;
+/* --- Les jours de la semaine ----------------------------------------- */
+
+/* The week as a strip. The day the question starts from is marked by a
+   filled, heavier box — not by colour alone — and the weekend by a dashed
+   outline, so the two days of rest read at a glance. */
+.week-strip {
+  display: flex;
+  gap: clamp(4px, 1vw, 8px);
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week-strip__day {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  flex: 1 1 0;
+  max-width: 64px;
+  padding: 10px 2px;
+  border-radius: var(--radius);
+  border: 2px solid var(--line);
+  background: var(--surface);
+  font-size: var(--ui-xs);
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+
+.week-strip__day--weekend {
+  border-style: dashed;
+}
+
+.week-strip__day--pivot {
+  border: 4px solid var(--category);
+  background: var(--category-pastel);
+  color: var(--category);
+}
+
+.week-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.week-prompt .game-prompt {
+  margin: 0;
+}
+
+/* --- Les quatre saisons ----------------------------------------------- */
+
+.season-picture {
+  display: grid;
+  place-items: center;
+}
+
+.season-scene {
+  width: min(100%, 360px);
+  height: auto;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.season-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.season-prompt .game-prompt {
+  margin: 0;
 }

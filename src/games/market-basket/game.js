@@ -5,7 +5,7 @@ export default {
   id: 'market-basket',
   title: 'Le panier du marché',
   tagline: 'Reproduire une commande de fruits et légumes en les prenant sur l’étal.',
-  category: 'executive-functions',
+  category: 'math-cognition',
   cover,
   ages: '4 ans et plus',
   keywords: ['planification', 'mémoire de travail', 'dénombrement', 'comparaison', 'inhibition'],
