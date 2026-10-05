@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1](https://github.com/timvtinsa/orthobox/compare/v0.6.0...v0.6.1) (2026-10-05)
+
+
+### Bug fixes
+
+* **release:** generate the user-facing changelog without claude-code-action ([9a3dba4](https://github.com/timvtinsa/orthobox/commit/9a3dba4831a00502e98b1a02feab009e01dcddfd))
+* **release:** generate the user-facing changelog without claude-code-action ([4926a27](https://github.com/timvtinsa/orthobox/commit/4926a2768931423c31b035bbb92ca12bf8731c43))
+
 ## [0.6.0](https://github.com/timvtinsa/orthobox/compare/v0.5.0...v0.6.0) (2026-10-05)
 
 
