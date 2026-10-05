@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.6.0](https://github.com/timvtinsa/orthobox/compare/v0.5.0...v0.6.0) (2026-10-05)
+
+
+### Features
+
+* **games:** add le memory des calculs, a number/operation memory game ([a9d857f](https://github.com/timvtinsa/orthobox/commit/a9d857fd58c04a9a1551bc16e0a666919e5ac6fa))
+* **games:** add the days of the week game ([0e6958c](https://github.com/timvtinsa/orthobox/commit/0e6958c1f6982fe3769adccfac7ac971306c3ee6))
+* **games:** add triomino du 10, a complement-to-ten matching game ([7595235](https://github.com/timvtinsa/orthobox/commit/75952353cc7e27cf9103c6282179644b8240f151))
+* **games:** ask about yesterday and tomorrow in the days game ([a864fbb](https://github.com/timvtinsa/orthobox/commit/a864fbb35620cdd73e5a15431a5aa7151774abac))
+* **games:** le memory des calculs ([54001ba](https://github.com/timvtinsa/orthobox/commit/54001bacec5c9b35c761e87baef9229e9145ac39))
+* **games:** le triomino du 10 ([641aa47](https://github.com/timvtinsa/orthobox/commit/641aa477858ee3f244edaafd57b771327b02fc4b))
+* **games:** move the days game to the executive functions domain ([8e9fba9](https://github.com/timvtinsa/orthobox/commit/8e9fba98f1f601e343f4a5f2a530806dc04693f2))
+* **games:** seasons from landscapes and objects, drop before/after ([a106b26](https://github.com/timvtinsa/orthobox/commit/a106b263876905695923befbacac71abf37b1d33))
+* **games:** the days of the week ([ac53ac5](https://github.com/timvtinsa/orthobox/commit/ac53ac537b290369b0c95a5359042b1eea3558e5))
+* **games:** the four seasons ([87c6bf7](https://github.com/timvtinsa/orthobox/commit/87c6bf74fe4c34476bf16372fb30b6b231b50687))
+* **games:** the four seasons ([e3b4cb5](https://github.com/timvtinsa/orthobox/commit/e3b4cb59207b4be5a8994e374b3fbc3e07c0ecad))
+* **math-memory:** add an all-operations-mixed mode ([c6c6f9c](https://github.com/timvtinsa/orthobox/commit/c6c6f9cdbd1c5d31a56b56c137ce368cc2a30f1d))
+* **noise-lotto:** add a real sound-to-picture lotto game ([c237c5f](https://github.com/timvtinsa/orthobox/commit/c237c5f2de00ee73af3d87de08c743e5bbbc547e))
+* **noise-lotto:** add a real sound-to-picture lotto game ([24e6508](https://github.com/timvtinsa/orthobox/commit/24e65080b02cce59e33420e8896e3f680fe35900))
+* **number-order:** drag numbers onto a frieze instead of clicking ([2dec67f](https://github.com/timvtinsa/orthobox/commit/2dec67f9f1d1b3b9e157607c688156e37b62d9e1))
+* **number-order:** drag numbers onto a frieze instead of clicking ([4ab2c45](https://github.com/timvtinsa/orthobox/commit/4ab2c45a45c32844453c469c1a2f009da0c12052))
+* **number-order:** make the frieze a real number line ([a0fd789](https://github.com/timvtinsa/orthobox/commit/a0fd789ad1f066e6fa9d516c3bca38e00b1e85de))
+* **triomino:** grow the board in every direction, not just rightward ([bcae026](https://github.com/timvtinsa/orthobox/commit/bcae0268b63cf918c53ce0ef203452a6252a1ce8))
+
+
+### Bug fixes
+
+* **deps:** pin eslint-plugin-react's eslint peer to the installed version ([5ce231c](https://github.com/timvtinsa/orthobox/commit/5ce231cc226657735365aa5538c5783420f8ccec))
+* **games:** remove unused names in the seasons game ([172c5bf](https://github.com/timvtinsa/orthobox/commit/172c5bf3348157b9d92d85a549bab5420059b80e))
+* **market-basket:** show the quantity as "×N" centred below the item ([6df8d9e](https://github.com/timvtinsa/orthobox/commit/6df8d9eae5351e3955cce9d73f88075e5c443cbd))
+* **market-basket:** show the quantity as "×N" centred below the item ([2dd8755](https://github.com/timvtinsa/orthobox/commit/2dd8755469d8ee6e2052051496a7e1d7f8cac65c))
+* **market-basket:** use the math-cognition palette on the gallery cover ([f9b25c9](https://github.com/timvtinsa/orthobox/commit/f9b25c9c88b096d675d7f1aac77a5ad02392568f))
+* **market-basket:** use the math-cognition palette on the gallery cover ([02574aa](https://github.com/timvtinsa/orthobox/commit/02574aa51f639a645a746c13dc68103568d7587a))
+* **number-order:** drop the rank number from empty frieze slots ([ed0eba9](https://github.com/timvtinsa/orthobox/commit/ed0eba91a9b920935cead25b3cf7dc441c7e41b3))
+* **sound-lotto:** rename to "Le loto des mots" ([fa417d4](https://github.com/timvtinsa/orthobox/commit/fa417d471f222766bd9d2ef67ae69870005465ba))
+* **sound-lotto:** rename to "Le loto des mots" ([1a211d5](https://github.com/timvtinsa/orthobox/commit/1a211d59391f4017a3805e25f1fb89932b43421d))
+* **triomino:** render a real tessellating strip, digits inside each third ([d23d6b0](https://github.com/timvtinsa/orthobox/commit/d23d6b0c196180200e947de1f006223b37a4b205))
+* **triomino:** show a clicked attempt side by side, not just coloured ([bfc1eee](https://github.com/timvtinsa/orthobox/commit/bfc1eeeed533c2bc2e4684d17e54d7c7ecf68789))
+* **ui:** shrink patient-facing choice text on phone, stop overflow ([de0d87b](https://github.com/timvtinsa/orthobox/commit/de0d87bcb9789a97352fc72a91c96253c04c45e6))
+* **ui:** shrink patient-facing choice text on phone, stop overflow ([82572a4](https://github.com/timvtinsa/orthobox/commit/82572a451febe3a607bed2f3b4f2d339d7ef85ab))
+* **whats-new:** add a manual bell button, fix silent generation failures ([49636cd](https://github.com/timvtinsa/orthobox/commit/49636cdfc08ee86401d08768f2e763f9ee209671))
+* **whats-new:** add a manual bell button, fix silent generation failures ([c74d66b](https://github.com/timvtinsa/orthobox/commit/c74d66bf0d672573da2e0cea25a3e90b6bb76f72))
+
 ## [0.5.0](https://github.com/timvtinsa/orthobox/compare/v0.4.0...v0.5.0) (2026-09-27)
 
 
