@@ -2586,3 +2586,28 @@
 .week-prompt .game-prompt {
   margin: 0;
 }
+
+/* --- Les quatre saisons ----------------------------------------------- */
+
+.season-picture {
+  display: grid;
+  place-items: center;
+}
+
+.season-scene {
+  width: min(100%, 360px);
+  height: auto;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.season-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.season-prompt .game-prompt {
+  margin: 0;
+}
