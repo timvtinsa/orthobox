@@ -55,6 +55,10 @@ try {
     ['release', 'view', newTag, '--json', 'body', '-q', '.body'],
     { cwd: ROOT, encoding: 'utf8' },
   )
+  if (currentBody.includes('## Nouveautés')) {
+    console.log(`Release notes for ${newTag} already have a "Nouveautés" section: left as they are.`)
+    process.exit(0)
+  }
   execFileSync('gh', ['release', 'edit', newTag, '--notes', notesSection + currentBody], {
     cwd: ROOT,
     encoding: 'utf8',
