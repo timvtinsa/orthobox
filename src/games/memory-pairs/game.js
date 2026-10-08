@@ -21,6 +21,9 @@ export default {
   ],
   instructions:
     'Les cartes sont face cachée. Le patient en retourne deux : si elles vont ensemble elles restent visibles, sinon elles se retournent après le temps d’observation choisi.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'level' },
   settings: [
     {
       id: 'level',

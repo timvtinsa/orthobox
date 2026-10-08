@@ -21,6 +21,9 @@ export default {
   ],
   instructions:
     'Une image, un indice ou un mois est présenté. Le patient touche la saison qui lui correspond parmi les quatre.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'level' },
   settings: [
     {
       id: 'level',
