@@ -47,7 +47,7 @@ export default function WeekDays({ config, session }) {
   const answer = (day) => {
     if (!lock.take()) return
     setPicked(day)
-    session.register(day === round.answer)
+    session.register(day === round.answer, round.prompt)
   }
 
   const goNext = () => {

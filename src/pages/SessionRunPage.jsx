@@ -12,7 +12,14 @@ import GameCompanion from '../components/GameCompanion.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
 import { useGameSession } from '../hooks/useGameSession.js'
-import { readSessionPlan, summariseConfig } from '../lib/session-plan.js'
+import { readSessionPlan } from '../lib/session-plan.js'
+import {
+  missesLabel,
+  reportDomains,
+  reportRows,
+  reportText,
+  scoreLabel,
+} from '../lib/session-report.js'
 
 export default function SessionRunPage() {
   const navigate = useNavigate()
@@ -96,6 +103,7 @@ function SessionStep({ step, steps, index, onFinish }) {
       correct: session.correct,
       attempts: session.attempts,
       played: session.attempts > 0,
+      misses: session.misses,
       // A game left before its last item is interrupted, which the summary
       // writes out rather than hiding behind a partial score.
       completed: session.total === null ? null : session.index >= session.total,
@@ -147,54 +155,133 @@ function SessionStep({ step, steps, index, onFinish }) {
  * Printed summary: black on white, black rules, no flat colour that would
  * drink the ink. Photographed askew, the table stays readable, and the shape
  * of the domain keeps saying the domain once the colour is gone.
+ *
+ * It doubles as the session report: what to go over again under each game,
+ * the result per domain, and two free fields (the patient's initials and the
+ * practitioner's observations) that are printed with it. None of it is stored.
  */
 function Summary({ steps, results, onRestart, onEdit }) {
   const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
+  const [patient, setPatient] = useState('')
+  const [note, setNote] = useState('')
+  const [copied, setCopied] = useState(false)
 
-  const score = (result) => {
-    if (!result || !result.played) return 'non joué'
-    if (result.completed === false) return 'interrompu'
-    return `${result.correct} / ${result.attempts}`
+  const rows = reportRows(steps, results)
+  const domains = reportDomains(rows)
+  const text = () => reportText({ rows, domains, date: today, patient: patient.trim(), note })
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text())
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard blocked: the download below does the same job.
+    }
+  }
+
+  const download = () => {
+    const url = URL.createObjectURL(new Blob([text()], { type: 'text/plain;charset=utf-8' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'bilan-de-seance.txt'
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
     <div className="stack summary">
       <header className="hero no-print">
-        <h1 className="hero__title">Récapitulatif de la séance</h1>
+        <h1 className="hero__title">Bilan de la séance</h1>
         <p className="hero__text">
-          À imprimer ou à photographier. Ces scores ne sont pas enregistrés : ils disparaissent en
-          quittant la page.
+          À imprimer, copier ou enregistrer. Ces scores ne sont pas conservés par l’application :
+          ils disparaissent en quittant la page.
         </p>
       </header>
 
       <div className="recap">
         <div className="recap__head">
-          <div className="recap__title">Séance du {today}</div>
+          <div className="recap__title">
+            Séance du {today}
+            {patient.trim() && ` · ${patient.trim()}`}
+          </div>
           <div className="recap__meta">
             {steps.length} jeu{steps.length > 1 ? 'x' : ''}
           </div>
         </div>
 
-        {steps.map((step, position) => {
-          const game = getGame(step.gameId)
-          const result = results[position]
-          return (
-            <div key={step.id} className="recap__row">
-              <span className="recap__rank">{position + 1}</span>
-              <span className="recap__text">
-                <strong>{game?.title ?? step.gameId}</strong>
-                <br />
-                {game ? summariseConfig(game, step.config) : 'jeu retiré de la galerie'}
-              </span>
-              <span className="recap__score">{score(result)}</span>
-            </div>
-          )
-        })}
+        {rows.map((row) => (
+          <div key={steps[row.rank - 1].id} className="recap__row">
+            <span className="recap__rank">{row.rank}</span>
+            <span className="recap__text">
+              <strong>{row.title}</strong>
+              <br />
+              {row.settings}
+              {row.misses.length > 0 && (
+                <>
+                  <br />
+                  <span className="recap__misses">À revoir : {missesLabel(row)}</span>
+                </>
+              )}
+            </span>
+            <span className="recap__score">{scoreLabel(row)}</span>
+          </div>
+        ))}
+
+        {domains.length > 0 && (
+          <div className="recap__domains">
+            <strong>Par domaine</strong>
+            {domains.map((domain) => (
+              <div key={domain.category} className="recap__domain">
+                <span>{domain.label}</span>
+                <span>
+                  {domain.correct} / {domain.attempts} ({domain.rate} %)
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {note.trim() && (
+          <div className="recap__note">
+            <strong>Observations</strong>
+            <p>{note.trim()}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="recap-fields no-print">
+        <label className="field">
+          <span className="field__label">Patient (initiales, facultatif)</span>
+          <input
+            className="field__input"
+            type="text"
+            maxLength={30}
+            value={patient}
+            onChange={(event) => setPatient(event.target.value)}
+          />
+        </label>
+        <label className="field">
+          <span className="field__label">Observations (facultatif)</span>
+          <textarea
+            className="field__input"
+            rows={4}
+            maxLength={1000}
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+          />
+        </label>
       </div>
 
       <div className="game-actions no-print">
         <button type="button" className="btn btn--lg" onClick={() => window.print()}>
-          Imprimer le récapitulatif
+          Imprimer le bilan
+        </button>
+        <button type="button" className="btn btn--ghost" onClick={copy}>
+          {copied ? 'Copié' : 'Copier le bilan'}
+        </button>
+        <button type="button" className="btn btn--ghost" onClick={download}>
+          Télécharger (.txt)
         </button>
         <button type="button" className="btn btn--ghost" onClick={onRestart}>
           Refaire la séance

@@ -2012,6 +2012,58 @@
   white-space: nowrap;
 }
 
+/* Bilan : ce qu'il reste à revoir, le résultat par domaine, les
+   observations. Toujours des filets et du texte, jamais un aplat. */
+.recap__misses {
+  font-style: italic;
+}
+
+.recap__domains,
+.recap__note {
+  padding: var(--s2) var(--s3);
+  border-top: 1.5px solid var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.recap__domain {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.recap__note p {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.field__label {
+  font-size: var(--ui-xs);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.field__input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+.recap-fields {
+  display: grid;
+  gap: var(--s2);
+  max-width: 680px;
+}
+
 @media (max-width: 700px) {
   .session-banner__advance {
     margin-left: 0;

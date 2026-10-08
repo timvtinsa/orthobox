@@ -129,6 +129,9 @@ export function buildRound(kind) {
     // All four seasons are offered: the question is which, not whether.
     options: shuffle([...SEASONS]),
     picture: question.picture,
+    // What the session report lists when the answer was missed: the question
+    // itself, or the object / landscape when the question is a picture.
+    summary: question.picture ? `${question.picture.type === 'object' ? objectLabel(question.picture.id) : 'paysage'} : ${answer}` : question.prompt,
     explanation: question.explain(),
   }
 }
