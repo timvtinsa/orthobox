@@ -2611,3 +2611,63 @@
 .season-prompt .game-prompt {
   margin: 0;
 }
+
+/* --- Mes mots : le mot à lire, et la page des listes ---------------- */
+
+.custom-word {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-patient);
+  font-size: clamp(2.6rem, 1.6rem + 6vw, 4.4rem);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.word-lists__items {
+  display: grid;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.word-list-card {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s3);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  max-width: 680px;
+}
+
+.word-list-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.word-list-card__name {
+  margin: 0;
+  font-size: var(--ui-lg, 18px);
+}
+
+.word-list-card__badge {
+  padding: 2px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-size: var(--ui-xs);
+  font-weight: 800;
+}
+
+.word-list-card__words {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.word-list-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
