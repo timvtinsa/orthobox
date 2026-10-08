@@ -34,6 +34,9 @@ export default function Layout() {
             <NavLink to="/session" className="app-nav__link app-nav__link--session">
               Séance
             </NavLink>
+            <NavLink to="/listes" className="app-nav__link">
+              Mes listes
+            </NavLink>
           </nav>
           <ModeSwitch />
           <WhatsNew />

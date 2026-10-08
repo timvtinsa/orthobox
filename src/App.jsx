@@ -8,6 +8,7 @@ import GamePage from './pages/GamePage.jsx'
 import SessionBuilderPage from './pages/SessionBuilderPage.jsx'
 import SessionRunPage from './pages/SessionRunPage.jsx'
 import SessionSharedPage from './pages/SessionSharedPage.jsx'
+import WordListsPage from './pages/WordListsPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="session" element={<SessionBuilderPage />} />
         <Route path="session/run" element={<SessionRunPage />} />
         <Route path="session/shared" element={<SessionSharedPage />} />
+        <Route path="listes" element={<WordListsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

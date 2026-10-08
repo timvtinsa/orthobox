@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une feuille de liste avec des mots à cocher et une ligne à compléter">
+  <rect width="320" height="200" fill="#fdede7"/>
+  <rect x="78" y="22" width="164" height="156" rx="14" fill="#f6bdab" stroke="#a44a28" stroke-width="6"/>
+  <path d="M104 62h20M140 62h74" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M104 96h20M140 96h58" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M104 130h20" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round"/>
+  <path d="M140 130h74" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round" stroke-dasharray="14 12"/>
+  <path d="M254 130l10 10 18-22" fill="none" stroke="#a44a28" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
