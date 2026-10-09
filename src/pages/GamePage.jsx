@@ -13,6 +13,7 @@ import CategoryShape from '../components/CategoryShape.jsx'
 import GameBrief from '../components/GameBrief.jsx'
 import GameCompanion from '../components/GameCompanion.jsx'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
+import { ProgressionProvider } from '../components/ProgressionContext.jsx'
 import Icon from '../components/Icon.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -72,7 +73,9 @@ function GameScreen({ gameId }) {
         <div className="board__area">
           <div className="board__content">
             <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
-              <GameComponent key={runKey} config={config} session={session} />
+              <ProgressionProvider value={{ game, config, apply: start }}>
+                <GameComponent key={runKey} config={config} session={session} />
+              </ProgressionProvider>
             </Suspense>
           </div>
 

@@ -21,6 +21,9 @@ export default {
   ],
   instructions:
     'Un nombre est donné, et le total à atteindre. Le patient choisit, parmi quatre propositions, le nombre qui complète exactement le compte.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'target' },
   settings: [
     {
       id: 'rounds',
