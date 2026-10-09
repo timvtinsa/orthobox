@@ -12,67 +12,12 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { pick, randomInt, shuffle } from '../../lib/random.js'
-
-/** Operand bounds for each range setting. */
-const RANGES = {
-  ten: { max: 10, tables: [2, 3, 4, 5] },
-  twenty: { max: 20, tables: [2, 3, 4, 5, 6, 10] },
-  hundred: { max: 100, tables: [2, 3, 4, 5, 6, 7, 8, 9, 10] },
-}
-
-/**
- * Plausible lures: the usual mistakes are the immediate neighbour, the
- * forgotten carry (a gap of 10) and the reverse operation.
- */
-function distractors(result, gaps) {
-  const candidates = new Set()
-  for (const gap of shuffle(gaps)) {
-    const value = result + gap
-    if (value >= 0 && value !== result) candidates.add(value)
-    if (candidates.size >= 3) break
-  }
-  let neighbour = result + 1
-  while (candidates.size < 3) {
-    if (neighbour !== result && neighbour >= 0) candidates.add(neighbour)
-    neighbour += 1
-  }
-  return [...candidates].slice(0, 3)
-}
-
-function buildOperation(config) {
-  const range = RANGES[config.range] ?? RANGES.ten
-  const operation =
-    config.operation === 'mixed'
-      ? pick(['addition', 'subtraction'])
-      : config.operation
-
-  if (operation === 'multiplication') {
-    const a = pick(range.tables)
-    const b = randomInt(2, 10)
-    return { equation: `${a} × ${b}`, result: a * b, gaps: [a, -a, b, -b, 1, -1, 10, -10] }
-  }
-  if (operation === 'subtraction') {
-    const a = randomInt(Math.ceil(range.max / 2), range.max)
-    const b = randomInt(1, a)
-    return { equation: `${a} − ${b}`, result: a - b, gaps: [1, -1, 2, -2, 10, -10] }
-  }
-  const a = randomInt(1, range.max)
-  const b = randomInt(1, Math.max(1, range.max - a))
-  return { equation: `${a} + ${b}`, result: a + b, gaps: [1, -1, 2, -2, 10, -10] }
-}
-
-function buildRound(config) {
-  const operation = buildOperation(config)
-  return {
-    ...operation,
-    options: shuffle([operation.result, ...distractors(operation.result, operation.gaps)]),
-  }
-}
+import { createProblemDrawer } from './logic.js'
 
 export default function MentalMath({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createProblemDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [choice, setChoice] = useState(null)
   const lock = useAnswerLock()
   const start = useRef(performance.now())
@@ -92,7 +37,7 @@ export default function MentalMath({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     setChoice(null)
   }
 
@@ -101,7 +46,8 @@ export default function MentalMath({ config, session }) {
     session.reset()
     rounds.restart()
     times.current = []
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     setChoice(null)
   }
 

@@ -20,7 +20,7 @@ import { useRounds } from '../../hooks/useRounds.js'
 import { Pictogram } from '../../lib/pictograms.jsx'
 import { stateClass } from '../../lib/answer-state.js'
 import { PRODUCE, quantityLabel } from './data.js'
-import { basketMatches, buildOrder, kindState, orderSize } from './logic.js'
+import { basketMatches, createOrderDrawer, kindState, orderSize } from './logic.js'
 
 function Item({ item, count, state, onClick, label, disabled }) {
   return (
@@ -41,7 +41,8 @@ function Item({ item, count, state, onClick, label, disabled }) {
 
 export default function MarketBasket({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [order, setOrder] = useState(() => buildOrder(config))
+  const [drawer] = useState(() => createOrderDrawer(config))
+  const [order, setOrder] = useState(() => drawer.next())
   const [phase, setPhase] = useState(config.model === 'hidden' ? 'study' : 'shop')
   const [basket, setBasket] = useState({})
   const [result, setResult] = useState(null)
@@ -86,13 +87,14 @@ export default function MarketBasket({ config, session }) {
 
   const goNext = () => {
     rounds.next()
-    startRound(buildOrder(config))
+    startRound(drawer.next())
   }
 
   const replay = () => {
     session.reset()
     rounds.restart()
-    startRound(buildOrder(config))
+    drawer.reset()
+    startRound(drawer.next())
   }
 
   if (rounds.isOver) {

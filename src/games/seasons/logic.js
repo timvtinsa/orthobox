@@ -119,6 +119,13 @@ export function seasonLabel(season) {
   return season === 0 ? 'au printemps' : `en ${SEASONS[season]}`
 }
 
+/** The same question, the same picture or the same answer as the previous round. */
+function repeats(previous, round) {
+  if (previous === undefined) return false
+  const same = (key) => JSON.stringify(previous[key]) === JSON.stringify(round[key])
+  return same('answer') || (same('prompt') && same('picture'))
+}
+
 export function buildRound(kind) {
   const question = build(kind)
   const answer = SEASONS[question.answer]
@@ -140,7 +147,7 @@ export function buildSeries(config) {
   const series = []
   for (const kind of noRepeatSeries(kinds, config.rounds)) {
     let round = buildRound(kind)
-    for (let attempt = 0; attempt < 20 && series.at(-1)?.prompt === round.prompt; attempt += 1) {
+    for (let attempt = 0; attempt < 40 && repeats(series.at(-1), round); attempt += 1) {
       round = buildRound(kind)
     }
     series.push(round)

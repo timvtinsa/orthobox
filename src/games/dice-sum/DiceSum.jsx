@@ -18,7 +18,7 @@ import GameOver from '../../components/GameOver.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import Die from './Die.jsx'
-import { FACE_ROTATION, isCorrectAnswer, maxSum, rollDice, sumOf, tumbleRotation } from './logic.js'
+import { FACE_ROTATION, createRollDrawer, isCorrectAnswer, maxSum, sumOf, tumbleRotation } from './logic.js'
 
 // Kept in step with the cube's own transition duration in game.css.
 const TUMBLE_MS = 1500
@@ -32,6 +32,7 @@ function prefersReducedMotion() {
 
 export default function DiceSum({ config, session }) {
   const rounds = useRounds(config.rounds, session)
+  const [drawer] = useState(() => createRollDrawer(config))
   const [roll, setRoll] = useState(null)
   const [phase, setPhase] = useState('ready') // ready -> tumbling -> answer
   const [rotations, setRotations] = useState([])
@@ -57,7 +58,7 @@ export default function DiceSum({ config, session }) {
   }, [phase, roll])
 
   const throwDice = () => {
-    const nextRoll = rollDice(config)
+    const nextRoll = drawer.next()
     setRoll(nextRoll)
     if (prefersReducedMotion()) {
       setRotations(nextRoll.map((die) => FACE_ROTATION[die.value]))
@@ -87,6 +88,7 @@ export default function DiceSum({ config, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
+    drawer.reset()
     setRoll(null)
     setTyped('')
     setResult(null)

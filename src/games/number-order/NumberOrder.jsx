@@ -16,7 +16,7 @@ import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import { useDragToZone } from '../../hooks/useDragToZone.js'
 import { useRounds } from '../../hooks/useRounds.js'
-import { sample, shuffle } from '../../lib/random.js'
+import { createDrawer, sample, shuffle } from '../../lib/random.js'
 
 const RANGES = {
   twenty: { min: 1, max: 20, step: 1 },
@@ -97,9 +97,22 @@ function buildRound(config) {
   }
 }
 
+/**
+ * The source of rounds for one game: the same set of numbers is not given
+ * twice, and two rounds within the last two never start from the same number.
+ */
+function createRoundDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [`first:${round.expected[0]}`],
+    series: (round) => [round.expected.join(',')],
+    memory: 2,
+  })
+}
+
 export default function NumberOrder({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createRoundDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [placed, setPlaced] = useState([])
   const [error, setError] = useState(null)
   const [flawless, setFlawless] = useState(true)
@@ -145,14 +158,15 @@ export default function NumberOrder({ config, session }) {
 
   const goNext = () => {
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     resetRound()
   }
 
   const replay = () => {
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     resetRound()
   }
 
