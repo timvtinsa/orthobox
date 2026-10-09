@@ -1,5 +1,5 @@
 /**
- * The session report: what was played, how it went, what to go over again.
+ * The session report: what was played and how it went.
  *
  * Built from the plan and the result of each step, once the session is over.
  * Nothing is stored: the report is shown, printed, copied or downloaded, and
@@ -8,9 +8,6 @@
 import { getGame } from '../games/registry.js'
 import { getCategory } from './categories.js'
 import { successRate, summariseConfig } from './session-plan.js'
-
-/** How many missed items a row lists before saying « et N autres ». */
-export const MAX_MISSES_LISTED = 5
 
 function stateOf(result) {
   if (!result || !result.played) return 'unplayed'
@@ -24,7 +21,6 @@ export function reportRows(steps, results) {
     const game = getGame(step.gameId)
     const result = results[position]
     const state = stateOf(result)
-    const misses = state === 'unplayed' ? [] : (result?.misses ?? [])
     return {
       rank: position + 1,
       gameId: step.gameId,
@@ -35,8 +31,6 @@ export function reportRows(steps, results) {
       correct: result?.correct ?? 0,
       attempts: result?.attempts ?? 0,
       rate: state === 'unplayed' ? null : successRate(result),
-      misses: misses.slice(0, MAX_MISSES_LISTED),
-      missesHidden: Math.max(0, misses.length - MAX_MISSES_LISTED),
     }
   })
 }
@@ -67,12 +61,6 @@ export function scoreLabel(row) {
   return `${row.correct} / ${row.attempts}${row.rate === null ? '' : ` (${row.rate} %)`}`
 }
 
-export function missesLabel(row) {
-  if (row.misses.length === 0) return ''
-  const more = row.missesHidden > 0 ? ` et ${row.missesHidden} autre${row.missesHidden > 1 ? 's' : ''}` : ''
-  return `${row.misses.join(' ; ')}${more}`
-}
-
 /** The whole report as plain text, for copying or downloading. */
 export function reportText({ rows, domains, date, patient, note }) {
   const lines = [`Séance du ${date}`]
@@ -81,8 +69,6 @@ export function reportText({ rows, domains, date, patient, note }) {
   for (const row of rows) {
     lines.push(`${row.rank}. ${row.title} — ${scoreLabel(row)}`)
     lines.push(`   ${row.settings}`)
-    const misses = missesLabel(row)
-    if (misses) lines.push(`   À revoir : ${misses}`)
   }
   if (domains.length > 0) {
     lines.push('', 'Par domaine :')

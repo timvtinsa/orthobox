@@ -2014,10 +2014,6 @@
 
 /* Bilan : ce qu'il reste à revoir, le résultat par domaine, les
    observations. Toujours des filets et du texte, jamais un aplat. */
-.recap__misses {
-  font-style: italic;
-}
-
 .recap__domains,
 .recap__note {
   padding: var(--s2) var(--s3);
@@ -2056,6 +2052,18 @@
   background: var(--surface);
   color: var(--ink);
   font: inherit;
+}
+
+.recap-tools {
+  display: flex;
+  gap: var(--s2);
+  margin-top: var(--s2);
+}
+
+.recap-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
 }
 
 .recap-fields {

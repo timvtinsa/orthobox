@@ -32,7 +32,7 @@ export default function Seasons({ config, session }) {
   const answer = (season) => {
     if (!lock.take()) return
     setPicked(season)
-    session.register(season === round.answer, round.summary)
+    session.register(season === round.answer)
   }
 
   const goNext = () => {

@@ -86,7 +86,7 @@ export default function MentalMath({ config, session }) {
     if (!lock.take()) return
     times.current.push(performance.now() - start.current)
     setChoice(value)
-    session.register(value === round.result, `${round.equation} = ${round.result}`)
+    session.register(value === round.result)
   }
 
   const goNext = () => {

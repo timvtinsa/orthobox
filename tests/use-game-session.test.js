@@ -13,7 +13,6 @@ const EMPTY = {
   lastAnswer: null,
   answerCount: 0,
   results: [],
-  misses: [],
   index: 0,
   total: null,
 }
@@ -63,14 +62,5 @@ describe('nextSessionState', () => {
     state = nextSessionState(state, true)
     state = nextSessionState(state, true)
     expect(state.answerCount).toBe(2)
-  })
-
-  it('keeps the detail of the items answered wrongly, and only those', () => {
-    let state = EMPTY
-    state = nextSessionState(state, true, '2 + 2 = 4')
-    state = nextSessionState(state, false, '7 + 8 = 15')
-    state = nextSessionState(state, false)
-    state = nextSessionState(state, false, '9 − 4 = 5')
-    expect(state.misses).toEqual(['7 + 8 = 15', '9 − 4 = 5'])
   })
 })

@@ -8,11 +8,6 @@ import { useCallback, useMemo, useState } from 'react'
  * counter lets the animation replay even on two correct answers in a row,
  * where the state itself would not change.
  *
- * `register` also takes an optional `detail`, a short readable label of the
- * item (« 7 + 8 = 15 »). The ones answered wrongly are kept in `misses`, which
- * is what the session report lists as « à revoir »: a game that gives no
- * detail simply leaves that list empty.
- *
  * `results` keeps one mark per answer, in order, which is what the board bar
  * shows as a frieze. `index` and `total` are reported by the game through
  * `useRounds`, so the bar can say where the patient is without the game
@@ -26,13 +21,12 @@ const EMPTY = {
   lastAnswer: null,
   answerCount: 0,
   results: [],
-  misses: [],
   index: 0,
   total: null,
 }
 
 /** The next session state once one more answer is registered. */
-export function nextSessionState(previous, isCorrect, detail) {
+export function nextSessionState(previous, isCorrect) {
   const streak = isCorrect ? previous.streak + 1 : 0
   return {
     ...previous,
@@ -43,15 +37,14 @@ export function nextSessionState(previous, isCorrect, detail) {
     lastAnswer: isCorrect ? 'correct' : 'wrong',
     answerCount: previous.answerCount + 1,
     results: [...previous.results, isCorrect ? 'ok' : 'err'],
-    misses: !isCorrect && detail ? [...previous.misses, detail] : previous.misses,
   }
 }
 
 export function useGameSession() {
   const [state, setState] = useState(EMPTY)
 
-  const register = useCallback((isCorrect, detail) => {
-    setState((previous) => nextSessionState(previous, isCorrect, detail))
+  const register = useCallback((isCorrect) => {
+    setState((previous) => nextSessionState(previous, isCorrect))
   }, [])
 
   const setProgress = useCallback((index, total) => {

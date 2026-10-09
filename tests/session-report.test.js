@@ -10,8 +10,8 @@ const steps = [
 ]
 
 const results = [
-  { gameId: 'mental-math', correct: 7, attempts: 10, played: true, completed: true, misses: ['3 + 4 = 7', '5 + 5 = 10', '1 + 1 = 2', '2 + 2 = 4', '8 + 1 = 9', '6 + 1 = 7', '9 + 0 = 9'] },
-  { gameId: 'week-days', correct: 2, attempts: 5, played: true, completed: false, misses: ['Quel jour sera-t-on demain ?'] },
+  { gameId: 'mental-math', correct: 7, attempts: 10, played: true, completed: true },
+  { gameId: 'week-days', correct: 2, attempts: 5, played: true, completed: false },
   { gameId: 'seasons', correct: 0, attempts: 0, played: false },
   { gameId: 'mental-math', correct: 4, attempts: 4, played: true, completed: true },
   { gameId: 'no-such-game', correct: 0, attempts: 0, played: false },
@@ -33,13 +33,6 @@ describe('session report', () => {
     expect(scoreLabel(rows[2])).toBe('non joué')
   })
 
-  it('lists at most five missed items and counts the rest', () => {
-    expect(rows[0].misses).toHaveLength(5)
-    expect(rows[0].missesHidden).toBe(2)
-    expect(rows[1].misses).toEqual(['Quel jour sera-t-on demain ?'])
-    expect(rows[3].misses).toEqual([])
-  })
-
   it('adds up the played games per domain, and leaves unplayed ones out', () => {
     const domains = reportDomains(rows)
     const math = domains.find((domain) => domain.category === 'math-cognition')
@@ -58,7 +51,7 @@ describe('session report', () => {
     expect(text).toContain('Séance du 8 octobre')
     expect(text).toContain('Patient : L.')
     expect(text).toContain('1. ')
-    expect(text).toContain('À revoir : 3 + 4 = 7 ; 5 + 5 = 10 ; 1 + 1 = 2 ; 2 + 2 = 4 ; 8 + 1 = 9 et 2 autres')
+    expect(text).not.toContain('À revoir')
     expect(text).toContain('Observations :\nFatigue en fin de séance.')
   })
 
