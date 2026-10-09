@@ -21,6 +21,9 @@ export default {
   ],
   instructions:
     'Une opération est affichée avec quatre résultats possibles. Le patient choisit le bon, et la correction est immédiate.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'range' },
   settings: [
     {
       id: 'operation',

@@ -1,15 +1,24 @@
 import Confetti from './Confetti.jsx'
 import Mascot from './Mascot.jsx'
+import { suggestProgression } from '../lib/progression.js'
 import { useMode } from './ModeProvider.jsx'
+import { useProgression } from './ProgressionContext.jsx'
 
 /**
  * Shared end-of-game screen: score, comment, replay.
  *
  * In child mode the mascot comes to greet the result, and confetti is kept
  * for successful games so that it keeps its meaning.
+ *
+ * Opened from the gallery, it can also propose a notch up or down for the next
+ * game, from the result: a button, never an automatic change.
  */
 export default function GameOver({ correct, total, onReplay, children }) {
   const { isChild } = useMode()
+  const progression = useProgression()
+  const suggestion = progression
+    ? suggestProgression(progression.game, progression.config, { correct, attempts: total })
+    : null
   const ratio = total === 0 ? 0 : correct / total
   const comment =
     ratio === 1
@@ -34,9 +43,25 @@ export default function GameOver({ correct, total, onReplay, children }) {
       </p>
       <p className="muted">{comment}</p>
       {children}
+      {suggestion && (
+        <p className="muted">
+          {suggestion.direction === 'up'
+            ? 'La série est bien réussie : on peut monter d’un cran.'
+            : 'La série était difficile : on peut redescendre d’un cran.'}
+        </p>
+      )}
       <button type="button" className="btn btn--lg" onClick={onReplay}>
         Rejouer
       </button>
+      {suggestion && (
+        <button
+          type="button"
+          className="btn btn--ghost"
+          onClick={() => progression.apply(suggestion.config)}
+        >
+          {suggestion.direction === 'up' ? 'Plus difficile' : 'Plus facile'} : {suggestion.label}
+        </button>
+      )}
     </div>
   )
 }
