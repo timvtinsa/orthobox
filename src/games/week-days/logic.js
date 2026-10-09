@@ -104,6 +104,10 @@ function distractors(answer) {
   return [...shuffle(near).slice(0, 1 + randomInt(0, 1)), ...sample(far, 3)].slice(0, 3)
 }
 
+function repeats(previous, round) {
+  return previous !== undefined && (previous.prompt === round.prompt || previous.answer === round.answer)
+}
+
 export function buildRound(kind) {
   const question = build(kind)
   const options = shuffle([question.answer, ...distractors(question.answer)]).map((index) => DAYS[index])
@@ -119,13 +123,15 @@ export function buildRound(kind) {
 }
 
 /** The whole session, drawn upfront: kinds rotate through the level's list,
- * and the same question never comes back twice in a row. */
+ * and neither the same question nor the same answer comes back twice in a
+ * row (« demain » from a Monday, then « hier » from a Wednesday, is Tuesday
+ * twice). */
 export function buildSeries(config) {
   const kinds = KINDS_BY_LEVEL[config.level] ?? KINDS_BY_LEVEL.easy
   const series = []
   for (const kind of noRepeatSeries(kinds, config.rounds)) {
     let round = buildRound(kind)
-    for (let attempt = 0; attempt < 20 && series.at(-1)?.prompt === round.prompt; attempt += 1) {
+    for (let attempt = 0; attempt < 40 && repeats(series.at(-1), round); attempt += 1) {
       round = buildRound(kind)
     }
     series.push(round)

@@ -6,7 +6,7 @@
  * directly: the instructed sequence is always a subset of what is actually
  * on screen, and it never repeats a shape.
  */
-import { shuffle } from '../../lib/random.js'
+import { shuffle, createDrawer } from '../../lib/random.js'
 import { COLORS, SHAPES } from './data.js'
 
 export const POOL_SIZE = 6
@@ -38,6 +38,18 @@ export function buildRound(config) {
   const pool = shuffle(allTokens()).slice(0, POOL_SIZE)
   const target = shuffle(pool).slice(0, length)
   return { pool, target }
+}
+
+/**
+ * The source of instructions for one game: the same instruction is not
+ * given twice, and two in a row never start with the same token.
+ */
+export function createInstructionDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [`first:${round.target[0].id}`],
+    series: (round) => [round.target.map((token) => token.id).join('>')],
+    memory: 2,
+  })
 }
 
 /** The instruction read out and displayed, agreeing in number but never in

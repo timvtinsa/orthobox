@@ -4,7 +4,7 @@
  * Kept apart from the component so the guarantee can be tested: a round always
  * offers the right answer exactly once, and never the same wording twice.
  */
-import { randomInt, shuffle } from '../../lib/random.js'
+import { randomInt, shuffle, createDrawer } from '../../lib/random.js'
 
 /** Minutes the hands may land on, per precision setting. */
 export const STEPS = {
@@ -48,4 +48,17 @@ export function buildRound(config) {
   }
 
   return { hours, minutes, label, options: shuffle([label, ...lures]) }
+}
+
+/**
+ * The source of times for one game: never the same time, nor the same hour,
+ * within the last two questions, and each time at most once while the
+ * precision leaves any to choose from.
+ */
+export function createClockDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [round.label, `hour:${round.hours}`],
+    series: (round) => [round.label],
+    memory: 2,
+  })
 }

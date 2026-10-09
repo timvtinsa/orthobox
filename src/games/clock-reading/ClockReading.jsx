@@ -13,7 +13,7 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { buildRound } from './clock.js'
+import { createClockDrawer } from './clock.js'
 
 function Dial({ hours, minutes }) {
   const minuteAngle = minutes * 6
@@ -57,7 +57,8 @@ function Dial({ hours, minutes }) {
 
 export default function ClockReading({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createClockDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -70,7 +71,7 @@ export default function ClockReading({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     setPicked(null)
   }
 
@@ -78,7 +79,8 @@ export default function ClockReading({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     setPicked(null)
   }
 

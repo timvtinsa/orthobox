@@ -12,7 +12,7 @@ import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
 import { scatterOnGrid } from '../../lib/layout.js'
-import { randomInt } from '../../lib/random.js'
+import { createDrawer, randomInt } from '../../lib/random.js'
 
 const MATERIALS = {
   subitizing: { min: 1, max: 6, minGap: 2, duration: null, mixed: false },
@@ -49,9 +49,23 @@ function buildRound(config) {
   }
 }
 
+/**
+ * The source of rounds for one game: the same pair of quantities is not shown
+ * twice (swapped sides count as the same pair), and two rounds within the last
+ * three never share their larger quantity.
+ */
+function createRoundDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [`big:${Math.max(round.left.total, round.right.total)}`],
+    series: (round) => [`${Math.min(round.left.total, round.right.total)}-${Math.max(round.left.total, round.right.total)}`],
+    memory: 3,
+  })
+}
+
 export default function QuantityCompare({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createRoundDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [picked, setPicked] = useState(null)
   const [hidden, setHidden] = useState(false)
   const lock = useAnswerLock()
@@ -75,7 +89,7 @@ export default function QuantityCompare({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     setPicked(null)
   }
 
@@ -83,7 +97,8 @@ export default function QuantityCompare({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     setPicked(null)
   }
 

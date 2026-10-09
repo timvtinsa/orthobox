@@ -137,7 +137,8 @@ stroke takes the ink of that domain rather than the constant black.
 - `hooks/useRounds.js`: progress in rounds
 - `hooks/useCountdown.js`: countdown
 - `hooks/useAnswerLock.js`: double-click guard on answers
-- `lib/random.js`: `shuffle`, `sample`, `pick`, `randomInt`
+- `lib/random.js`: `shuffle`, `sample`, `pick`, `randomInt`, and `createDrawer` / `drawSeries` for
+  variety (see below)
 - `lib/lexicon.js`: frequent words, digit sequences, lenient comparison
 - `lib/pictograms.jsx`: the bank of 32 drawings, reusable, each in three
   layers on a 120 by 120 grid (flat colour, one shadow plane, outline plus
@@ -170,6 +171,19 @@ those values in `settings`: the practitioner fixes them **before** the patient
 sees the material. The usual flow is `settings → memorisation → test →
 results`, with two ways out: replaying with the same settings, or going back to
 the settings.
+
+### Variety of the questions
+
+A game that draws its questions at random must not hand the same answer back
+right away (« 7 + 3 » then « 6 + 4 » is one result twice). Draw through
+`createDrawer(make, { recent, series, memory })` from `lib/random.js`:
+`recent(round)` lists the keys that must not return within the last `memory`
+rounds (typically the result), `series(round)` the ones that should not return
+at all during the session (typically the question). It draws again until a round
+breaks neither, and when the pool is too small for that it keeps the least
+repetitive one, so a series never stalls. Create the drawer once per game,
+call `next()` for each round and `reset()` on replay; `drawSeries` does the same
+for a game that draws its whole series upfront.
 
 ## 5. Checking
 
