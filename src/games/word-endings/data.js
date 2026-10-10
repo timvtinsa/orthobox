@@ -8,7 +8,7 @@
  * same for every gap of the text, so that the right one cannot be found by
  * elimination.
  *
- * Eleven topics. Spelling of inflectional endings: the infinitive, the past
+ * Fourteen topics. Spelling of inflectional endings: the infinitive, the past
  * participle and the « vous » form (-er, -é, -ez); the imperfect and the
  * present of the third person (-ait, -aient, -ent); the gender and number of
  * adjectives and nouns. Conjugation: the present and the future or
@@ -16,7 +16,7 @@
  * Pronouns: subject (il, elle, ils, elles) and object (le, la, les, lui,
  * leur). Derivation, which makes new words: prefixes and suffixes. Inflection:
  * the forms a word takes (chevaux, actrice, êtes, pris). Homophones: a, as or
- * à; ou or où. Subject-verb agreement when the subject is far from the verb
+ * à; ou or où; on or ont; son or sont; ces, ses, c’est or s’est. Subject-verb agreement when the subject is far from the verb
  * (« Les enfants de la voisine jouent »).
  *
  * A gap with an empty stem offers whole words (a pronoun, an irregular form).
@@ -34,6 +34,9 @@ export const TOPICS = [
   'inflection',
   'a-a',
   'ou-ou',
+  'on-ont',
+  'son-sont',
+  'ces-ses',
   'subject-verb',
 ]
 
@@ -454,6 +457,48 @@ const OU_TEXTS = [
   },
 ]
 
+// --- Homophones: on or ont; son or sont; ces, ses, c’est or s’est -----------
+
+const ON_ONT = ['on', 'ont']
+const SON_SONT = ['son', 'sont']
+const CES_SES = ['ces', 'ses', 'c’est', 's’est']
+
+const ON = 'On peut dire « il » à la place (« il joue ») : c’est le pronom « on ».'
+const ONT = 'On peut dire « avaient » à la place (« ils avaient ») : c’est le verbe avoir, donc « ont ».'
+const SON = 'On peut dire « mon » à la place (« mon vélo ») : c’est le déterminant « son ».'
+const SONT = 'On peut dire « étaient » à la place (« ils étaient ») : c’est le verbe être, donc « sont ».'
+const CES = 'On peut dire « ce » au singulier (« ce chien ») : c’est le déterminant « ces ».'
+const SES = 'On peut dire « mes » à la place (« mes clés ») : c’est « ses », ce qui appartient à quelqu’un.'
+const CEST = 'On peut dire « cela est » à la place : c’est « c’est ».'
+const SEST = 'On peut dire « se » à un autre temps (« il se lave ») : c’est le pronom « se », donc « s’est ».'
+
+const ON_TEXTS = [
+  { topic: 'on-ont', options: ON_ONT, text: `À la récréation, {|on|${ON}} joue au ballon. Les enfants {|ont|${ONT}} un ballon rouge. Si tu veux, {|on|${ON}} joue ensemble.` },
+  { topic: 'on-ont', options: ON_ONT, text: `Quand {|on|${ON}} a faim, {|on|${ON}} mange. Mes parents {|ont|${ONT}} une voiture bleue.` },
+  { topic: 'on-ont', options: ON_ONT, text: `Les oiseaux {|ont|${ONT}} des plumes. Ici, {|on|${ON}} entend la mer. Elles {|ont|${ONT}} cueilli des fleurs.` },
+  { topic: 'on-ont', options: ON_ONT, text: `Les élèves {|ont|${ONT}} fini leurs devoirs. Après l’école, {|on|${ON}} va au parc. Léa et Paul {|ont|${ONT}} du pain.` },
+  { topic: 'on-ont', options: ON_ONT, text: `Dans mon village, {|on|${ON}} connaît tout le monde. Mes cousins {|ont|${ONT}} un chien. Quand il pleut, {|on|${ON}} reste à la maison.` },
+  { topic: 'on-ont', options: ON_ONT, text: `Pendant les vacances, {|on|${ON}} ira à la mer. Mes amis {|ont|${ONT}} réservé une maison. Ils {|ont|${ONT}} hâte d’y être.` },
+]
+
+const SON_TEXTS = [
+  { topic: 'son-sont', options: SON_SONT, text: `Léo prend {|son|${SON}} vélo. Ses amis {|sont|${SONT}} déjà là. Il range {|son|${SON}} sac.` },
+  { topic: 'son-sont', options: SON_SONT, text: `Paul a perdu {|son|${SON}} chapeau. Les nuages {|sont|${SONT}} gris. Elle lit {|son|${SON}} livre.` },
+  { topic: 'son-sont', options: SON_SONT, text: `Mes frères {|sont|${SONT}} à l’école. Paul joue avec {|son|${SON}} ami. Les cerises {|sont|${SONT}} mûres.` },
+  { topic: 'son-sont', options: SON_SONT, text: `La maîtresse corrige {|son|${SON}} cahier. Les devoirs {|sont|${SONT}} faciles. Zoé range {|son|${SON}} cartable.` },
+  { topic: 'son-sont', options: SON_SONT, text: `Les chats {|sont|${SONT}} sur le toit. Mon voisin promène {|son|${SON}} chien. Ses chaussures {|sont|${SONT}} sales.` },
+  { topic: 'son-sont', options: SON_SONT, text: `Marie écoute {|son|${SON}} frère. Ses parents {|sont|${SONT}} fiers. Elle aime {|son|${SON}} école.` },
+]
+
+const CES_TEXTS = [
+  { topic: 'ces-ses', options: CES_SES, text: `Regarde {|ces|${CES}} chiens. Léo a perdu {|ses|${SES}} clés. Mon frère dit que {|c’est|${CEST}} facile.` },
+  { topic: 'ces-ses', options: CES_SES, text: `Léa {|s’est|${SEST}} lavé les mains. Elle sait que {|c’est|${CEST}} important. Elle range {|ses|${SES}} jouets.` },
+  { topic: 'ces-ses', options: CES_SES, text: `Pose {|ces|${CES}} livres sur la table. Paul {|s’est|${SEST}} caché derrière l’arbre. Il a peur de {|ses|${SES}} voisins.` },
+  { topic: 'ces-ses', options: CES_SES, text: `Grand-père cherche {|ses|${SES}} lunettes. Je sais que {|c’est|${CEST}} lui. Regarde {|ces|${CES}} nuages.` },
+  { topic: 'ces-ses', options: CES_SES, text: `Le chat {|s’est|${SEST}} endormi. Zoé range {|ses|${SES}} crayons. Dis-moi si {|c’est|${CEST}} bon.` },
+  { topic: 'ces-ses', options: CES_SES, text: `Regarde {|ces|${CES}} oiseaux. Le bébé {|s’est|${SEST}} réveillé. Maman dit que {|c’est|${CEST}} l’heure.` },
+]
+
 // --- Subject-verb agreement, the subject being far from the verb -------------
 
 const SUBJECT_VERB = ['e', 'es', 'ent']
@@ -500,6 +545,9 @@ export const TEXTS = [
   ...INFLECTION_TEXTS,
   ...A_TEXTS,
   ...OU_TEXTS,
+  ...ON_TEXTS,
+  ...SON_TEXTS,
+  ...CES_TEXTS,
   ...SUBJECT_VERB_TEXTS,
 ]
 

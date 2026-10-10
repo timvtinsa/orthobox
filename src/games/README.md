@@ -64,6 +64,11 @@ Settings are presented before the game, on a screen shared by every game: the
 practitioner adjusts them, then presses « Démarrer ». A game without any
 setting declares `settings: []`.
 
+A `choice` with more than a handful of options adds `display: 'select'` to be
+shown as a drop-down instead of cards, and gives each option a `group` to have
+them sorted under headings (options without one stay outside any heading). The
+hint of the option picked is shown under the list.
+
 A setting that only means something under another one adds `showIf:
 (config) => …` and stays out of the screen otherwise (a memorisation time
 when nothing is ever memorised, say).

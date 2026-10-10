@@ -12,6 +12,9 @@ import {
   pool,
 } from '../src/games/word-endings/logic.js'
 
+// « ou / où », « on / ont » and « son / sont » leave only two forms to choose between.
+const TWO_FORMS = ['ou-ou', 'on-ont', 'son-sont']
+
 describe('word endings: the texts', () => {
   it('has at least six texts for each topic', () => {
     for (const topic of TOPICS) expect(TOPIC_COUNTS[topic], topic).toBeGreaterThanOrEqual(6)
@@ -31,8 +34,7 @@ describe('word endings: the texts', () => {
 
   it('offers, for every gap, the right ending among at least three endings', () => {
     for (const entry of TEXTS) {
-      // « ou » or « où » leave only two forms to choose between.
-      expect(entry.options.length, entry.text).toBeGreaterThanOrEqual(entry.topic === 'ou-ou' ? 2 : 3)
+      expect(entry.options.length, entry.text).toBeGreaterThanOrEqual(TWO_FORMS.includes(entry.topic) ? 2 : 3)
       expect(new Set(entry.options).size, entry.text).toBe(entry.options.length)
       for (const gap of gapsOf({ parts: parseText(entry.text) })) {
         expect(entry.options, entry.text).toContain(gap.answer)
@@ -65,14 +67,14 @@ describe('word endings: the texts', () => {
       if (entry.topic === 'derivation' && gaps.some((gap) => gap.before)) {
         for (const gap of gaps) expect(gap.before, entry.text).toBe(true)
       }
-      if (['pronouns', 'inflection', 'a-a', 'ou-ou'].includes(entry.topic)) {
+      if (['pronouns', 'inflection', 'a-a', ...TWO_FORMS, 'ces-ses'].includes(entry.topic)) {
         for (const gap of gaps) expect(gap.stem, entry.text).toBe('')
       }
     }
   })
 
-  it('uses a, as and à, and ou and où, each as the right answer', () => {
-    for (const [topic, expected] of [['a-a', ['a', 'as', 'à']], ['ou-ou', ['ou', 'où']]]) {
+  it('uses every form of the homophone notions as the right answer', () => {
+    for (const [topic, expected] of [['a-a', ['a', 'as', 'à']], ['ou-ou', ['ou', 'où']], ['on-ont', ['on', 'ont']], ['son-sont', ['son', 'sont']], ['ces-ses', ['ces', 'ses', 'c’est', 's’est']]]) {
       const answers = new Set(
         TEXTS.filter((entry) => entry.topic === topic).flatMap((entry) =>
           gapsOf({ parts: parseText(entry.text) }).map((gap) => gap.answer),
