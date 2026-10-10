@@ -2671,3 +2671,68 @@
 .season-prompt .game-prompt {
   margin: 0;
 }
+
+/* --- Les terminaisons ------------------------------------------------ */
+
+.ending-text {
+  margin: 0;
+  font-family: var(--font-patient);
+  font-size: clamp(1.25rem, 1rem + 1.6vw, 1.75rem);
+  line-height: 2.6;
+  text-align: left;
+}
+
+/* The word's fixed start and its drop-down read as one word. The state after
+   correction is carried by the border (solid / dashed) and by an icon with a
+   hidden text, not by colour alone. */
+.ending-gap {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.ending-gap__select {
+  min-height: 48px;
+  margin: 0 2px;
+  padding: 0 28px 0 10px;
+  border: 2px solid var(--category);
+  border-radius: var(--radius);
+  background-color: var(--category-tint);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ending-gap--ok .ending-gap__select {
+  border-style: solid;
+  border-width: 3px;
+}
+
+.ending-gap--err .ending-gap__select {
+  border-style: dashed;
+  border-width: 3px;
+}
+
+.ending-gap__mark {
+  display: inline-grid;
+  place-items: center;
+}
+
+.ending-fixes {
+  display: grid;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 680px;
+  text-align: left;
+}
+
+.ending-fixes li {
+  padding: var(--s2) var(--s3);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
