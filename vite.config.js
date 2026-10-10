@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // Relative base: the application is purely client-side, so it can be served
-// from any subdirectory (GitHub Pages, Netlify, a USB stick…).
+// from any subdirectory (Netlify, Cloudflare, a USB stick…).
 export default defineConfig({
   base: './',
   test: {
