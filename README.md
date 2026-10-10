@@ -189,6 +189,7 @@ npm run build     # production build in dist/
 npm run preview   # preview the build
 npm run lint
 npm test          # unit tests (Vitest)
+npm run test:e2e  # layout and accessibility in a real browser (Playwright, axe)
 ```
 
 `npm run build` also regenerates the PWA PNG icons (`npm run icons` to

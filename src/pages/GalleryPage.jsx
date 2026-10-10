@@ -60,6 +60,7 @@ export default function GalleryPage() {
 
   return (
     <div className="gallery">
+      <h1 className="visually-hidden">Les jeux Orthobox</h1>
       <div className="toolbar">
         <div className="search">
           <label htmlFor="search" className="visually-hidden">

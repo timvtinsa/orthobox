@@ -36,10 +36,10 @@ export default defineConfig({
       // much bigger share of a much smaller statement count. Re-floor again
       // after the next `npm run test:coverage` if the suite grows.
       thresholds: {
-        statements: 50,
-        lines: 50,
-        functions: 50,
-        branches: 60,
+        statements: 65,
+        lines: 65,
+        functions: 68,
+        branches: 66,
       },
     },
   },
