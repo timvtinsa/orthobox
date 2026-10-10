@@ -9,7 +9,8 @@ const GAP = /\{([^|}]*)\|([^|}]*)\|([^}]*)\}/g
 
 /**
  * A text as an ordered list of parts: `{ type: 'text', value }` and
- * `{ type: 'gap', id, stem, answer, why }`.
+ * `{ type: 'gap', id, stem, answer, why, before }`. `before` is true for a
+ * prefix gap, written `{^stem|prefix|why}`, where the list comes first.
  */
 export function parseText(text) {
   const parts = []
@@ -17,7 +18,15 @@ export function parseText(text) {
   let id = 0
   for (const match of text.matchAll(GAP)) {
     if (match.index > last) parts.push({ type: 'text', value: text.slice(last, match.index) })
-    parts.push({ type: 'gap', id, stem: match[1], answer: match[2], why: match[3] })
+    const before = match[1].startsWith('^')
+    parts.push({
+      type: 'gap',
+      id,
+      stem: before ? match[1].slice(1) : match[1],
+      answer: match[2],
+      why: match[3],
+      before,
+    })
     id += 1
     last = match.index + match[0].length
   }
@@ -29,9 +38,9 @@ export function gapsOf(round) {
   return round.parts.filter((part) => part.type === 'gap')
 }
 
-/** The word as it is spelt once the right ending is on. */
+/** The word as it is spelt once the right ending (or prefix) is on. */
 export function correctWord(gap) {
-  return `${gap.stem}${gap.answer}`
+  return gap.before ? `${gap.answer}${gap.stem}` : `${gap.stem}${gap.answer}`
 }
 
 /** The text with every gap filled in, for reading aloud. */

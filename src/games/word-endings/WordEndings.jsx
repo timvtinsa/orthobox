@@ -1,7 +1,8 @@
 /**
- * Word endings: a short text whose words lack their ending.
+ * Word forms: a short text whose words lack their ending, their prefix or
+ * their whole form (a pronoun, an irregular verb form).
  *
- * The patient opens the list beside each word and picks the ending, then
+ * The patient opens the list beside each word and picks the right form, then
  * validates the whole text. Only then is anything corrected: the wrong words
  * show the right spelling and the rule that justifies it, which is what a
  * practitioner takes up afterwards. Each word is one answer for the score.
@@ -30,26 +31,33 @@ function EndingSelect({ gap, options, picks, onPick, checked }) {
   const value = picks[gap.id]
   const ok = checked && isRight(gap, picks)
   const state = checked ? (ok ? ' ending-gap--ok' : ' ending-gap--err') : ''
+  const name = gap.stem === '' ? 'Mot à choisir' : `${gap.before ? 'Début' : 'Fin'} de ${gap.stem}`
+
+  const select = (
+    <select
+      className="ending-gap__select"
+      aria-label={name}
+      value={value === undefined ? '' : String(options.indexOf(value))}
+      disabled={checked}
+      onChange={(event) => onPick(gap.id, options[Number(event.target.value)])}
+    >
+      <option value="" disabled>
+        …
+      </option>
+      {options.map((ending, index) => (
+        <option key={ending || 'none'} value={index}>
+          {label(ending)}
+        </option>
+      ))}
+    </select>
+  )
+  const stem = gap.stem === '' ? null : <span className="ending-gap__stem">{gap.stem}</span>
 
   return (
     <span className={`ending-gap${state}`}>
-      <span className="ending-gap__stem">{gap.stem}</span>
-      <select
-        className="ending-gap__select"
-        aria-label={`Terminaison de ${gap.stem}`}
-        value={value === undefined ? '' : String(options.indexOf(value))}
-        disabled={checked}
-        onChange={(event) => onPick(gap.id, options[Number(event.target.value)])}
-      >
-        <option value="" disabled>
-          …
-        </option>
-        {options.map((ending, index) => (
-          <option key={ending || 'none'} value={index}>
-            {label(ending)}
-          </option>
-        ))}
-      </select>
+      {gap.before && select}
+      {stem}
+      {!gap.before && select}
       {checked && (
         <span className="ending-gap__mark">
           <Icon name={ok ? 'check' : 'cross'} size={20} />
@@ -104,7 +112,7 @@ export default function WordEndings({ config, session }) {
       <p className="game-round">
         Texte {rounds.round + 1} sur {rounds.total}
       </p>
-      <p className="game-prompt">Choisis la fin de chaque mot.</p>
+      <p className="game-prompt">Choisis la bonne forme de chaque mot.</p>
 
       <p className="ending-text">
         {round.parts.map((part, index) =>

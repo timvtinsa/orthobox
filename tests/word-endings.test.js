@@ -22,7 +22,8 @@ describe('word endings: the texts', () => {
       const gaps = gapsOf({ parts: parseText(entry.text) })
       expect(gaps, entry.text).toHaveLength(3)
       for (const gap of gaps) {
-        expect(gap.stem.length, entry.text).toBeGreaterThan(0)
+        // A gap has a stem to complete, or is a whole word to choose.
+        expect(gap.stem.length + gap.answer.length, entry.text).toBeGreaterThan(0)
         expect(gap.why.length, entry.text).toBeGreaterThan(10)
       }
     }
@@ -57,6 +58,18 @@ describe('word endings: the texts', () => {
     }
   })
 
+  it('never mixes prefix and suffix gaps in a text, and offers whole words for pronouns and forms', () => {
+    for (const entry of TEXTS) {
+      const gaps = gapsOf({ parts: parseText(entry.text) })
+      if (entry.topic === 'derivation' && gaps.some((gap) => gap.before)) {
+        for (const gap of gaps) expect(gap.before, entry.text).toBe(true)
+      }
+      if (entry.topic === 'pronouns' || entry.topic === 'inflection') {
+        for (const gap of gaps) expect(gap.stem, entry.text).toBe('')
+      }
+    }
+  })
+
   it('writes no em dash in patient-facing text', () => {
     for (const entry of TEXTS) expect(entry.text).not.toContain('—')
   })
@@ -68,6 +81,22 @@ describe('word endings: parsing and checking', () => {
   it('splits a text into words and gaps, in order', () => {
     expect(round.parts.map((part) => part.type)).toEqual(['text', 'gap', 'text', 'gap', 'text', 'gap', 'text'])
     expect(gapsOf(round).map((gap) => gap.id)).toEqual([0, 1, 2])
+  })
+
+  it('reads a prefix gap, whose list comes before the stem', () => {
+    const prefixed = { parts: parseText('C’est {^possible|im|Devant p.} !') }
+    const gap = gapsOf(prefixed)[0]
+    expect(gap).toMatchObject({ stem: 'possible', answer: 'im', before: true })
+    expect(correctWord(gap)).toBe('impossible')
+    expect(completeText(prefixed)).toBe('C’est impossible !')
+    expect(gapsOf(round)[0].before).toBe(false)
+  })
+
+  it('reads a gap with no stem as a whole word to choose', () => {
+    const whole = { parts: parseText('Léa dort car {|elle|Une fille.} est fatiguée.') }
+    const gap = gapsOf(whole)[0]
+    expect(gap).toMatchObject({ stem: '', answer: 'elle' })
+    expect(completeText(whole)).toBe('Léa dort car elle est fatiguée.')
   })
 
   it('reads an empty ending as « nothing to add »', () => {
