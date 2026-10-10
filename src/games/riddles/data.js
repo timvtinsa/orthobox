@@ -333,6 +333,141 @@ export const RIDDLES = [
       'On l’emmène chez lui quand notre chat ne va pas bien.',
     ],
   },
+  {
+    theme: 'animals',
+    answer: 'le lion',
+    clues: [
+      'Je suis un animal sauvage qui vit en Afrique.',
+      'Les mâles ont une grande crinière autour de la tête.',
+      'Je rugis et on m’appelle le roi des animaux.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'le canard',
+    clues: [
+      'Je suis un oiseau.',
+      'J’ai un bec plat et des pattes palmées.',
+      'Je nage sur la mare et je fais coin-coin.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'le cheval',
+    clues: [
+      'Je suis un animal que l’on trouve dans les fermes et les centres équestres.',
+      'On peut monter sur mon dos avec une selle.',
+      'J’ai une crinière, quatre sabots et je hennis.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'la girafe',
+    clues: [
+      'Je suis un animal sauvage qui vit en Afrique.',
+      'J’ai des taches sur tout le corps.',
+      'J’ai un cou très long pour manger les feuilles tout en haut des arbres.',
+    ],
+  },
+  {
+    theme: 'animals',
+    answer: 'le papillon',
+    clues: [
+      'Je suis un insecte.',
+      'Avant d’être ce que je suis, j’étais une chenille.',
+      'J’ai de grandes ailes colorées et je butine les fleurs.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le balai',
+    clues: [
+      'Je sers à faire le ménage.',
+      'J’ai un long manche et des poils au bout.',
+      'Avec moi, on ramasse la poussière sur le sol.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le miroir',
+    clues: [
+      'On me trouve souvent dans la salle de bain.',
+      'Je suis fait de verre et je suis très lisse.',
+      'Quand on se regarde dans moi, on voit son visage.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le téléphone',
+    clues: [
+      'Je suis un objet que l’on tient dans la main.',
+      'Je sonne et je vibre.',
+      'Grâce à moi, on peut parler avec quelqu’un qui est loin.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le lit',
+    clues: [
+      'Je suis un meuble que l’on trouve dans une chambre.',
+      'J’ai des draps, une couverture et un oreiller.',
+      'On s’allonge sur moi pour dormir la nuit.',
+    ],
+  },
+  {
+    theme: 'objects',
+    answer: 'le savon',
+    clues: [
+      'On me trouve près du lavabo.',
+      'Je glisse facilement des mains.',
+      'Je fais de la mousse pour se laver.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'l’école',
+    clues: [
+      'C’est un lieu où l’on va presque tous les jours de la semaine.',
+      'Il y a une cour de récréation et des classes.',
+      'Les élèves y apprennent à lire et à compter avec leur maîtresse.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'le zoo',
+    clues: [
+      'C’est un lieu que l’on visite en famille.',
+      'Il faut acheter un billet pour y entrer.',
+      'On y voit des lions, des girafes et des singes dans des enclos.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'l’hôpital',
+    clues: [
+      'C’est un grand bâtiment.',
+      'Les ambulances viennent y déposer des personnes.',
+      'Des médecins et des infirmières y soignent les malades.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'le cinéma',
+    clues: [
+      'C’est un lieu où l’on va pour se divertir.',
+      'La salle est sombre et les fauteuils sont alignés.',
+      'On y regarde un film sur un grand écran en mangeant du pop-corn.',
+    ],
+  },
+  {
+    theme: 'places',
+    answer: 'la ferme',
+    clues: [
+      'C’est un lieu à la campagne.',
+      'On y trouve des vaches, des poules et un tracteur.',
+      'L’agriculteur y travaille avec ses animaux et ses champs.',
+    ],
+  },
 ]
 
 export const THEMES = {
