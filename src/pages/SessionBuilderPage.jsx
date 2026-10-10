@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
+import SavedSessions from '../components/SavedSessions.jsx'
 import StyledQr from '../components/StyledQr.jsx'
 import { GAMES, getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -261,6 +262,7 @@ export default function SessionBuilderPage() {
               </div>
             </div>
           )}
+          <SavedSessions steps={steps} onOpen={save} />
         </section>
 
         <section className="session-column">

@@ -1,0 +1,131 @@
+/* --- Séances enregistrées (page « Préparer une séance ») -------------- */
+
+.saved {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.saved__header {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.saved__save {
+  display: grid;
+  gap: var(--s2);
+}
+
+.saved__label {
+  font-size: var(--ui-sm);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.saved__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
+}
+
+.saved__input {
+  flex: 1 1 200px;
+  min-width: 0;
+  height: 46px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+.saved__status {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: var(--ui-sm);
+  font-weight: 700;
+  color: var(--success);
+}
+
+.saved__empty,
+.saved__note {
+  margin: 0;
+  font-size: var(--ui-sm);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.saved__list {
+  display: grid;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.saved__item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}
+
+.saved__item--active {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.saved__text {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.saved__name {
+  margin: 0;
+  font-size: var(--ui-md);
+  overflow-wrap: anywhere;
+}
+
+.saved__meta,
+.saved__games {
+  margin: 2px 0 0;
+  font-size: var(--ui-sm);
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.saved__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
+}
+
+.saved__confirm {
+  font-size: var(--ui-sm);
+  font-weight: 700;
+}
+
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.saved__backup {
+  display: grid;
+  gap: var(--s2);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--line);
+}
