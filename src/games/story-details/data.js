@@ -453,6 +453,344 @@ export const STORIES = [
       },
     ],
   },
+  {
+    id: 'boulangerie',
+    length: 'short',
+    title: 'La boulangerie de Nora',
+    text: [
+      'Dimanche, Nora est allée à la boulangerie avec son père. Ils ont fait la queue pendant dix minutes devant le magasin.',
+      'Nora a demandé une baguette et deux croissants. Le boulanger, monsieur Garnier, lui a offert un petit biscuit au chocolat.',
+      'Sur le chemin du retour, elle a mangé son croissant assis sur un banc vert.',
+    ],
+    questions: [
+      {
+        question: 'Quel jour Nora est-elle allée à la boulangerie ?',
+        options: ['Samedi', 'Dimanche', 'Lundi', 'Mercredi'],
+        answer: 1,
+      },
+      {
+        question: 'Combien de temps ont-ils attendu ?',
+        options: ['Cinq minutes', 'Dix minutes', 'Quinze minutes', 'Vingt minutes'],
+        answer: 1,
+      },
+      {
+        question: 'Que Nora a-t-elle demandé en plus de la baguette ?',
+        options: ['Deux croissants', 'Trois éclairs', 'Un pain au chocolat', 'Une tarte'],
+        answer: 0,
+      },
+      {
+        question: 'Comment s’appelle le boulanger ?',
+        options: ['Monsieur Garnier', 'Monsieur Granier', 'Monsieur Gauthier', 'Monsieur Garcia'],
+        answer: 0,
+      },
+      {
+        question: 'De quelle couleur était le banc ?',
+        options: ['Bleu', 'Rouge', 'Vert', 'Marron'],
+        answer: 2,
+      },
+    ],
+  },
+  {
+    id: 'plage',
+    length: 'short',
+    title: 'Une journée à la plage',
+    text: [
+      'En juillet, la famille Dubois est partie à la plage. Il faisait très chaud, alors Julie a mis son chapeau de paille.',
+      'Son petit frère Hugo a construit un grand château de sable avec un seau rouge. Il a ajouté quatre tours et un drapeau.',
+      'À midi, ils ont mangé des sandwichs au jambon sous le parasol. Puis Julie s’est baignée pendant que Papa lisait son journal.',
+    ],
+    questions: [
+      {
+        question: 'Quand la famille est-elle partie à la plage ?',
+        options: ['En juin', 'En juillet', 'En août', 'En mai'],
+        answer: 1,
+      },
+      {
+        question: 'Que Julie a-t-elle mis sur sa tête ?',
+        options: ['Une casquette', 'Un bonnet', 'Un chapeau de paille', 'Un foulard'],
+        answer: 2,
+      },
+      {
+        question: 'De quelle couleur était le seau d’Hugo ?',
+        options: ['Bleu', 'Jaune', 'Vert', 'Rouge'],
+        answer: 3,
+      },
+      {
+        question: 'Combien de tours le château avait-il ?',
+        options: ['Deux', 'Trois', 'Quatre', 'Cinq'],
+        answer: 2,
+      },
+      {
+        question: 'Que contenaient les sandwichs ?',
+        options: ['Du jambon', 'Du fromage', 'Du poulet', 'Du thon'],
+        answer: 0,
+      },
+    ],
+  },
+  {
+    id: 'anniversaire',
+    length: 'short',
+    title: 'Le gâteau d’Adam',
+    text: [
+      'Pour les huit ans d’Adam, sa maman a préparé un gâteau au citron. Elle l’a décoré avec huit bougies bleues.',
+      'Cinq copains sont venus à la maison, dont Samia et Léon. Ils ont joué à cache-cache dans le jardin pendant une heure.',
+      'Au moment des cadeaux, Adam a reçu un puzzle de cent pièces et un livre sur les dinosaures.',
+    ],
+    questions: [
+      {
+        question: 'Quel âge Adam a-t-il fêté ?',
+        options: ['Six ans', 'Sept ans', 'Huit ans', 'Neuf ans'],
+        answer: 2,
+      },
+      {
+        question: 'Quel parfum avait le gâteau ?',
+        options: ['Chocolat', 'Citron', 'Fraise', 'Vanille'],
+        answer: 1,
+      },
+      {
+        question: 'De quelle couleur étaient les bougies ?',
+        options: ['Bleues', 'Rouges', 'Jaunes', 'Vertes'],
+        answer: 0,
+      },
+      {
+        question: 'Combien de copains sont venus ?',
+        options: ['Trois', 'Quatre', 'Cinq', 'Six'],
+        answer: 2,
+      },
+      {
+        question: 'À quel jeu ont-ils joué ?',
+        options: ['À chat', 'À cache-cache', 'Au ballon', 'Aux cartes'],
+        answer: 1,
+      },
+    ],
+  },
+  {
+    id: 'foret',
+    length: 'medium',
+    title: 'La balade en forêt',
+    text: [
+      'Un dimanche d’octobre, Clara et son grand frère Yanis sont partis se promener en forêt avec leur oncle Paul. Le ciel était gris, mais il ne pleuvait pas.',
+      'Ils ont suivi un sentier marqué de petits ronds rouges. Au bout d’une demi-heure, ils ont croisé un écureuil qui descendait d’un chêne. Clara l’a pris en photo avec le téléphone de son oncle.',
+      'Yanis a ramassé neuf châtaignes et Clara des feuilles de toutes les couleurs, qu’elle a rangées dans son sac à dos. Puis ils ont mangé des tartines de confiture près d’un étang.',
+      'Sur le chemin du retour, Paul s’est aperçu qu’il avait oublié sa casquette sur un rocher. Ils sont revenus la chercher et sont rentrés à la maison à cinq heures.',
+    ],
+    questions: [
+      {
+        question: 'En quel mois a lieu la balade ?',
+        options: ['Septembre', 'Octobre', 'Novembre', 'Décembre'],
+        answer: 1,
+      },
+      {
+        question: 'Quelles marques suivent-ils sur le sentier ?',
+        options: ['Des ronds rouges', 'Des flèches jaunes', 'Des croix bleues', 'Des carrés verts'],
+        answer: 0,
+      },
+      {
+        question: 'Quel animal croisent-ils ?',
+        options: ['Un lapin', 'Un renard', 'Un écureuil', 'Un hérisson'],
+        answer: 2,
+      },
+      {
+        question: 'Combien de châtaignes Yanis a-t-il ramassées ?',
+        options: ['Cinq', 'Sept', 'Neuf', 'Douze'],
+        answer: 2,
+      },
+      {
+        question: 'Où mangent-ils leurs tartines ?',
+        options: ['Près d’un étang', 'Sous un chêne', 'Sur un rocher', 'Dans une cabane'],
+        answer: 0,
+      },
+      {
+        question: 'Qu’est-ce que Paul a oublié ?',
+        options: ['Son sac', 'Sa casquette', 'Son téléphone', 'Sa veste'],
+        answer: 1,
+      },
+    ],
+  },
+  {
+    id: 'cinema',
+    length: 'medium',
+    title: 'Une sortie au cinéma',
+    text: [
+      'Mercredi après-midi, Louise est allée au cinéma avec sa tante Élodie et sa cousine Manon. Elles ont pris le bus numéro 12 pour aller au centre-ville.',
+      'La séance commençait à quatorze heures trente. Devant la caisse, la tante a acheté trois billets à sept euros chacun. Manon a voulu du pop-corn salé, alors que Louise a préféré un jus de pomme.',
+      'Le film racontait l’histoire d’un petit renard qui cherche sa famille dans la neige. À la fin, tout le monde a applaudi, et Louise a trouvé la musique magnifique.',
+      'En sortant, elles ont acheté une glace à la vanille et sont rentrées à pied, car le bus était en panne.',
+    ],
+    questions: [
+      {
+        question: 'Quel jour a lieu la sortie ?',
+        options: ['Lundi', 'Mercredi', 'Vendredi', 'Samedi'],
+        answer: 1,
+      },
+      {
+        question: 'Quel bus ont-elles pris pour aller au centre-ville ?',
+        options: ['Le numéro 8', 'Le numéro 10', 'Le numéro 12', 'Le numéro 21'],
+        answer: 2,
+      },
+      {
+        question: 'Combien coûte chaque billet ?',
+        options: ['Cinq euros', 'Six euros', 'Sept euros', 'Huit euros'],
+        answer: 2,
+      },
+      {
+        question: 'Que Louise a-t-elle choisi de boire ?',
+        options: ['Du jus de pomme', 'De l’eau', 'Du soda', 'Du lait'],
+        answer: 0,
+      },
+      {
+        question: 'Quel animal est le héros du film ?',
+        options: ['Un ours', 'Un renard', 'Un loup', 'Un lapin'],
+        answer: 1,
+      },
+      {
+        question: 'Pourquoi rentrent-elles à pied ?',
+        options: ['Il pleuvait', 'Elles voulaient marcher', 'Le bus était en panne', 'Il n’y avait plus de place'],
+        answer: 2,
+      },
+    ],
+  },
+  {
+    id: 'ferme',
+    length: 'medium',
+    title: 'La visite de la ferme',
+    text: [
+      'Au mois de mai, la classe de CE2 de monsieur Bernard a visité une ferme près du village de Valmont. Il y avait vingt-trois élèves et deux parents accompagnateurs.',
+      'La fermière, madame Rolland, leur a d’abord montré les vaches. Elle en possède quarante, et chacune donne environ vingt litres de lait par jour. Ensuite, les enfants ont donné du grain aux poules et ont ramassé sept œufs.',
+      'Dans l’étable, Inès a caressé un veau né deux jours plus tôt. Il s’appelait Noisette et avait une tache blanche sur le front.',
+      'Pour terminer, la fermière a servi du fromage blanc avec du miel. Tout le monde est reparti avec un petit pot de confiture de fraises.',
+    ],
+    questions: [
+      {
+        question: 'Dans quelle classe sont les élèves ?',
+        options: ['CP', 'CE1', 'CE2', 'CM1'],
+        answer: 2,
+      },
+      {
+        question: 'Combien d’élèves participent à la visite ?',
+        options: ['Dix-huit', 'Vingt-trois', 'Vingt-huit', 'Trente'],
+        answer: 1,
+      },
+      {
+        question: 'Combien la fermière possède-t-elle de vaches ?',
+        options: ['Vingt', 'Trente', 'Quarante', 'Cinquante'],
+        answer: 2,
+      },
+      {
+        question: 'Combien d’œufs les enfants ont-ils ramassés ?',
+        options: ['Trois', 'Cinq', 'Sept', 'Neuf'],
+        answer: 2,
+      },
+      {
+        question: 'Comment s’appelle le veau ?',
+        options: ['Noisette', 'Pâquerette', 'Caramel', 'Biscotte'],
+        answer: 0,
+      },
+      {
+        question: 'Que reçoivent les enfants en partant ?',
+        options: ['Un pot de miel', 'Un pot de confiture de fraises', 'Une bouteille de lait', 'Un fromage'],
+        answer: 1,
+      },
+    ],
+  },
+  {
+    id: 'tempete',
+    length: 'long',
+    title: 'La tempête sur le village',
+    text: [
+      'Un vendredi de novembre, le vent s’est mis à souffler très fort sur le petit village de Pierrefitte. Vers dix-huit heures, la pluie s’est ajoutée au vent, et le ciel est devenu presque noir.',
+      'Chez les Marchand, le père, Antoine, a rentré les chaises du jardin et fermé tous les volets. Sa fille Camille, qui a dix ans, a allumé trois bougies sur la table au cas où le courant serait coupé. Son petit frère Noé, six ans, s’est caché sous la couverture à rayures du canapé avec son lapin en peluche.',
+      'À vingt heures, l’électricité s’est éteinte dans tout le quartier. La famille a dîné à la lumière des bougies : une soupe de potiron et du pain grillé. Camille a lu à voix haute un conte de pirates, et Noé s’est endormi avant la fin.',
+      'Pendant la nuit, un grand peuplier est tombé au bout de la rue, sans toucher aucune maison. Le lendemain matin, les pompiers sont arrivés avec une tronçonneuse pour dégager la route, et le maire, madame Bouvier, a remercié tous les voisins qui sont venus aider.',
+      'À midi, le courant est revenu. Pour fêter ça, les habitants ont partagé un goûter sur la place, avec des crêpes que Camille avait aidé à préparer.',
+    ],
+    questions: [
+      {
+        question: 'En quel mois la tempête a-t-elle lieu ?',
+        options: ['Octobre', 'Novembre', 'Décembre', 'Janvier'],
+        answer: 1,
+      },
+      {
+        question: 'À quelle heure la pluie s’ajoute-t-elle au vent ?',
+        options: ['Seize heures', 'Dix-sept heures', 'Dix-huit heures', 'Vingt heures'],
+        answer: 2,
+      },
+      {
+        question: 'Quel âge a Camille ?',
+        options: ['Six ans', 'Huit ans', 'Dix ans', 'Douze ans'],
+        answer: 2,
+      },
+      {
+        question: 'Combien de bougies Camille allume-t-elle ?',
+        options: ['Deux', 'Trois', 'Quatre', 'Cinq'],
+        answer: 1,
+      },
+      {
+        question: 'Que dîne la famille ?',
+        options: ['Une soupe de potiron', 'Des pâtes', 'Une omelette', 'Une pizza'],
+        answer: 0,
+      },
+      {
+        question: 'Quel arbre est tombé dans la rue ?',
+        options: ['Un chêne', 'Un sapin', 'Un peuplier', 'Un saule'],
+        answer: 2,
+      },
+      {
+        question: 'Comment s’appelle le maire du village ?',
+        options: ['Madame Marchand', 'Madame Bouvier', 'Madame Camille', 'Madame Pierrefitte'],
+        answer: 1,
+      },
+    ],
+  },
+  {
+    id: 'musee',
+    length: 'long',
+    title: 'Au musée des sciences',
+    text: [
+      'Le jeudi 14 mars, les élèves de CM1 de madame Perrin ont visité le musée des sciences de la ville de Montbrun. Le bus est parti à neuf heures pile, avec vingt et un enfants, deux enseignantes et un papa, monsieur Salhi.',
+      'Le guide, un jeune homme prénommé Victor, les attendait à l’entrée, portant une blouse blanche. Il leur a expliqué qu’ils verraient trois salles : celle des planètes, celle des dinosaures et celle des volcans. Chaque enfant a reçu un petit carnet vert et un crayon pour noter ses découvertes.',
+      'Dans la salle des planètes, Zoé a appris que Jupiter est la plus grosse planète, et qu’il lui faut près de douze ans pour tourner autour du soleil. Dans la salle des dinosaures, Malik a mesuré le squelette d’un diplodocus : il fait vingt-sept mètres de long, soit plus que trois bus alignés.',
+      'Dans la salle des volcans, une machine a simulé une éruption avec de la fumée et des lumières rouges. Léna a eu un peu peur et a pris la main de sa maîtresse.',
+      'À midi, la classe a mangé dans le jardin du musée, sous un grand tilleul. L’après-midi, un atelier leur a permis de fabriquer chacun une petite fusée en carton. Le bus est reparti à seize heures, et tout le monde a chanté pendant le trajet.',
+    ],
+    questions: [
+      {
+        question: 'Comment s’appelle l’enseignante de la classe ?',
+        options: ['Madame Perrin', 'Madame Salhi', 'Madame Victor', 'Madame Montbrun'],
+        answer: 0,
+      },
+      {
+        question: 'Combien d’enfants sont partis en sortie ?',
+        options: ['Dix-neuf', 'Vingt et un', 'Vingt-quatre', 'Vingt-sept'],
+        answer: 1,
+      },
+      {
+        question: 'De quelle couleur était le carnet des enfants ?',
+        options: ['Rouge', 'Bleu', 'Jaune', 'Vert'],
+        answer: 3,
+      },
+      {
+        question: 'Quelle est la plus grosse planète ?',
+        options: ['Mars', 'Saturne', 'Jupiter', 'Vénus'],
+        answer: 2,
+      },
+      {
+        question: 'Quelle est la longueur du diplodocus ?',
+        options: ['Dix-sept mètres', 'Vingt-sept mètres', 'Trente-sept mètres', 'Quarante mètres'],
+        answer: 1,
+      },
+      {
+        question: 'Qui a eu un peu peur pendant l’éruption ?',
+        options: ['Zoé', 'Malik', 'Victor', 'Léna'],
+        answer: 3,
+      },
+      {
+        question: 'Que les enfants fabriquent-ils pendant l’atelier ?',
+        options: ['Une fusée en carton', 'Un volcan en pâte à modeler', 'Un squelette en papier', 'Un télescope'],
+        answer: 0,
+      },
+    ],
+  },
 ]
 
 export const LONGUEURS = {
