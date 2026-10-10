@@ -9,6 +9,7 @@ import './styles/gallery.css'
 import './styles/game.css'
 import './styles/what.css'
 import './styles/child-mode.css'
+import './styles/saved-sessions.css'
 
 // HashRouter: the application must be droppable as is on any static host
 // (Cloudflare, Netlify, a practice intranet), with no URL rewriting rule to
