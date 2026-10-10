@@ -6,9 +6,8 @@
 # created when that pull request is merged: publishing stays a deliberate act,
 # while being entirely computed.
 #
-# The same build is then reused for everything downstream, so the downloadable
-# archive and every hosted copy can never drift apart: it is attached to the
-# GitHub release and published to GitHub Pages. Along the way, a single call
+# The build is attached to the GitHub release as a downloadable archive.
+# Along the way, a single call
 # to Claude Code (the cheap `claude-haiku-4-5`, authenticated with a Claude
 # subscription rather than paid API credits) turns the release's commits
 # into a short, French, user-facing changelog (see "Write the user-facing
@@ -54,8 +53,6 @@ jobs:
     name: Prepare and publish the release
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    outputs:
-      released: ${{ steps.target.outputs.tag }}
     steps:
       - name: Compute the version and the changelog
         id: release
@@ -184,31 +181,3 @@ jobs:
           # variable expansion, which is the safe pattern regardless of how
           # trusted `tag_name` happens to be today.
           TAG_NAME: ${{ steps.target.outputs.tag }}
-
-      - name: Package the build for GitHub Pages
-        if: ${{ steps.target.outputs.tag != '' }}
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: dist
-
-  # A separate job so the deployment gets its own `github-pages` environment
-  # (the URL shown on the commit and in the repository's Environments tab),
-  # and so the `pages` permission stays scoped to the one step that needs it
-  # rather than sitting on the whole release job (`id-token` is already
-  # needed there too, by the Claude Code Action step above).
-  deploy:
-    name: Publish to GitHub Pages
-    needs: release
-    if: ${{ needs.release.outputs.released != '' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5

@@ -306,10 +306,7 @@ kept as a build artifact either way, so a failure can be traced to the file
 that dropped. `.github/workflows/release-please.yml` computes the
 version from the commit messages, keeps `CHANGELOG.md` up to date, and creates
 the tag and the release when the release pull request is merged — then builds
-once more and publishes that same `dist/` to GitHub Pages
-(`actions/upload-pages-artifact` and `actions/deploy-pages`, in a job scoped
-to the `pages`/`id-token` permissions it alone needs), so the zip attached to
-the release and the hosted copy are provably the same build.
+once more and attaches that `dist/` to the release as a zip.
 
 Right after the tag is created, a plain step ("Prepare the release commit
 log") computes the commit range since the previous tag and captures every
