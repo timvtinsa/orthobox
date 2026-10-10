@@ -8,14 +8,16 @@
  * same for every gap of the text, so that the right one cannot be found by
  * elimination.
  *
- * Eight topics. Spelling of inflectional endings: the infinitive, the past
+ * Eleven topics. Spelling of inflectional endings: the infinitive, the past
  * participle and the « vous » form (-er, -é, -ez); the imperfect and the
  * present of the third person (-ait, -aient, -ent); the gender and number of
  * adjectives and nouns. Conjugation: the present and the future or
  * conditional, then avoir or être and the agreement of the participle.
  * Pronouns: subject (il, elle, ils, elles) and object (le, la, les, lui,
  * leur). Derivation, which makes new words: prefixes and suffixes. Inflection:
- * the forms a word takes (chevaux, actrice, êtes, pris).
+ * the forms a word takes (chevaux, actrice, êtes, pris). Homophones: a, as or
+ * à; ou or où. Subject-verb agreement when the subject is far from the verb
+ * (« Les enfants de la voisine jouent »).
  *
  * A gap with an empty stem offers whole words (a pronoun, an irregular form).
  * A prefix gap is written `{^stem|prefix|why}`: the list comes before the stem.
@@ -30,6 +32,9 @@ export const TOPICS = [
   'pronouns',
   'derivation',
   'inflection',
+  'a-a',
+  'ou-ou',
+  'subject-verb',
 ]
 
 const INFINITIVE = ['er', 'é', 'ez']
@@ -372,6 +377,120 @@ const INFLECTION_TEXTS = [
   },
 ]
 
+// --- Homophones: a, as or à; ou or où ----------------------------------------
+
+const A_AS_A = ['a', 'as', 'à']
+const OU_OU = ['ou', 'où']
+
+const HAS = 'On peut dire « avait » à la place (« il avait ») : c’est le verbe avoir, donc « a » sans accent.'
+const AS = 'Avec « tu », le verbe avoir s’écrit « as ».'
+const PREPOSITION = 'On ne peut pas dire « avait » à la place : c’est la préposition « à », avec un accent.'
+const CHOICE = 'On peut dire « ou bien » à la place : c’est un choix, donc « ou » sans accent.'
+const PLACE = 'On ne peut pas dire « ou bien » à la place : c’est le lieu ou le moment, donc « où » avec un accent.'
+
+const A_TEXTS = [
+  {
+    topic: 'a-a',
+    options: A_AS_A,
+    text: `Léo {|a|${HAS}} un vélo. Il va {|à|${PREPOSITION}} l’école {|à|${PREPOSITION}} vélo.`,
+  },
+  {
+    topic: 'a-a',
+    options: A_AS_A,
+    text: `Tu {|as|${AS}} faim. Maman {|a|${HAS}} préparé un gâteau. Nous le mangeons {|à|${PREPOSITION}} quatre heures.`,
+  },
+  {
+    topic: 'a-a',
+    options: A_AS_A,
+    text: `Zoé {|a|${HAS}} un chat. Elle joue {|à|${PREPOSITION}} la balle avec lui. Il {|a|${HAS}} peur du bruit.`,
+  },
+  {
+    topic: 'a-a',
+    options: A_AS_A,
+    text: `Hier, il {|a|${HAS}} plu. Nous sommes restés {|à|${PREPOSITION}} la maison. Tu {|as|${AS}} lu un livre.`,
+  },
+  {
+    topic: 'a-a',
+    options: A_AS_A,
+    text: `Mon frère {|a|${HAS}} dix ans. Il habite {|à|${PREPOSITION}} Lyon. Tu {|as|${AS}} vu sa maison ?`,
+  },
+  {
+    topic: 'a-a',
+    options: A_AS_A,
+    text: `Léa {|a|${HAS}} mal {|à|${PREPOSITION}} la tête. Elle pense {|à|${PREPOSITION}} ses vacances.`,
+  },
+]
+
+const OU_TEXTS = [
+  {
+    topic: 'ou-ou',
+    options: OU_OU,
+    text: `Veux-tu du thé {|ou|${CHOICE}} du lait ? Dis-moi {|où|${PLACE}} tu vas. Tu prends le bus {|ou|${CHOICE}} le train ?`,
+  },
+  {
+    topic: 'ou-ou',
+    options: OU_OU,
+    text: `Je ne sais pas {|où|${PLACE}} est mon sac. Est-il sur la table {|ou|${CHOICE}} dans la chambre ? C’est le jardin {|où|${PLACE}} je joue.`,
+  },
+  {
+    topic: 'ou-ou',
+    options: OU_OU,
+    text: `Le chat est dans la cuisine {|ou|${CHOICE}} dans le salon. Voici la maison {|où|${PLACE}} j’habite. Il veut du chocolat {|ou|${CHOICE}} des bonbons.`,
+  },
+  {
+    topic: 'ou-ou',
+    options: OU_OU,
+    text: `Dis-moi {|où|${PLACE}} tu as mis mes clés. Elles sont sur la table {|ou|${CHOICE}} sur le lit. Le jour {|où|${PLACE}} il neige, nous restons ici.`,
+  },
+  {
+    topic: 'ou-ou',
+    options: OU_OU,
+    text: `Veux-tu partir à pied {|ou|${CHOICE}} en voiture ? Je ne sais pas {|où|${PLACE}} garer la voiture. Le pays {|où|${PLACE}} elle est née est loin.`,
+  },
+  {
+    topic: 'ou-ou',
+    options: OU_OU,
+    text: `Mange une pomme {|ou|${CHOICE}} une poire. La ville {|où|${PLACE}} je vis est petite. Dis-moi {|où|${PLACE}} je dois aller.`,
+  },
+]
+
+// --- Subject-verb agreement, the subject being far from the verb -------------
+
+const SUBJECT_VERB = ['e', 'es', 'ent']
+
+const SUBJECT_VERB_TEXTS = [
+  {
+    topic: 'subject-verb',
+    options: SUBJECT_VERB,
+    text: 'Les enfants de la voisine {jou|ent|Le sujet est « les enfants » (pluriel), pas « la voisine » : on écrit -ent.} dans le jardin. Le chat des voisins {miaul|e|Le sujet est « le chat » (singulier), pas « les voisins » : on écrit -e.} toute la nuit. Les fleurs du jardin {pouss|ent|Le sujet est « les fleurs » (pluriel), pas « le jardin » : on écrit -ent.} vite.',
+  },
+  {
+    topic: 'subject-verb',
+    options: SUBJECT_VERB,
+    text: 'Le livre de mes frères {tomb|e|Le sujet est « le livre » (singulier), pas « mes frères » : on écrit -e.} de la table. Les amis de ma sœur {arriv|ent|Le sujet est « les amis » (pluriel), pas « ma sœur » : on écrit -ent.} déjà. La voiture des voisins {roul|e|Le sujet est « la voiture » (singulier), pas « les voisins » : on écrit -e.} vite.',
+  },
+  {
+    topic: 'subject-verb',
+    options: SUBJECT_VERB,
+    text: 'Les chats de ma tante {dorm|ent|Le sujet est « les chats » (pluriel), pas « ma tante » : on écrit -ent.} sur le canapé. Le bébé des voisins {pleur|e|Le sujet est « le bébé » (singulier), pas « les voisins » : on écrit -e.} souvent. Les cris du bébé {réveill|ent|Le sujet est « les cris » (pluriel), pas « le bébé » : on écrit -ent.} toute la rue.',
+  },
+  {
+    topic: 'subject-verb',
+    options: SUBJECT_VERB,
+    text: 'Le bruit des camions {fatigu|e|Le sujet est « le bruit » (singulier), pas « les camions » : on écrit -e.} les habitants. Les enfants du quartier {march|ent|Le sujet est « les enfants » (pluriel), pas « le quartier » : on écrit -ent.} vers l’école. La maîtresse des élèves {ouvr|e|Le sujet est « la maîtresse » (singulier), pas « les élèves » : on écrit -e.} la porte.',
+  },
+  {
+    topic: 'subject-verb',
+    options: SUBJECT_VERB,
+    text: 'Les voisins de l’immeuble {chant|ent|Le sujet est « les voisins » (pluriel), pas « l’immeuble » : on écrit -ent.} le soir. Le chien de mes cousins {gard|e|Le sujet est « le chien » (singulier), pas « mes cousins » : on écrit -e.} la maison. Les jouets de Léa {traîn|ent|Le sujet est « les jouets » (pluriel), pas « Léa » : on écrit -ent.} partout.',
+  },
+  {
+    topic: 'subject-verb',
+    options: SUBJECT_VERB,
+    text: 'La couleur des feuilles {chang|e|Le sujet est « la couleur » (singulier), pas « les feuilles » : on écrit -e.} en automne. Les arbres du parc {perd|ent|Le sujet est « les arbres » (pluriel), pas « le parc » : on écrit -ent.} leurs feuilles. Le vent des montagnes {souffl|e|Le sujet est « le vent » (singulier), pas « les montagnes » : on écrit -e.} fort.',
+  },
+]
+
 export const TEXTS = [
   ...SPELLING_TEXTS,
   ...CONJUGATION_TEXTS,
@@ -379,6 +498,9 @@ export const TEXTS = [
   ...PRONOUN_TEXTS,
   ...DERIVATION_TEXTS,
   ...INFLECTION_TEXTS,
+  ...A_TEXTS,
+  ...OU_TEXTS,
+  ...SUBJECT_VERB_TEXTS,
 ]
 
 export const TOPIC_COUNTS = Object.fromEntries(

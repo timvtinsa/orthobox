@@ -31,7 +31,8 @@ describe('word endings: the texts', () => {
 
   it('offers, for every gap, the right ending among at least three endings', () => {
     for (const entry of TEXTS) {
-      expect(entry.options.length, entry.text).toBeGreaterThanOrEqual(3)
+      // « ou » or « où » leave only two forms to choose between.
+      expect(entry.options.length, entry.text).toBeGreaterThanOrEqual(entry.topic === 'ou-ou' ? 2 : 3)
       expect(new Set(entry.options).size, entry.text).toBe(entry.options.length)
       for (const gap of gapsOf({ parts: parseText(entry.text) })) {
         expect(entry.options, entry.text).toContain(gap.answer)
@@ -64,9 +65,20 @@ describe('word endings: the texts', () => {
       if (entry.topic === 'derivation' && gaps.some((gap) => gap.before)) {
         for (const gap of gaps) expect(gap.before, entry.text).toBe(true)
       }
-      if (entry.topic === 'pronouns' || entry.topic === 'inflection') {
+      if (['pronouns', 'inflection', 'a-a', 'ou-ou'].includes(entry.topic)) {
         for (const gap of gaps) expect(gap.stem, entry.text).toBe('')
       }
+    }
+  })
+
+  it('uses a, as and à, and ou and où, each as the right answer', () => {
+    for (const [topic, expected] of [['a-a', ['a', 'as', 'à']], ['ou-ou', ['ou', 'où']]]) {
+      const answers = new Set(
+        TEXTS.filter((entry) => entry.topic === topic).flatMap((entry) =>
+          gapsOf({ parts: parseText(entry.text) }).map((gap) => gap.answer),
+        ),
+      )
+      expect([...answers].sort(), topic).toEqual([...expected].sort())
     }
   })
 
