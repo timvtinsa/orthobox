@@ -55,6 +55,13 @@
   font-weight: 800;
 }
 
+/* Touch screens: a 32px target is easy to miss with a thumb. */
+@media (pointer: coarse) {
+  .mode-switch__option {
+    height: 40px;
+  }
+}
+
 /* --- Mascotte ------------------------------------------------------
    La récompense doit se voir : elle dure assez longtemps pour qu'un
    enfant la remarque, sans jamais bloquer la saisie suivante. C'est ce

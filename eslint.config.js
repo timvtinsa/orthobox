@@ -5,7 +5,7 @@ import globals from 'globals'
 
 export default [
   {
-    ignores: ['dist', 'dist-preview', 'dev-dist', 'node_modules', 'coverage', '**/*.svg'],
+    ignores: ['dist', 'dist-preview', 'dev-dist', 'node_modules', 'coverage', 'playwright-report', 'test-results', '**/*.svg'],
   },
   { files: ['**/*.js', '**/*.jsx', '**/*.mjs', '**/*.cjs'] },
   js.configs.recommended,

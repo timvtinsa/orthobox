@@ -80,3 +80,38 @@ jobs:
           name: dist
           path: dist
           retention-days: 7
+
+  # Layout and accessibility, on phone, tablet and desktop sizes. A separate
+  # job: it needs a browser, and takes longer than the unit tests.
+  e2e:
+    name: Responsive and accessibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Check every screen on every device size
+        run: npm run test:e2e
+
+      - name: Keep the report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-results
+          path: test-results
+          retention-days: 7
