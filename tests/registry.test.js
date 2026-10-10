@@ -83,6 +83,21 @@ describe('declared settings', () => {
     }
   })
 
+  it('shows as a drop-down only a choice, grouping all or none of its options', () => {
+    for (const game of GAMES) {
+      for (const field of game.settings) {
+        const where = `${game.id}.${field.id}`
+        if (field.display !== undefined) {
+          expect(field.display, where).toBe('select')
+          expect(field.type, where).toBe('choice')
+        }
+        for (const option of field.options ?? []) {
+          if (option.group !== undefined) expect(field.display, where).toBe('select')
+        }
+      }
+    }
+  })
+
   it('offers at least two options for a choice, including the default', () => {
     for (const game of GAMES) {
       for (const field of game.settings.filter((item) => item.type === 'choice')) {
