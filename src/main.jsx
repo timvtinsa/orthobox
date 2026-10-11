@@ -10,7 +10,7 @@ import './styles/game.css'
 import './styles/child-mode.css'
 
 // HashRouter: the application must be droppable as is on any static host
-// (GitHub Pages, Netlify, a practice intranet), with no URL rewriting rule to
+// (Cloudflare, Netlify, a practice intranet), with no URL rewriting rule to
 // configure.
 createRoot(document.getElementById('root')).render(
   <StrictMode>

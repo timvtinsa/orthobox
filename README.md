@@ -200,7 +200,7 @@ worker, useful for a hosted preview.
 | File | Role |
 | --- | --- |
 | `.github/workflows/ci.yml` | lint, tests and build on `main`, `integ` and every pull request |
-| `.github/workflows/release-please.yml` | version computation, changelog, tag, release and GitHub Pages deployment |
+| `.github/workflows/release-please.yml` | version computation, changelog, tag and release |
 
 The repository follows three levels: working branches start from `integ`,
 `integ` is the integration branch, and `main` only receives what is ready to
@@ -236,12 +236,12 @@ from the history.
 
 ## Deployment
 
-Every release is published to **GitHub Pages** automatically: once the
-release pull request is merged, `.github/workflows/release-please.yml` builds
-the application and deploys that exact `dist/` — the same one attached to the
-GitHub release as a zip — with no separate build for the two.
+Every release gets the built application attached as a zip: once the release pull
+request is merged, `.github/workflows/release-please.yml` builds `dist/` and
+uploads it to the GitHub release. The production site is deployed by
+Cloudflare's own git integration (see `ARCHITECTURE.md`).
 
-More generally, the build is a static application: the contents of `dist/`
+The build is a static application: the contents of `dist/`
 can be dropped as they are on any hosting (Netlify, a practice intranet, a USB
 stick). The base is relative and navigation uses a hash router
 (`#/games/...`), so no URL rewriting is needed, including in a subdirectory.
