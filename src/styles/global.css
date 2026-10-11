@@ -24,7 +24,7 @@
   --line-strong: #d6cdc6;
   --ink: #33303a;
   --ink-soft: #6b6674;
-  --ink-faint: #98929f;
+  --ink-faint: #6e6978; /* 4.5:1 on every surface: it carries text, not only decoration */
 
   /* Sémantique */
   --success: #2f7d57;
@@ -255,7 +255,6 @@ a {
 }
 
 .app-footer__version {
-  opacity: 0.6;
   font-variant-numeric: tabular-nums;
 }
 

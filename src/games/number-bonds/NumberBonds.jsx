@@ -60,7 +60,7 @@ export default function NumberBonds({ config, session }) {
         <span className="bond-line__sign" aria-hidden="true">
           +
         </span>
-        <span className="bond-line__hole" aria-label="nombre manquant" />
+        <span className="bond-line__hole" role="img" aria-label="nombre manquant" />
         <span className="bond-line__sign" aria-hidden="true">
           =
         </span>

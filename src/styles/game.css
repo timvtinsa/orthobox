@@ -1060,7 +1060,10 @@
 
 .scene {
   position: relative;
-  width: 100%;
+  /* Width follows the height cap: otherwise a phone in landscape keeps the full
+     width but loses height, and the objects (sized in % of the width) pile up. */
+  width: min(100%, calc(62vh * 1.5));
+  margin-inline: auto;
   aspect-ratio: 3 / 2;
   max-height: 62vh;
   border-radius: var(--radius);
@@ -1071,6 +1074,8 @@
 
 .scene__item {
   position: absolute;
+  /* Small scenes (phone in landscape) must not shrink an object below a tappable size. */
+  min-width: 32px;
   transform: translate(-50%, -50%);
   border: none;
   background: none;
@@ -1363,6 +1368,7 @@
 
   .scene {
     max-height: 56vh;
+    width: min(100%, calc(56vh * 1.5));
   }
 }
 
@@ -2633,7 +2639,7 @@
 .week-strip__day--pivot {
   border: 4px solid var(--category);
   background: var(--category-pastel);
-  color: var(--category);
+  color: var(--ink);
 }
 
 .week-prompt {
