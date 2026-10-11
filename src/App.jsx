@@ -1,5 +1,6 @@
 /**
- * Application routes: gallery, game page, session planning and session run.
+ * Application routes: gallery, game page, session planning and session run,
+ * plus the short presentation page (`#/what`).
  */
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
@@ -9,6 +10,7 @@ import SessionBuilderPage from './pages/SessionBuilderPage.jsx'
 import SessionRunPage from './pages/SessionRunPage.jsx'
 import SessionSharedPage from './pages/SessionSharedPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import WhatPage from './pages/WhatPage.jsx'
 
 export default function App() {
   return (
@@ -19,6 +21,7 @@ export default function App() {
         <Route path="session" element={<SessionBuilderPage />} />
         <Route path="session/run" element={<SessionRunPage />} />
         <Route path="session/shared" element={<SessionSharedPage />} />
+        <Route path="what" element={<WhatPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
