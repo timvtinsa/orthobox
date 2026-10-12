@@ -23,6 +23,7 @@ import {
   deleteSession,
   exportSessions,
   importSessions,
+  isPlanKept,
   missingGames,
   openSession,
   readSavedSessions,
@@ -189,10 +190,13 @@ export function SavedList({ steps, saved, onOpen, onBack }) {
     onBack()
   }
 
+  // A plan already kept (empty, or exactly a saved session) is replaced at once.
+  // One with changes since it was saved, or a new one, asks before it is
+  // overwritten, and says which it is.
   const askOpen = (entry) => {
     setProblem('')
-    if (steps.length === 0) open(entry)
-    else setConfirming({ type: 'open', id: entry.id })
+    if (isPlanKept(steps, list)) open(entry)
+    else setConfirming({ type: 'open', id: entry.id, changed: Boolean(source) })
   }
 
   const remove = (entry) => {
@@ -252,13 +256,19 @@ export function SavedList({ steps, saved, onOpen, onBack }) {
 
                   {confirming?.id === entry.id ? (
                     <div className="saved-item__confirm" role="group" aria-label={`Confirmer pour ${entry.name}`}>
-                      <span>{confirming.type === 'open' ? 'Remplacer la séance en cours ?' : 'Supprimer cette séance ?'}</span>
+                      <span>
+                        {confirming.type === 'delete'
+                          ? 'Supprimer cette séance ?'
+                          : confirming.changed
+                            ? `« ${source.name} » a des modifications non enregistrées. Les écraser ?`
+                            : 'La séance en cours n’est pas enregistrée. L’écraser ?'}
+                      </span>
                       <button
                         type="button"
                         className={`btn btn--sm${confirming.type === 'delete' ? ' btn--danger' : ''}`}
                         onClick={() => (confirming.type === 'open' ? open(entry) : remove(entry))}
                       >
-                        {confirming.type === 'open' ? 'Remplacer' : 'Supprimer'}
+                        {confirming.type === 'open' ? 'Écraser' : 'Supprimer'}
                       </button>
                       <button type="button" className="btn btn--ghost btn--sm" onClick={() => setConfirming(null)}>
                         Annuler

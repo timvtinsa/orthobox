@@ -7,6 +7,7 @@ import {
   deleteSession,
   exportSessions,
   importSessions,
+  isPlanKept,
   missingGames,
   openSession,
   readSavedSessions,
@@ -186,5 +187,16 @@ describe('backup file', () => {
     expect(readSessionSource()).toBe('abc')
     writeSessionSource(null)
     expect(readSessionSource()).toBe(null)
+  })
+
+  it('tells whether opening another session would lose the plan in progress', () => {
+    const base = saveSession('Base', plan(A, B)).entry
+    const list = readSavedSessions()
+    expect(isPlanKept([], list)).toBe(true)
+    expect(isPlanKept(plan(A, B), list)).toBe(true)
+    expect(isPlanKept(plan(A, B, C), list)).toBe(false)
+    expect(isPlanKept(plan(C), list)).toBe(false)
+    expect(isPlanKept(plan(A), [])).toBe(false)
+    expect(base.name).toBe('Base')
   })
 })

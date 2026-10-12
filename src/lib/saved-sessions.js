@@ -168,6 +168,15 @@ export function sameAsSaved(steps, entry) {
   return flat(steps) === flat(entry.steps)
 }
 
+/**
+ * Whether opening another session would lose nothing: the plan in progress is
+ * empty, or it is exactly one of the saved sessions (so it is already kept).
+ * A plan that was changed since it was saved, or a new one, is not.
+ */
+export function isPlanKept(steps, list) {
+  return steps.length === 0 || list.some((entry) => sameAsSaved(steps, entry))
+}
+
 /** How many of a saved session's games the catalogue no longer has. */
 export function missingGames(entry) {
   return entry.steps.filter((step) => !getGame(step.gameId)).length
