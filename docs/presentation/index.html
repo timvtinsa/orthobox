@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orthobox, présentation</title>
+<style>
+  /* Orthobox tokens, copied from src/styles/global.css and src/lib/categories.js. */
+  @font-face { font-family: 'Nunito'; font-weight: 400 800; font-style: normal; font-display: swap; src: url('fonts/Nunito-variable.woff2') format('woff2'); }
+  :root {
+    --ground: #faf7f5;
+    --surface: #ffffff;
+    --surface-alt: #f4f0ed;
+    --line: #e7e0db;
+    --line-strong: #d6cdc6;
+    --ink: #33303a;
+    --ink-soft: #6b6674;
+    --ink-faint: #98929f;
+    --accent: #35608f;
+    --accent-pastel: #a8c8ec;
+    --accent-tint: #eaf2fb;
+    --oral-pastel: #f6bdab;
+    --oral-ink: #a44a28;
+    --oral-tint: #fdede7;
+    --written-pastel: #b9d8c2;
+    --written-ink: #2f6b4c;
+    --written-tint: #eaf4ee;
+    --exec-pastel: #cdc3ec;
+    --exec-ink: #5b45a0;
+    --exec-tint: #f0ecfa;
+    --math-pastel: #f4dfa8;
+    --math-ink: #8a6a18;
+    --math-tint: #fbf5e4;
+    --success: #2f7d57;
+    --success-tint: #eaf5ee;
+    --danger: #b4453f;
+    --danger-tint: #fdecea;
+    --s1: 4px;
+    --s2: 8px;
+    --s3: 12px;
+    --s4: 16px;
+    --s5: 24px;
+    --s6: 32px;
+    --s7: 48px;
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-lg: 22px;
+    --shadow-sm: 0 1px 2px rgba(51, 48, 58, 0.05), 0 2px 10px rgba(51, 48, 58, 0.04);
+    --shadow: 0 8px 28px rgba(51, 48, 58, 0.1);
+    --shape-square: inset(0 round 2px);
+    --shape-circle: circle(50%);
+    --shape-triangle: polygon(50% 0, 100% 100%, 0 100%);
+    --shape-diamond: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    --font-ui: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+</style>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--surface-alt); color: var(--ink); font-family: var(--font-ui); }
+  body { padding: var(--s5); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+
+  /* ---- Barre d'outils ---- */
+  .bar { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin-bottom: var(--s5); }
+  .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px; }
+  .seg button { border: 0; background: transparent; min-height: 44px; padding: 0 var(--s4); border-radius: 999px; font-weight: 700; font-size: 15px; color: var(--ink-soft); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .btn { min-height: 44px; padding: 0 var(--s5); border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); font-weight: 800; font-size: 15px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn:focus-visible, .seg button:focus-visible, .nav button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .hint { font-size: 14px; color: var(--ink-soft); margin-left: auto; }
+
+  /* ---- Liste de diapositives ---- */
+  .item { margin: 0 auto var(--s6); max-width: 960px; }
+  .item h2 { margin: 0 0 var(--s2); font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); display: flex; gap: var(--s2); align-items: center; }
+  .tag { font-size: 12px; background: var(--accent-tint); color: var(--accent); border-radius: 999px; padding: 2px 10px; letter-spacing: 0; text-transform: none; }
+  .frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--line); background: var(--ground); }
+  .frame .slide { transform-origin: top left; position: absolute; left: 0; top: 0; }
+  .notes { margin: var(--s3) 0 0; padding: var(--s3) var(--s4); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 15px; line-height: 23px; color: var(--ink-soft); }
+  .notes b { color: var(--ink); }
+  body.nonotes .notes { display: none; }
+  body.short .item.long { display: none; }
+
+  /* ---- Mode présentation ---- */
+  #stage { display: none; position: fixed; inset: 0; background: #1f1d24; z-index: 10; align-items: center; justify-content: center; }
+  #stage.on { display: flex; }
+  #stage .slidewrap { position: relative; overflow: hidden; background: var(--ground); }
+  #stage .slide { transform-origin: top left; position: absolute; left: 0; top: 0; }
+  .nav { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; background: rgba(31,29,36,.88); border-radius: 999px; padding: 6px; color: #fff; font-weight: 700; font-size: 14px; z-index: 12; }
+  .nav button { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #fff; min-width: 44px; min-height: 44px; border-radius: 999px; font-weight: 800; }
+  .nav span { padding: 0 8px; min-width: 64px; text-align: center; }
+  #speaker { position: absolute; left: 0; right: 0; bottom: 70px; margin: 0 auto; max-width: 900px; background: rgba(31,29,36,.92); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 18px; line-height: 26px; z-index: 11; display: none; }
+  #speaker.on { display: block; }
+
+  /* ================= Les diapositives (1280 x 720) ================= */
+  .slide { width: 1280px; height: 720px; background: var(--ground); color: var(--ink); font-family: var(--font-ui); padding: 56px 64px 0; display: flex; flex-direction: column; }
+  .slide .kicker { font-size: 20px; line-height: 28px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; }
+  .slide h3 { margin: 10px 0 0; font-size: 56px; line-height: 64px; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
+  .slide .lead { font-size: 30px; line-height: 42px; font-weight: 600; color: var(--ink-soft); margin: 16px 0 0; }
+  .slide p, .slide li { font-size: 26px; line-height: 38px; font-weight: 600; margin: 0; }
+  .slide .foot { position: absolute; left: 64px; right: 64px; bottom: 26px; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 800; color: var(--ink-soft); }
+  .slide .foot img { width: 30px; height: 30px; }
+  .slide .foot .n { margin-left: auto; font-weight: 700; }
+  .shape { display: inline-block; width: 28px; height: 28px; flex: none; }
+  .sq { clip-path: var(--shape-square); border-radius: 0; }
+  .ci { clip-path: var(--shape-circle); }
+  .tr { clip-path: var(--shape-triangle); }
+  .di { clip-path: var(--shape-diamond); }
+  .shot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .shot img { display: block; width: 100%; height: auto; }
+  .cap { font-size: 22px; line-height: 30px; font-weight: 800; margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+  .num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+  .body { flex: 1; min-height: 0; margin-top: 28px; }
+  .placeholder { border: 3px dashed var(--ink-soft); border-radius: var(--radius); color: var(--ink-soft); font-weight: 800; display: inline-flex; align-items: center; justify-content: center; padding: 10px 22px; }
+
+  /* 1 titre */
+  .s1 { padding: 0; flex-direction: row; align-items: center; }
+  .s1 .l { flex: 1; padding: 0 0 40px 80px; }
+  .s1 .r { width: 440px; display: flex; align-items: center; justify-content: center; }
+  .s1 .r img { width: 340px; height: 340px; filter: drop-shadow(0 18px 30px rgba(51,48,58,.14)); }
+  .s1 h3 { font-size: 80px; line-height: 88px; margin-top: 18px; }
+  .s1 .brand { display: flex; align-items: center; gap: 16px; font-size: 34px; font-weight: 800; }
+  .s1 .brand img { width: 56px; height: 56px; }
+  .pills { display: flex; gap: 10px; margin-top: 36px; flex-wrap: wrap; }
+  .pill { font-size: 21px; font-weight: 800; background: var(--surface); border: 2px solid var(--line-strong); border-radius: 999px; padding: 8px 18px; }
+  .s1 .foot { display: none; }
+
+  /* 2 besoins */
+  .needs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .need { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm); }
+  .need .num { width: 56px; height: 56px; font-size: 30px; margin-bottom: 20px; }
+  .need b { display: block; font-size: 32px; line-height: 40px; font-weight: 800; margin-bottom: 10px; }
+  .need span { font-size: 24px; line-height: 34px; font-weight: 600; color: var(--ink-soft); }
+
+  /* 3 chiffres */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .stat { border-radius: var(--radius-lg); padding: 28px 28px 30px; background: var(--surface); border: 2px solid var(--line-strong); min-height: 300px; display: flex; flex-direction: column; justify-content: space-between; }
+  .stat.first { background: var(--accent-pastel); border-color: var(--accent-pastel); }
+  .stat .fig { font-size: 120px; line-height: 110px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .stat .lab { font-size: 28px; line-height: 36px; font-weight: 800; }
+  .stat .sub { font-size: 21px; line-height: 28px; font-weight: 600; color: var(--ink-soft); margin-top: 6px; }
+  .stat.first .sub { color: var(--ink); }
+  .shapes4 { display: flex; gap: 14px; height: 60px; align-items: center; }
+  .shapes4 .shape { width: 44px; height: 44px; }
+  .note-line { margin-top: 28px; font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 14px; }
+
+  /* 4 galerie */
+  .two { display: grid; grid-template-columns: 640px 1fr; gap: 48px; align-items: start; }
+  .crop { height: 330px; }
+  .crop img { width: 100%; }
+  .doms { display: flex; flex-direction: column; gap: 18px; }
+  .dom { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start; }
+  .dom .shape { width: 36px; height: 36px; margin-top: 4px; }
+  .dom b { font-size: 28px; line-height: 34px; font-weight: 800; display: flex; gap: 12px; align-items: baseline; }
+  .dom b i { font-style: normal; font-size: 20px; font-weight: 700; color: var(--ink-soft); }
+  .dom span { font-size: 21px; line-height: 28px; font-weight: 600; color: var(--ink-soft); display: block; }
+  .covers { display: flex; gap: 10px; margin-top: 22px; }
+  .covers img { width: 118px; height: 74px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
+
+  /* 5 régler */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .chips { display: flex; gap: 12px; margin-top: 22px; flex-wrap: nowrap; }
+  .chip { font-size: 20px; font-weight: 700; background: var(--accent-tint); color: var(--ink); border-radius: var(--radius-sm); padding: 8px 16px; display: inline-flex; gap: 10px; align-items: center; }
+  .chip svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+  /* 6 séance */
+  .split { display: grid; grid-template-columns: 560px 1fr; gap: 56px; align-items: start; }
+  .ticks { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+  .ticks li { display: grid; grid-template-columns: 36px 1fr; gap: 16px; align-items: start; }
+  .ticks svg { width: 34px; height: 34px; stroke: var(--success); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; margin-top: 2px; }
+  .ticks small { display: block; font-size: 22px; line-height: 30px; font-weight: 600; color: var(--ink-soft); }
+
+  /* 7 partager */
+  .steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-sm); }
+  .step b { display: block; font-size: 30px; line-height: 38px; font-weight: 800; margin: 12px 0 6px; }
+  .step span { font-size: 22px; line-height: 31px; font-weight: 600; color: var(--ink-soft); display: block; }
+  .proof { display: flex; align-items: center; gap: 28px; margin-top: 26px; }
+  .proof .shot { width: 600px; flex: none; }
+  .safe { font-size: 26px; line-height: 36px; font-weight: 700; background: var(--success-tint); border-radius: var(--radius); padding: 16px 22px; display: flex; gap: 14px; align-items: flex-start; }
+  .safe svg { width: 32px; height: 32px; stroke: var(--success); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; flex: none; margin-top: 2px; }
+
+  /* 8 enfant */
+  .kid { display: grid; grid-template-columns: 380px 1fr; gap: 56px; align-items: center; }
+  .foxbox { background: var(--oral-tint); border-radius: var(--radius-lg) ; height: 380px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--oral-pastel); }
+  .foxbox img { width: 300px; height: 300px; }
+  .modes { display: flex; flex-direction: column; gap: 20px; }
+  .mode { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 26px; display: grid; grid-template-columns: 150px 1fr; gap: 20px; align-items: center; }
+  .mode .tg { font-size: 24px; font-weight: 800; border-radius: 999px; padding: 6px 0; text-align: center; background: var(--accent); color: #fff; }
+  .mode .tg.k { background: var(--oral-pastel); color: var(--ink); }
+  .mode span { font-size: 24px; line-height: 33px; font-weight: 600; }
+  .same { font-size: 26px; line-height: 36px; font-weight: 800; background: var(--accent-tint); border-radius: var(--radius); padding: 16px 22px; }
+
+  /* 9 cabinet */
+  .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 30px; box-shadow: var(--shadow-sm); }
+  .ico { min-width: 76px; width: max-content; padding: 0 22px; height: 76px; border-radius: 38px; background: var(--accent-tint); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .ico svg { width: 38px; height: 38px; stroke: var(--accent); fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .ico .glyph { font-family: var(--font-patient); font-weight: 700; font-size: 30px; color: var(--accent); letter-spacing: 2px; }
+  .col b { display: block; font-size: 32px; line-height: 40px; font-weight: 800; margin-bottom: 12px; }
+  .col span { font-size: 23px; line-height: 33px; font-weight: 600; color: var(--ink-soft); display: block; }
+
+  /* 10 rôle */
+  .rows { display: flex; flex-direction: column; }
+  .row { display: grid; grid-template-columns: 70px 1fr; gap: 20px; padding: 20px 0; border-bottom: 2px solid var(--line); align-items: center; }
+  .row:first-child { border-top: 2px solid var(--line); }
+  .row b { font-size: 38px; line-height: 46px; font-weight: 800; }
+  .row .shape { width: 44px; height: 44px; background: var(--accent); }
+  .suggest { margin-top: 28px; background: var(--exec-tint); border-radius: var(--radius); padding: 20px 26px; font-size: 26px; line-height: 36px; font-weight: 600; display: flex; gap: 20px; align-items: center; }
+  .suggest .shape { background: var(--exec-ink); width: 40px; height: 40px; }
+
+  /* 11 comparatif */
+  .cmp { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 22px; }
+  .cmp th, .cmp td { padding: 7px 12px; text-align: left; vertical-align: middle; border-bottom: 2px solid var(--line); line-height: 28px; }
+  .cmp thead th { font-size: 20px; font-weight: 800; color: var(--ink); vertical-align: bottom; }
+  .cmp thead th.me, .cmp td.me { background: var(--accent-tint); }
+  .cmp tbody th { font-weight: 800; width: 250px; }
+  .cmp td { font-weight: 600; }
+  .yn { display: inline-flex; gap: 8px; align-items: center; font-weight: 800; }
+  .yn svg { width: 24px; height: 24px; fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .yn.y svg { stroke: var(--success); }
+  .yn.y { color: var(--success); }
+  .yn.n svg { stroke: var(--danger); }
+  .yn.n { color: var(--danger); }
+  .yn small { display: block; font-size: 17px; font-weight: 600; color: var(--ink-soft); line-height: 22px; }
+  .slide p.src { margin-top: 12px; font-size: 18px; line-height: 25px; font-weight: 600; color: var(--ink-soft); }
+
+  /* 12 fin */
+  .s12 { padding: 0; flex-direction: row; align-items: center; }
+  .s12 .l { flex: 1; padding: 0 0 40px 80px; }
+  .s12 .r { width: 460px; display: flex; flex-direction: column; align-items: center; gap: 18px; padding-right: 64px; }
+  .s12 h3 { font-size: 72px; line-height: 80px; }
+  .s12 .lines { margin-top: 30px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+  .s12 .lines div { font-size: 28px; font-weight: 800; display: flex; gap: 14px; align-items: center; }
+  .qrbox { width: 300px; height: 300px; font-size: 22px; line-height: 30px; text-align: center; background: var(--surface); }
+  .s12 .small { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--ink-soft); max-width: 700px; margin-top: 30px; }
+  .s12 .foot { display: none; }
+
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    html, body { background: #fff; padding: 0; }
+    .bar, .notes, .item h2, #stage { display: none !important; }
+    .item { margin: 0; max-width: none; break-after: page; }
+    .frame { width: 1280px; height: 720px; border: 0; border-radius: 0; box-shadow: none; }
+    .frame .slide { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <button class="btn primary" id="present">Présenter</button>
+  <button class="btn" id="toggleNotes">Masquer les notes</button>
+  <button class="btn" id="print">Imprimer ou PDF</button>
+  <span class="hint">En présentation : flèches pour avancer, N pour les notes, Échap pour quitter.</span>
+</div>
+<main id="list"></main>
+
+<div id="stage" role="dialog" aria-label="Présentation" aria-modal="true">
+  <div class="slidewrap" id="wrap"></div>
+  <div id="speaker"></div>
+  <div class="nav"><button id="prev" aria-label="Diapositive précédente">&#8592;</button><span id="count"></span><button id="next" aria-label="Diapositive suivante">&#8594;</button><button id="close" aria-label="Quitter la présentation">Quitter</button></div>
+</div>
+
+<script>
+/* À renseigner avant diffusion (voir le README du kit). */
+var SITE = '';      // ex. https://exemple.fr/orthobox
+var CONTACT = '';   // ex. contact@exemple.fr
+
+var IMG = {
+  mark: 'images/mark.svg',
+  galerie: 'images/gallery.png',
+  seance: 'images/session.png',
+  c: {
+    sound: 'images/cover-sound-odd-one-out.svg', stroop: 'images/cover-stroop.svg',
+    scr: 'images/cover-scrambled-syllables.svg', qty: 'images/cover-quantity-compare.svg'
+  }
+};
+var ICON = {
+  check: '<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+  cross: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  down: '<svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg>',
+  lock: '<svg viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0110 0v3"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg>',
+  drag: '<svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>',
+  gear: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>'
+};
+function yn(ok, text, sub) { return '<span class="yn ' + (ok ? 'y' : 'n') + '">' + (ok ? ICON.check : ICON.cross) + '<span>' + text + (sub ? '<small>' + sub + '</small>' : '') + '</span></span>'; }
+function foot(n) { return '<div class="foot"><img src="' + IMG.mark + '" alt=""><span>Orthobox</span><span class="n">' + n + ' / 12</span></div>'; }
+function addr(v, label) { return v ? v : '<span class="placeholder">[' + label + ']</span>'; }
+
+var S = [
+ { id: 1, short: true, notes: 'Je vous présente Orthobox, une galerie de jeux pour les séances d’orthophonie. Je vous montre l’essentiel, puis vous l’essayez sur votre tablette.',
+   html: '<section class="slide s1"><div class="l"><div class="brand"><img src="' + IMG.mark + '" alt="">Orthobox</div><h3>Des jeux prêts pour la séance</h3><p class="lead">Pour les orthophonistes. Sur tablette ou ordinateur.</p><div class="pills"><span class="pill">Gratuit</span><span class="pill">Sans compte</span><span class="pill">Sans publicité</span><span class="pill">Sans connexion</span></div></div><div class="r"><img src="' + IMG.mark + '" alt="Orthobox : une tuile bleue à quatre disques"></div></section>' },
+ { id: 2, short: false, notes: 'Vous connaissez ces situations. Orthobox est parti de là, pas d’un catalogue : régler vite, lire sans effort, ne pas dépendre du wifi.',
+   html: '<section class="slide"><div class="kicker">Le besoin</div><h3>Ce que l’on cherche en séance</h3><div class="body"><div class="needs"><div class="need"><div class="num">1</div><b>Régler vite</b><span>Un jeu qui se prépare en quelques gestes : nombre d’essais, consigne, matériel.</span></div><div class="need"><div class="num">2</div><b>Lire sans effort</b><span>Des mots nets, grands, lisibles sur une tablette posée entre vous et le patient.</span></div><div class="need"><div class="num">3</div><b>Ne pas dépendre du wifi</b><span>Un outil qui marche aussi quand la connexion du cabinet ne suit pas.</span></div></div></div>' + foot(2) + '</section>' },
+ { id: 3, short: true, notes: 'Quarante et un jeux, quatre domaines. Pas de compte à créer, pas de publicité. Et c’est gratuit : aucune version payante n’est prévue.',
+   html: '<section class="slide"><div class="kicker">Orthobox en bref</div><h3>L’essentiel tient en quatre chiffres</h3><div class="body"><div class="stats"><div class="stat first"><div><div class="fig">41</div></div><div><div class="lab">jeux</div><div class="sub">prêts à lancer</div></div></div><div class="stat"><div class="shapes4"><span class="shape sq" style="background:var(--oral-ink)"></span><span class="shape ci" style="background:var(--written-ink)"></span><span class="shape tr" style="background:var(--exec-ink)"></span><span class="shape di" style="background:var(--math-ink)"></span></div><div><div class="lab">4 domaines</div><div class="sub">oral, écrit, exécutives, maths</div></div></div><div class="stat"><div class="fig">0</div><div><div class="lab">compte</div><div class="sub">rien à créer, rien à retenir</div></div></div><div class="stat"><div class="fig">0</div><div><div class="lab">publicité</div><div class="sub">et aucune donnée patient</div></div></div></div><div class="note-line"><span class="num" style="background:var(--success)">' + ICON.check.replace('<svg', '<svg style="width:26px;height:26px;stroke:#fff;fill:none;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round"') + '</span>Gratuit, et aucune version payante n’est prévue.</div></div>' + foot(3) + '</section>' },
+ { id: 4, short: true, notes: 'Les jeux sont rangés en quatre domaines. Chaque domaine a sa couleur et sa forme : on le reconnaît même en noir et blanc, à l’impression.',
+   html: '<section class="slide"><div class="kicker">La galerie</div><h3>41 jeux, quatre domaines</h3><div class="body"><div class="two"><div><div class="shot crop"><img src="' + IMG.galerie + '" alt="La galerie d’Orthobox, avec les filtres par domaine"></div><div class="covers"><img src="' + IMG.c.sound + '" alt=""><img src="' + IMG.c.scr + '" alt=""><img src="' + IMG.c.stroop + '" alt=""><img src="' + IMG.c.qty + '" alt=""></div></div><div class="doms"><div class="dom"><span class="shape sq" style="background:var(--oral-ink)"></span><div><b>Langage oral</b><span>10 jeux : phonologie, lexique, évocation, compréhension et expression</span></div></div><div class="dom"><span class="shape ci" style="background:var(--written-ink)"></span><div><b>Langage écrit</b><span>8 jeux : lecture, conscience syllabique, compréhension écrite, fluence</span></div></div><div class="dom"><span class="shape tr" style="background:var(--exec-ink)"></span><div><b>Fonctions exécutives</b><span>12 jeux : inhibition, mémoire de travail, attention, flexibilité</span></div></div><div class="dom"><span class="shape di" style="background:var(--math-ink)"></span><div><b>Cognition mathématique</b><span>11 jeux : sens du nombre, estimation, chaîne numérique, calcul</span></div></div></div></div></div>' + foot(4) + '</section>' },
+ { id: 5, short: false, notes: 'Chaque jeu s’ouvre sur ses réglages : nombre d’essais, consigne, matériel. Le plateau n’est monté qu’à « Démarrer » : le patient ne voit rien avant. Le bloc « Consignes et objectifs » rappelle ce qui est travaillé et propose des variantes.',
+   html: '<section class="slide"><div class="kicker">Un jeu</div><h3>Vous réglez, le patient découvre</h3><div class="body"><div class="duo"><div><div class="shot"><img src="' + IMG.reglages + '" alt="L’écran de réglages d’un jeu"></div><div class="cap"><span class="num">1</span>Vous réglez avant</div></div><div><div class="shot"><img src="' + IMG.jeu + '" alt="Un essai du jeu L’intrus sonore"></div><div class="cap"><span class="num">2</span>Puis le patient joue</div></div></div><div class="chips"><span class="chip">' + ICON.gear + 'Essais, consigne, matériel</span><span class="chip">' + ICON.play + 'Rien avant « Démarrer »</span><span class="chip">' + ICON.check + 'Consignes et objectifs</span></div></div>' + foot(5) + '</section>' },
+ { id: 6, short: true, notes: 'Vous composez une suite de jeux en les glissant, au doigt ou à la souris. Chacun garde ses réglages et la séance reste dans le navigateur pour la fois suivante. À la fin, un bilan imprimable reprend les scores. Il n’est jamais stocké.',
+   html: '<section class="slide"><div class="kicker">La séance</div><h3>Composez une séance, imprimez le bilan</h3><div class="body"><div class="split"><div class="shot"><img src="' + IMG.seance + '" alt="Le mode Séance avec quatre jeux composés"></div><ul class="ticks"><li>' + ICON.check + '<p>On glisse les jeux, au doigt ou à la souris<small>Ou on les touche pour les ajouter à la fin.</small></p></li><li>' + ICON.check + '<p>Chaque jeu garde ses réglages<small>Et la séance reste d’une fois à l’autre.</small></p></li><li>' + ICON.check + '<p>Un bilan imprimable à la fin<small>Score de chaque jeu et total. Il n’est jamais stocké.</small></p></li></ul></div></div>' + foot(6) + '</section>' },
+ { id: 7, short: false, notes: 'Un lien ou un QR code transmet un réglage ou une séance entière à une collègue, à une autre tablette, ou au patient pour s’entraîner chez lui. Il ne contient que des réglages : aucune donnée patient.',
+   html: '<section class="slide"><div class="kicker">Partager</div><h3>Un lien ou un QR code, rien d’autre</h3><div class="body"><div class="steps3"><div class="step"><div class="num">1</div><b>Composer</b><span>Une séance, ou les réglages d’un seul jeu.</span></div><div class="step"><div class="num">2</div><b>Partager</b><span>« Partager la séance » donne un lien et un QR code.</span></div><div class="step"><div class="num">3</div><b>Ouvrir</b><span>Le destinataire voit d’abord un récapitulatif, puis lance quand il le décide.</span></div></div><div class="proof"><div class="shot"><img src="' + IMG.actions + '" alt="Les boutons Lancer la séance, Partager la séance et Tout effacer"></div><div class="safe">' + ICON.lock + '<span>Le lien ne contient que des réglages : aucune donnée patient, aucun résultat.</span></div></div></div>' + foot(7) + '</section>' },
+ { id: 8, short: false, notes: 'Un interrupteur dans l’en-tête. En mode Enfant, un petit renard sourit et saute quand c’est juste, encourage quand ce ne l’est pas. Rien d’autre ne change : même matériel, mêmes réglages, même calcul du score. Les passations restent comparables.',
+   html: '<section class="slide"><div class="kicker">Deux modes</div><h3>Un renard qui encourage, rien d’autre ne change</h3><div class="body"><div class="kid"><div class="foxbox"><img src="' + IMG.foxCheer + '" alt="Le renard d’Orthobox, content"></div><div class="modes"><div class="mode"><div class="tg">Adulte</div><span>Une interface sobre, sans animation superflue.</span></div><div class="mode"><div class="tg k">Enfant</div><span>Le renard sourit et saute si c’est juste, encourage sinon. Confettis en fin de jeu réussi.</span></div><div class="same">Même matériel, mêmes réglages, même calcul du score : les passations restent comparables.</div></div></div></div>' + foot(8) + '</section>' },
+ { id: 9, short: false, notes: 'Il s’installe comme une application, sans magasin d’applications. Rien n’est envoyé : seuls vos favoris, le mode et la séance en préparation restent dans le navigateur. Et les mots du patient sont écrits en Atkinson Hyperlegible, qui distingue b, d, p, q.',
+   html: '<section class="slide"><div class="kicker">Au cabinet</div><h3>Pensé pour la pièce où l’on travaille</h3><div class="body"><div class="cols3"><div class="col"><div class="ico">' + ICON.down + '</div><b>Sans connexion</b><span>Il s’installe sur l’écran d’accueil, sans magasin d’applications. Une fois chargé, il fonctionne hors ligne.</span></div><div class="col"><div class="ico">' + ICON.lock + '</div><b>Rien n’est envoyé</b><span>Pas de serveur, pas de compte. Le navigateur garde seulement vos favoris, le mode et la séance en préparation.</span></div><div class="col"><div class="ico"><span class="glyph">bdpq</span></div><b>Lisible</b><span>Une police conçue pour distinguer b, d, p, q. Cibles tactiles d’au moins 44 px, états jamais portés par la couleur seule.</span></div></div></div>' + foot(9) + '</section>' },
+ { id: 10, short: false, notes: 'Orthobox n’est pas un test standardisé ni un outil de diagnostic. Vous choisissez le jeu et le niveau, vous interprétez. À la fin d’un jeu, il peut suggérer un cran plus dur ou plus facile : c’est un bouton, c’est vous qui décidez.',
+   html: '<section class="slide"><div class="kicker">Votre rôle</div><h3>Vous gardez la main</h3><div class="body"><div class="rows"><div class="row"><span class="shape sq"></span><b>Du matériel de rééducation</b></div><div class="row"><span class="shape ci"></span><b>Ni test, ni outil de diagnostic</b></div><div class="row"><span class="shape tr"></span><b>Vous choisissez, vous interprétez</b></div></div><div class="suggest"><span class="shape di"></span><span>À la fin d’un jeu, Orthobox peut suggérer un cran plus dur ou plus facile. C’est un bouton : c’est vous qui décidez.</span></div></div>' + foot(10) + '</section>' },
+ { id: 11, short: false, annex: true, notes: 'À montrer seulement si on vous le demande. Les chiffres viennent des pages publiques de chaque éditeur en septembre 2026 : relisez-les avant de diffuser.',
+   html: '<section class="slide"><div class="kicker">Annexe</div><h3>Et les autres outils ?</h3><div class="body" style="margin-top:14px"><table class="cmp"><thead><tr><th></th><th class="me">Orthobox</th><th>logicieleducatif.fr</th><th>HappyNeuron Pro</th><th>DYNSEO</th><th>LenaTheo</th></tr></thead><tbody>'
+     + '<tr><th>Gratuit</th><td class="me">' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(0, 'Non', 'dès 59 €/mois') + '</td><td>' + yn(0, 'Non', '88 € HT/an/tablette') + '</td><td>' + yn(0, 'Non', '8,90 €/mois') + '</td></tr>'
+     + '<tr><th>Sans publicité</th><td class="me">' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td></tr>'
+     + '<tr><th>Hors connexion</th><td class="me">' + yn(1, 'Oui') + '</td><td>' + yn(0, 'Non', 'navigateur') + '</td><td>' + yn(0, 'Non', 'plateforme en ligne') + '</td><td>' + yn(1, 'Oui', 'appli installée') + '</td><td>' + yn(0, 'Non', 'navigateur') + '</td></tr>'
+     + '<tr><th>Conçu pour l’orthophonie</th><td class="me">' + yn(1, 'Oui') + '</td><td>' + yn(0, 'Non', 'scolaire') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td></tr>'
+     + '<tr><th>Sans compte</th><td class="me">' + yn(1, 'Oui') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(0, 'Non') + '</td><td>' + yn(1, 'Oui') + '</td><td>' + yn(0, 'Non', 'catalogue complet') + '</td></tr>'
+     + '</tbody></table><p class="src">Source : présentation publique de chaque produit, septembre 2026. LenaTheo propose quelques jeux gratuits, sans compte. Tarifs et fonctions susceptibles d’avoir changé : à vérifier avant diffusion.</p></div>' + '</section>' },
+ { id: 12, short: true, notes: 'Ouvrez l’adresse sur votre tablette, choisissez un jeu, faites un essai. Dites-moi ce qui manque : c’est ce qui fait évoluer Orthobox.',
+   html: '<section class="slide s12"><div class="l"><div class="kicker">À vous d’essayer</div><h3>Ouvrez Orthobox sur votre tablette</h3><div class="lines"><div>Adresse : ' + addr(SITE, 'adresse d’Orthobox') + '</div><div>Vos retours : ' + addr(CONTACT, 'contact') + '</div></div><p class="small">La page « Découvrir Orthobox » (<b>/#/what</b>) présente l’application en un coup d’œil. Du matériel de rééducation : ni test standardisé, ni outil de diagnostic. Gratuit et sans publicité, pour toutes les praticiennes.</p></div><div class="r"><div class="placeholder qrbox">QR code à ajouter avec l’adresse</div></div></section>' }
+];
+
+S = S.filter(function (s) { return s.short; });
+S.forEach(function (s, i) { s.html = s.html.replace(/<span class="n">\d+ \/ 12<\/span>/, '<span class="n">' + (i + 1) + ' / ' + S.length + '</span>'); });
+var list = document.getElementById('list');
+S.forEach(function (s, i) {
+  var item = document.createElement('article');
+  item.className = 'item' + (s.short ? '' : ' long');
+  item.innerHTML = '<h2><span>' + (i + 1) + '</span>' + '</h2><div class="frame">' + s.html + '</div><p class="notes"><b>À dire :</b> ' + s.notes + '</p>';
+  list.appendChild(item);
+});
+
+function fitAll() {
+  document.querySelectorAll('.frame').forEach(function (f) {
+    var sl = f.firstElementChild; if (!sl) return;
+    sl.style.transform = 'scale(' + (f.clientWidth / 1280) + ')';
+  });
+}
+window.addEventListener('resize', fitAll); fitAll();
+if (window.ResizeObserver) new ResizeObserver(fitAll).observe(document.body);
+
+var tn = document.getElementById('toggleNotes');
+tn.onclick = function () { var off = document.body.classList.toggle('nonotes'); tn.textContent = off ? 'Afficher les notes' : 'Masquer les notes'; };
+document.getElementById('print').onclick = function () { try { window.print(); } catch (e) {} };
+
+/* Mode présentation */
+var stage = document.getElementById('stage'), wrap = document.getElementById('wrap'), speaker = document.getElementById('speaker'), count = document.getElementById('count');
+var order = [], idx = 0;
+function fitStage() {
+  var sc = Math.min(stage.clientWidth / 1280, stage.clientHeight / 720);
+  wrap.style.width = 1280 * sc + 'px'; wrap.style.height = 720 * sc + 'px';
+  if (wrap.firstElementChild) wrap.firstElementChild.style.transform = 'scale(' + sc + ')';
+}
+function show(i) {
+  idx = Math.max(0, Math.min(order.length - 1, i));
+  var s = order[idx];
+  wrap.innerHTML = s.html; speaker.textContent = s.notes; count.textContent = (idx + 1) + ' / ' + order.length; fitStage();
+}
+function start() {
+  order = S;
+  stage.classList.add('on'); show(0);
+  try { if (stage.requestFullscreen) stage.requestFullscreen(); } catch (e) {}
+  document.getElementById('next').focus();
+}
+function stop() { stage.classList.remove('on'); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {} }
+document.getElementById('present').onclick = start;
+document.getElementById('close').onclick = stop;
+document.getElementById('prev').onclick = function () { show(idx - 1); };
+document.getElementById('next').onclick = function () { show(idx + 1); };
+window.addEventListener('resize', function () { if (stage.classList.contains('on')) fitStage(); });
+document.addEventListener('keydown', function (e) {
+  if (!stage.classList.contains('on')) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { show(idx + 1); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(idx - 1); e.preventDefault(); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(order.length - 1);
+  else if (e.key === 'n' || e.key === 'N') speaker.classList.toggle('on');
+  else if (e.key === 'Escape') stop();
+});
+</script>
+</body>
+</html>
