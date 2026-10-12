@@ -8,7 +8,7 @@ import { useState } from 'react'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
-import { randomInt } from '../../lib/random.js'
+import { createDrawer, randomInt } from '../../lib/random.js'
 import { COINS, Coin, formatAmount } from './coins.jsx'
 
 /** Highest amount offered, in cents, for each setting. */
@@ -30,7 +30,12 @@ function availableCoins(config) {
 
 export default function CountingMoney({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [price, setPrice] = useState(() => drawPrice(config))
+  // No amount twice within the last three, nor twice in the session while the
+  // setting leaves other amounts to choose from.
+  const [drawer] = useState(() =>
+    createDrawer(() => drawPrice(config), { recent: (price) => [price], series: (price) => [price], memory: 3 }),
+  )
+  const [price, setPrice] = useState(() => drawer.next())
   const [chosen, setChosen] = useState([])
   const [result, setResult] = useState(null)
 
@@ -56,7 +61,7 @@ export default function CountingMoney({ config, session }) {
 
   const goNext = () => {
     rounds.next()
-    setPrice(drawPrice(config))
+    setPrice(drawer.next())
     setChosen([])
     setResult(null)
   }
@@ -64,7 +69,8 @@ export default function CountingMoney({ config, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
-    setPrice(drawPrice(config))
+    drawer.reset()
+    setPrice(drawer.next())
     setChosen([])
     setResult(null)
   }

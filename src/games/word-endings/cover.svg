@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Une ligne de texte dont la fin d’un mot est à choisir dans une liste">
+  <rect width="320" height="200" fill="#eaf4ee"/>
+  <path d="M30 52h150M30 84h104M30 148h210" fill="none" stroke="#b9d8c2" stroke-width="10" stroke-linecap="round"/>
+  <path d="M30 116h58" fill="none" stroke="#2f6b4c" stroke-width="10" stroke-linecap="round"/>
+  <rect x="98" y="94" width="76" height="44" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <path d="M146 112l10 12 10-12" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="186" y="158" width="104" height="30" rx="10" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <path d="M206 173h26" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-linecap="round"/>
+</svg>

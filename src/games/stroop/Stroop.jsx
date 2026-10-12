@@ -11,7 +11,7 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { pick, shuffle } from '../../lib/random.js'
+import { createDrawer, pick, shuffle } from '../../lib/random.js'
 
 const COLORS = [
   { id: 'red', label: 'ROUGE', hex: '#d0342c' },
@@ -35,9 +35,22 @@ function buildRound(config) {
   }
 }
 
+/**
+ * The source of trials for one game: the same word in the same ink is not
+ * shown again within the last two trials, and neither is the same correct
+ * answer, so the patient cannot settle into pressing one button.
+ */
+function createTrialDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [`${round.word.id}/${round.ink.id}/${round.prompt}`, `answer:${round.expected}`],
+    memory: 2,
+  })
+}
+
 export default function Stroop({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createTrialDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
   const times = useRef([])
@@ -59,7 +72,7 @@ export default function Stroop({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     setPicked(null)
   }
 
@@ -68,7 +81,8 @@ export default function Stroop({ config, session }) {
     session.reset()
     rounds.restart()
     times.current = []
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     setPicked(null)
   }
 

@@ -51,7 +51,8 @@ export default function Layout() {
 
       <footer className="app-footer">
         Orthobox, outil libre pour les séances d’orthophonie. Tout fonctionne hors ligne, aucune
-        donnée patient n’est enregistrée.
+        donnée patient n’est enregistrée.{' '}
+        <Link to="/what">Découvrir Orthobox</Link>
         <span className="app-footer__version"> · v{version}</span>
       </footer>
 

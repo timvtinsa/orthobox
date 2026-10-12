@@ -1,0 +1,76 @@
+import { lazy } from 'react'
+import cover from './cover.svg'
+
+export default {
+  id: 'word-endings',
+  title: 'La bonne forme du mot',
+  tagline: 'Choisir, dans un petit texte, la terminaison, le pronom ou la forme qui convient.',
+  category: 'written-language',
+  cover,
+  ages: '8 ans et plus',
+  keywords: [
+    'orthographe',
+    'terminaisons',
+    'accord',
+    'conjugaison',
+    'pronoms',
+    'dérivation',
+    'flexion',
+    'morphologie',
+    'décision orthographique',
+  ],
+  objectives: [
+    'Décision orthographique : choisir la forme d’après le contexte',
+    'Flexion : accorder le verbe avec son sujet, l’adjectif et le nom en genre et en nombre, choisir la bonne forme d’un mot',
+    'Dérivation : former un mot nouveau avec un préfixe ou un suffixe',
+    'Conjugaison et pronoms : temps, auxiliaire, pronom sujet et pronom complément',
+    'Homophones grammaticaux : a, as ou à ; ou ou où ; on ou ont ; son ou sont ; ces, ses, c’est ou s’est',
+    'Accord du verbe avec un sujet éloigné, en repérant d’abord le sujet',
+  ],
+  materials: [
+    'Chaque texte compte trois mots à compléter : le patient ouvre la liste et choisit la forme, puis valide.',
+    'La liste propose les mêmes formes pour tous les mots du texte, y compris des formes qui ne conviennent à aucun : on ne peut pas répondre par élimination.',
+    'La flexion fait varier un même mot (chanter, chantons, chantait ; cheval, chevaux). La dérivation fabrique un mot nouveau (chanter, chanteur ; utile, inutile) : les deux notions se travaillent séparément.',
+    'Pour les homophones, le test du remplacement aide : « avait » pour a, « ou bien » pour ou, « il » pour on, « mon » pour son, « étaient » pour sont, « se » à un autre temps pour s’est. Pour l’accord, on cherche d’abord le sujet (« qui est-ce qui ? »), qui n’est pas forcément le mot juste avant le verbe.',
+    'À la correction, la règle qui justifie chaque forme s’affiche pour les mots manqués : elle sert de point de départ à la remédiation.',
+    'Variante : faire dire à voix haute pourquoi cette forme avant de valider (« après a, c’est un participe passé »).',
+  ],
+  instructions:
+    'Un petit texte contient des mots dont la fin, le début ou la forme est à choisir dans une liste. Le patient complète tous les mots, puis valide pour voir la correction.',
+  settings: [
+    {
+      id: 'topic',
+      type: 'choice',
+      label: 'Notion travaillée',
+      default: 'infinitive',
+      // Many notions: a drop-down, sorted under headings.
+      display: 'select',
+      options: [
+        { id: 'infinitive', group: 'Terminaisons', label: 'er, é, ez', hint: 'L’infinitif, le participe passé et la forme avec « vous ».' },
+        { id: 'tenses', group: 'Terminaisons', label: 'ait, aient, ent', hint: 'L’imparfait et le présent, au singulier et au pluriel.' },
+        { id: 'agreement', group: 'Terminaisons', label: 'Genre et nombre', hint: 'Les adjectifs et les noms : -e, -s, -es, -x.' },
+        { id: 'conjugation', group: 'Conjugaison et accords', label: 'Conjugaison', hint: 'Le présent (-e, -es, -ons, -ez, -ent), le futur et le conditionnel (-ra, -rait, -ront, -raient).' },
+        { id: 'perfect', group: 'Conjugaison et accords', label: 'Passé composé', hint: 'Avoir ou être (a, ont, est, sont), puis l’accord du participe passé avec être.' },
+        { id: 'subject-verb', group: 'Conjugaison et accords', label: 'Accord sujet-verbe', hint: 'Le sujet est loin du verbe : « Les enfants de la voisine jouent ».' },
+        { id: 'pronouns', group: 'Conjugaison et accords', label: 'Pronoms', hint: 'Sujets (il, elle, ils, elles) et compléments (le, la, les, lui, leur).' },
+        { id: 'derivation', group: 'Morphologie', label: 'Dérivation', hint: 'Les préfixes (in-, im-, dé-, re-) et les suffixes (-eur, -euse, -ier, -able, -tion).' },
+        { id: 'inflection', group: 'Morphologie', label: 'Flexion', hint: 'Les formes d’un mot : chevaux, actrice, êtes, pris, meilleur.' },
+        { id: 'a-a', group: 'Homophones', label: 'a, as ou à', hint: 'Le verbe avoir (a, as) ou la préposition à.' },
+        { id: 'ou-ou', group: 'Homophones', label: 'ou ou où', hint: 'Le choix (ou) ou le lieu (où).' },
+        { id: 'on-ont', group: 'Homophones', label: 'on ou ont', hint: 'Le pronom on ou le verbe avoir (ils ont).' },
+        { id: 'son-sont', group: 'Homophones', label: 'son ou sont', hint: 'Le déterminant son ou le verbe être (ils sont).' },
+        { id: 'ces-ses', group: 'Homophones', label: 'ces, ses, c’est, s’est', hint: 'Le déterminant ces, ses (à lui ou à elle), c’est (cela est) et s’est (se, à un autre temps).' },
+        { id: 'mixed', label: 'Tout mélangé', hint: 'Toutes les notions, dans un ordre quelconque.' },
+      ],
+    },
+    {
+      id: 'rounds',
+      type: 'number',
+      label: 'Nombre de textes',
+      min: 1,
+      max: 6,
+      default: 3,
+    },
+  ],
+  component: lazy(() => import('./WordEndings.jsx')),
+}

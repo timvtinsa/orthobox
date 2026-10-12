@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // Relative base: the application is purely client-side, so it can be served
-// from any subdirectory (GitHub Pages, Netlify, a USB stick…).
+// from any subdirectory (Netlify, Cloudflare, a USB stick…).
 export default defineConfig({
   base: './',
   test: {
@@ -36,10 +36,10 @@ export default defineConfig({
       // much bigger share of a much smaller statement count. Re-floor again
       // after the next `npm run test:coverage` if the suite grows.
       thresholds: {
-        statements: 50,
-        lines: 50,
-        functions: 50,
-        branches: 60,
+        statements: 65,
+        lines: 65,
+        functions: 68,
+        branches: 66,
       },
     },
   },

@@ -16,6 +16,18 @@ export const COMMON_WORDS = [
   'ananas', 'robinet', 'ceinture', 'sifflet', 'tabouret', 'éponge', 'chaussette', 'biberon',
   'cravate', 'tiroir', 'poubelle', 'réveil', 'coquillage', 'papillon', 'tortue', 'cactus',
   'harmonica', 'montre', 'pantoufle', 'coffre', 'seau', 'igloo', 'tunnel', 'cloche',
+  'accordéon', 'aiguille', 'ampoule', 'araignée', 'arrosoir', 'artichaut', 'aspirateur', 'assiette',
+  'baleine', 'balançoire', 'bassine', 'betterave', 'bibliothèque', 'bicyclette', 'boîte', 'bonnet',
+  'brouette', 'cabane', 'cafetière', 'cahier', 'calendrier', 'canoë', 'cartable', 'cerf-volant',
+  'cerise', 'chaudron', 'cheminée', 'chou', 'cintre', 'cirque', 'clown', 'commode',
+  'couronne', 'cuillère', 'dé', 'drapeau', 'écharpe', 'éventail', 'fauteuil', 'fusée',
+  'gant', 'gomme', 'hamac', 'hérisson', 'hibou', 'hublot', 'kiwi', 'lanterne',
+  'licorne', 'loupe', 'luge', 'marteau', 'marionnette', 'mouchoir', 'moufle', 'nappe',
+  'niche', 'palmier', 'parasol', 'passoire', 'pelle', 'peluche', 'perle', 'phare',
+  'pigeon', 'pizza', 'plume', 'poêle', 'pomme', 'prise', 'puzzle', 'pyjama',
+  'radio', 'rideau', 'robot', 'sablier', 'sac', 'savon', 'scie', 'seringue',
+  'sonnette', 'tambourin', 'tente', 'toupie', 'tricycle', 'trottinette', 'trousse', 'tuyau',
+  'vase', 'verrou', 'violon', 'vélo', 'zèbre',
 ]
 
 /** Random digit sequence, never repeating the same digit twice in a row. */

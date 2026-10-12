@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { noRepeatSeries, pick, randomInt, sample, sampleAvoiding, shuffle } from '../src/lib/random.js'
+import { createDrawer, drawSeries, noRepeatSeries, pick, randomInt, sample, sampleAvoiding, shuffle } from '../src/lib/random.js'
 
 const SOURCE = ['a', 'b', 'c', 'd', 'e', 'f']
 
@@ -62,5 +62,53 @@ describe('random helpers', () => {
 
   it('draws the requested count, beyond the pool size', () => {
     expect(noRepeatSeries(SOURCE, 20)).toHaveLength(20)
+  })
+})
+
+describe('createDrawer', () => {
+  const sum = () => {
+    const a = randomInt(1, 9)
+    const b = randomInt(1, 9)
+    return { a, b, result: a + b }
+  }
+
+  it('never repeats a result within its memory when the pool allows it', () => {
+    for (let run = 0; run < 200; run += 1) {
+      const drawer = createDrawer(sum, { recent: (round) => [round.result], memory: 3 })
+      const rounds = drawSeries(drawer, 20)
+      rounds.forEach((round, index) => {
+        for (let back = 1; back <= 3 && index - back >= 0; back += 1) {
+          expect(round.result).not.toBe(rounds[index - back].result)
+        }
+      })
+    }
+  })
+
+  it('never asks the same question twice in a session when the pool allows it', () => {
+    for (let run = 0; run < 100; run += 1) {
+      const drawer = createDrawer(sum, { series: (round) => [[round.a, round.b].sort().join('+')] })
+      const keys = drawSeries(drawer, 20).map((round) => [round.a, round.b].sort().join('+'))
+      expect(new Set(keys).size).toBe(keys.length)
+    }
+  })
+
+  it('keeps going, spreading the repeats, when the pool is too small', () => {
+    const drawer = createDrawer(() => ({ value: randomInt(1, 3) }), {
+      recent: (round) => [round.value],
+      series: (round) => [round.value],
+      memory: 1,
+    })
+    const rounds = drawSeries(drawer, 12)
+    expect(rounds).toHaveLength(12)
+    rounds.forEach((round, index) => {
+      if (index > 0) expect(round.value).not.toBe(rounds[index - 1].value)
+    })
+  })
+
+  it('starts afresh after a reset', () => {
+    const drawer = createDrawer(() => ({ value: 1 }), { series: (round) => [round.value] })
+    drawer.next()
+    drawer.reset()
+    expect(drawer.next()).toEqual({ value: 1 })
   })
 })

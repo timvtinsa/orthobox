@@ -12,6 +12,9 @@
  * The order is imposed here rather than by each manifest: numbers first, then
  * choices, and a choice of more than three options takes a row of its own.
  *
+ * A choice with many options can declare `display: 'select'` to be shown as a
+ * drop-down instead of cards, its options optionally sorted under a `group`.
+ *
  * A field can declare `showIf(config)` to appear only once another field
  * holds a given value, for a setting that means nothing without it (a
  * memorisation time when the model is never hidden, say). Hidden fields keep
@@ -22,6 +25,7 @@ import { useState } from 'react'
 import { shareLink } from '../lib/share-settings.js'
 import Stepper from './Stepper.jsx'
 import StyledQr from './StyledQr.jsx'
+import SettingSelect from './SettingSelect.jsx'
 import SwitchGroup from './SwitchGroup.jsx'
 
 /** Default values declared by a game in its `game.js` manifest. */
@@ -103,6 +107,13 @@ export default function GameSetup({
                   min={field.min}
                   max={field.max}
                   step={field.step ?? 1}
+                  onChange={(value) => update(field.id, value)}
+                />
+              ) : field.display === 'select' ? (
+                <SettingSelect
+                  labelId={fieldId(field)}
+                  value={config[field.id]}
+                  options={field.options}
                   onChange={(value) => update(field.id, value)}
                 />
               ) : (

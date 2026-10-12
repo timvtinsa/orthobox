@@ -161,6 +161,14 @@ travels in the link, a step naming a game the catalogue no longer has is
 simply left out, and every setting is re-checked against what the game
 itself allows.
 
+## Presenting Orthobox
+
+`#/what` (« Découvrir Orthobox », linked from the footer) is a single short page
+that presents the application to a practitioner who has never seen it: what it
+is, how it works in three steps, the four domains and what to know. It is meant
+to be sent as a link, and its figures are read from the catalogue, so it never
+lags behind the games.
+
 ## Installing the PWA
 
 Orthobox installs like a native app, with no app store and no account, and
@@ -189,6 +197,7 @@ npm run build     # production build in dist/
 npm run preview   # preview the build
 npm run lint
 npm test          # unit tests (Vitest)
+npm run test:e2e  # layout and accessibility in a real browser (Playwright, axe)
 ```
 
 `npm run build` also regenerates the PWA PNG icons (`npm run icons` to
@@ -200,7 +209,7 @@ worker, useful for a hosted preview.
 | File | Role |
 | --- | --- |
 | `.github/workflows/ci.yml` | lint, tests and build on `main`, `integ` and every pull request |
-| `.github/workflows/release-please.yml` | version computation, changelog, tag, release and GitHub Pages deployment |
+| `.github/workflows/release-please.yml` | version computation, changelog, tag and release |
 
 The repository follows three levels: working branches start from `integ`,
 `integ` is the integration branch, and `main` only receives what is ready to
@@ -236,12 +245,12 @@ from the history.
 
 ## Deployment
 
-Every release is published to **GitHub Pages** automatically: once the
-release pull request is merged, `.github/workflows/release-please.yml` builds
-the application and deploys that exact `dist/` — the same one attached to the
-GitHub release as a zip — with no separate build for the two.
+Every release gets the built application attached as a zip: once the release pull
+request is merged, `.github/workflows/release-please.yml` builds `dist/` and
+uploads it to the GitHub release. The production site is deployed by
+Cloudflare's own git integration (see `ARCHITECTURE.md`).
 
-More generally, the build is a static application: the contents of `dist/`
+The build is a static application: the contents of `dist/`
 can be dropped as they are on any hosting (Netlify, a practice intranet, a USB
 stick). The base is relative and navigation uses a hash router
 (`#/games/...`), so no URL rewriting is needed, including in a subdirectory.

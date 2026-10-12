@@ -59,3 +59,62 @@ export function noRepeatSeries(items, count) {
   }
   return series
 }
+
+/**
+ * A source of rounds that remembers what it has just asked.
+ *
+ * `make()` builds one round at random. Two lists of keys say what must not
+ * come back:
+ *  - `recent(round)`: keys that must not repeat within the last `memory`
+ *    rounds, typically the *result* (« 7 + 3 » then « 6 + 4 » is the same
+ *    answer twice in a row);
+ *  - `series(round)`: keys that should not repeat at all during the session,
+ *    typically the question itself.
+ *
+ * A round that breaks neither is drawn again as many times as `attempts`
+ * allows. When the pool is too small for that (a range of ten only holds so
+ * many sums), the least repetitive round found is kept, recent repeats
+ * counting far worse than session ones, so the session never stalls and
+ * what is unavoidable is at least spread out.
+ */
+export function createDrawer(make, { recent = () => [], series = () => [], memory = 3, attempts = 60 } = {}) {
+  let window = []
+  let seen = new Set()
+
+  const penalty = (round) => {
+    const recentKeys = new Set(window.flat())
+    return (
+      recent(round).filter((key) => recentKeys.has(key)).length * 100 +
+      series(round).filter((key) => seen.has(key)).length
+    )
+  }
+
+  return {
+    next() {
+      let best = null
+      let bestPenalty = Infinity
+      for (let attempt = 0; attempt < attempts; attempt += 1) {
+        const round = make()
+        const cost = penalty(round)
+        if (cost < bestPenalty) {
+          best = round
+          bestPenalty = cost
+          if (cost === 0) break
+        }
+      }
+      window = [...window, recent(best)].slice(-memory)
+      for (const key of series(best)) seen.add(key)
+      return best
+    },
+    reset() {
+      window = []
+      seen = new Set()
+    },
+  }
+}
+
+/** `count` rounds from a drawer, for the games that draw their whole series upfront. */
+export function drawSeries(drawer, count) {
+  drawer.reset()
+  return Array.from({ length: count }, () => drawer.next())
+}

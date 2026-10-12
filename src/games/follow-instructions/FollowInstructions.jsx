@@ -11,7 +11,7 @@ import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
-import { buildRound, instructionText } from './logic.js'
+import { instructionText, createInstructionDrawer } from './logic.js'
 import ShapeIcon from './ShapeIcon.jsx'
 
 function Token({ token, onClick, label, showLabel }) {
@@ -29,7 +29,8 @@ function Token({ token, onClick, label, showLabel }) {
 
 export default function FollowInstructions({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createInstructionDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [placed, setPlaced] = useState([])
   const [result, setResult] = useState(null)
   // Miroir synchrone de `placed` : deux taps dans la même image liraient
@@ -65,7 +66,7 @@ export default function FollowInstructions({ config, session }) {
 
   const goNext = () => {
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     updatePlaced([])
     setResult(null)
   }
@@ -73,7 +74,8 @@ export default function FollowInstructions({ config, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     updatePlaced([])
     setResult(null)
   }

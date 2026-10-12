@@ -4,7 +4,7 @@
  * Kept apart from the component so the guarantee can be tested: the target
  * appears in the row exactly once, otherwise the answer would be ambiguous.
  */
-import { pick, sample, shuffle } from '../../lib/random.js'
+import { pick, sample, shuffle, createDrawer } from '../../lib/random.js'
 
 /** Confusion sets: every letter of a set is a plausible lure for the others. */
 export const SETS = {
@@ -36,4 +36,12 @@ export function buildRound(config) {
   }
 
   return { target, cells: shuffle(cells).map((letter, index) => ({ id: index, letter })) }
+}
+
+/** The source of rounds for one game: the same target letter is not asked twice within the last two. */
+export function createLetterDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [round.target],
+    memory: 2,
+  })
 }

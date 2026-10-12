@@ -18,7 +18,7 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { buildRound, ratioOf, ticksFor, toleranceFor, valueAt } from './line.js'
+import { ratioOf, ticksFor, toleranceFor, valueAt, createLineDrawer } from './line.js'
 
 // Repère de dessin : la ligne vit dans un viewBox large, pour rester nette
 // à toutes les tailles sans recalculer de pixels.
@@ -57,7 +57,8 @@ function Marker({ ratio, variant, label }) {
 
 export default function NumberLine({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createLineDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -86,7 +87,7 @@ export default function NumberLine({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     setPicked(null)
   }
 
@@ -94,7 +95,8 @@ export default function NumberLine({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     setPicked(null)
   }
 
