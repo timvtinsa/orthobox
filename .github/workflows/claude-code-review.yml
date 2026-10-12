@@ -1,0 +1,102 @@
+# A first-pass review of a pull request by Claude Code, posted as one comment.
+# It is a second opinion, not a gate: it never blocks a merge and never pushes
+# a commit.
+#
+# Two things shape it (the details are in scripts/claude-review.mjs):
+#
+# - Safe on untrusted text. The model gets the diff as text and no tool at all,
+#   runs from an empty directory, and only ever sees the subscription token.
+#   Its answer is validated and sanitised by a script, and the comment is
+#   posted by a plain `gh` call in a separate step, never by the model. The two
+#   secrets are never in the same step.
+# - Frugal with the subscription. One review per pull request when it is
+#   opened or marked ready, not on every push; asked again with the
+#   `claude-review` label (which also lifts the size ceiling). Not on drafts,
+#   forks, bots, documentation-only or lockfile-only changes, and not above
+#   1500 changed lines. One model call, on a diff without noise, cut at about
+#   15k tokens, with Sonnet rather than the default Opus.
+#
+# `pull_request` runs the workflow as it is on the pull request's own merge
+# commit, so someone who can push a branch here can change it: write access to
+# the repository is the trust boundary, as for every workflow. A pull request
+# from a fork gets no secret at all.
+name: Claude code review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, labeled]
+    branches: [main, integ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'package-lock.json'
+      - 'public/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Review with Claude
+    # `labeled` only counts for the label that asks for a review: any other
+    # label must not spend one. Bots (Dependabot, release-please) are skipped.
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot' &&
+      (github.event.action != 'labeled' || github.event.label.name == 'claude-review')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # A new run for the same pull request (a second label, say) replaces the
+    # one in progress instead of queuing a second review.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    env:
+      # `secrets` cannot be used in a step's `if`: it goes through `env`.
+      HAS_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+    steps:
+      - name: Check out the merge of the pull request
+        if: ${{ env.HAS_TOKEN == 'true' }}
+        uses: actions/checkout@v7
+        with:
+          # The review reads `git diff HEAD^1 HEAD`, the changes the pull
+          # request brings; nothing here pushes, so no credentials are kept.
+          fetch-depth: 2
+          persist-credentials: false
+
+      # The subscription token (read by the Claude Code CLI) is in this step
+      # only; the GitHub token is not. `continue-on-error`: a lapsed
+      # subscription or a model hiccup shows as a failed step but never blocks
+      # the pull request.
+      - name: Write the review
+        id: review
+        if: ${{ env.HAS_TOKEN == 'true' }}
+        continue-on-error: true
+        run: node scripts/claude-review.mjs
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_ADDITIONS: ${{ github.event.pull_request.additions }}
+          PR_DELETIONS: ${{ github.event.pull_request.deletions }}
+          FORCE_REVIEW: ${{ github.event.action == 'labeled' }}
+
+      # The GitHub token is in this step only. It posts the sanitised text
+      # the script wrote, in a single comment that later runs update in place
+      # (found by its marker) instead of piling up.
+      - name: Post the review
+        if: ${{ steps.review.outputs.body_path != '' }}
+        run: |
+          comment=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" --paginate \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- claude-code-review -->")))][0].id // empty')
+          if [ -n "$comment" ]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${comment}" -F body=@"${BODY_PATH}"
+          else
+            gh pr comment "${PR_NUMBER}" --body-file "${BODY_PATH}"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BODY_PATH: ${{ steps.review.outputs.body_path }}

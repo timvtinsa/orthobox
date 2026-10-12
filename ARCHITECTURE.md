@@ -396,3 +396,35 @@ matched against `git rev-parse HEAD`) and only runs `wrangler deploy` when it
 is, exiting successfully without deploying otherwise. This setting lives in
 the Cloudflare dashboard, not in this repository, so it has to be applied by
 hand there once.
+
+`.github/workflows/claude-code-review.yml` posts a first-pass review of a pull
+request, written by Claude Code from its diff, as a single comment that later
+runs update in place. It is a second opinion, not a gate: it never blocks a
+merge and never pushes a commit.
+
+*Safe on untrusted text.* A diff can carry instructions (a comment, a string, a
+dependency's changelog), so the model is only ever a text function
+(`scripts/claude-review.mjs`): it gets the diff and **no tool at all**
+(`--tools ''`), runs from an empty temporary directory (so no `.claude/`
+settings, hook or `CLAUDE.md` from the pull request is loaded, a hook would run
+with the token in its environment), and its environment holds the subscription
+token and nothing else. Its answer must have a fixed shape and is sanitised
+(length caps; links, HTML, images and @mentions removed) before anything is
+written, and the comment is posted by a plain `gh` call in a separate step,
+which is the only one holding the `GITHUB_TOKEN`: the two secrets are never in
+the same step. The CLI is pinned to a version. The workflow runs on
+`pull_request`, which uses the workflow as it is on the pull request's merge
+commit, so write access to the repository is the trust boundary, as for any
+workflow; a pull request from a fork gets no secret and is skipped.
+
+*Frugal with the subscription* (`CLAUDE_CODE_OAUTH_TOKEN`, from
+`claude setup-token`, shared with the release changelog). One review per pull
+request, when it is opened or marked ready, not on every push; asked again by
+adding the `claude-review` label, which also lifts the size ceiling. Skipped
+for drafts, forks, bots, documentation-only or lockfile-only changes (`paths-ignore`)
+and above 1500 changed lines. A single model call, with the Sonnet alias rather
+than the default Opus, on a diff without noise (lockfile, images, fonts,
+sounds) cut at about 15k tokens, with a ten-minute timeout, and a new run on
+the same pull request replaces the one in progress. Without the secret the job
+does nothing; with a lapsed one the step fails but nothing else does (it is
+not a required check).
