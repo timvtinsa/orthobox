@@ -1,0 +1,145 @@
+/* ---------------------------------------------------------------
+   Page « Découvrir Orthobox » (#/what)
+   --------------------------------------------------------------- */
+
+.what {
+  gap: var(--s7);
+}
+
+.what__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  max-width: 62ch;
+}
+
+.what__title {
+  font-size: 2.1rem;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.what__lead {
+  margin: 0;
+  font-size: var(--ui-lg);
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.what__promises {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+}
+
+.what__promises li {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--line-strong);
+  background: var(--surface);
+  font-weight: 700;
+  font-size: var(--ui-sm);
+}
+
+.what__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  margin-top: var(--s2);
+}
+
+.what__heading {
+  font-size: var(--ui-xl);
+  line-height: 30px;
+  margin-bottom: var(--s4);
+}
+
+.what__steps,
+.what__know {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.what__domains {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.what__step h3,
+.what__know h3 {
+  font-size: var(--ui-lg);
+  margin-bottom: var(--s2);
+}
+
+.what__step p,
+.what__know p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.what__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--s3);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+}
+
+.what__domain {
+  padding: var(--s4) var(--s5);
+  border-radius: var(--radius);
+  background: var(--category-tint);
+}
+
+.what__domain h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--ui-lg);
+  color: var(--category);
+  margin-bottom: var(--s2);
+}
+
+.what__domain p {
+  margin: 0;
+  color: var(--ink);
+}
+
+.what__count {
+  margin-top: var(--s2) !important;
+  font-weight: 700;
+  font-size: var(--ui-sm);
+}
+
+.what__scope {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: var(--ui-sm);
+}
+
+@media (max-width: 560px) {
+  .what__domains {
+    grid-template-columns: 1fr;
+  }
+
+  .what__title {
+    font-size: 1.7rem;
+  }
+}

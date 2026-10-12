@@ -7,6 +7,7 @@ import './styles/fonts.css'
 import './styles/global.css'
 import './styles/gallery.css'
 import './styles/game.css'
+import './styles/what.css'
 import './styles/child-mode.css'
 
 // HashRouter: the application must be droppable as is on any static host

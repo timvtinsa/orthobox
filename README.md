@@ -161,6 +161,14 @@ travels in the link, a step naming a game the catalogue no longer has is
 simply left out, and every setting is re-checked against what the game
 itself allows.
 
+## Presenting Orthobox
+
+`#/what` (« Découvrir Orthobox », linked from the footer) is a single short page
+that presents the application to a practitioner who has never seen it: what it
+is, how it works in three steps, the four domains and what to know. It is meant
+to be sent as a link, and its figures are read from the catalogue, so it never
+lags behind the games.
+
 ## Installing the PWA
 
 Orthobox installs like a native app, with no app store and no account, and
