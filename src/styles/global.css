@@ -254,6 +254,15 @@ a {
   font-size: 0.85rem;
 }
 
+/* The « Découvrir Orthobox » link: a line of small text is far under the
+   44 px a finger needs, so the link takes a target of its own. */
+.app-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s2);
+}
+
 .app-footer__version {
   font-variant-numeric: tabular-nums;
 }

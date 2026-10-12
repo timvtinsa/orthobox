@@ -97,11 +97,39 @@ export async function axeViolations(page) {
   )
 }
 
+/**
+ * Waits for the page to be at rest: fonts loaded (they change the size of the
+ * text) and two frames painted. Motion is reduced in these tests, so layout
+ * does not keep moving after that; a fixed sleep was slower and no safer.
+ */
+export function settle(page) {
+  return page.evaluate(async () => {
+    await document.fonts.ready
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+  })
+}
+
 /** Opens a hash route and waits for the app to render something. */
 export async function open(page, route) {
   await page.goto(`/#${route}`)
   await page.waitForSelector('main, .setup, .game-board, .gallery, h1', { timeout: 10_000 })
-  await page.waitForTimeout(250)
+  await settle(page)
+}
+
+/** Presses the start button of a game's settings screen and waits for its board. */
+export async function startGame(page) {
+  // The frame's own button, not any button whose label mentions starting: the
+  // dice game has a setting called « Lancer … », which this once clicked
+  // instead, so its board was never opened (and the settings were checked twice).
+  const start = page.getByRole('button', { name: /^démarrer$/i })
+  await start.waitFor({ state: 'visible' })
+  await start.click()
+  // The game is a lazy chunk: its board is there once the placeholder is gone.
+  await page.locator('.board__content').waitFor({ state: 'visible' })
+  await page.getByText('Chargement du jeu…').waitFor({ state: 'detached' })
+  await settle(page)
+  // Boards that open with a short intro (a sequence, a spoken word) get a moment.
+  await page.waitForTimeout(150)
 }
 
 /** Records uncaught errors and console errors so a test can assert there were none. */
