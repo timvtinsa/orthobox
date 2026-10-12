@@ -18,6 +18,7 @@ import { sanitizeConfig } from './share-settings.js'
 import { createStep } from './session-plan.js'
 
 const KEY = 'saved-sessions'
+const SOURCE_KEY = 'saved-session-source'
 
 export const MAX_SAVED = 50
 export const MAX_NAME_LENGTH = 60
@@ -144,6 +145,29 @@ export function openSession(entry) {
   return cleanSteps(entry.steps).map((step) => createStep(step.gameId, step.config))
 }
 
+/** The same value written with its keys in a fixed order, to compare settings. */
+function stable(value) {
+  if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stable(value[key])}`)
+      .join(',')}}`
+  }
+  return JSON.stringify(value)
+}
+
+/**
+ * Whether a plan in progress is still exactly what a saved session holds (same
+ * games, same order, same settings): it tells a session that was opened and
+ * left alone from one that was changed since.
+ */
+export function sameAsSaved(steps, entry) {
+  if (!entry) return false
+  const flat = (list) => stable(cleanSteps(list).map((step) => [step.gameId, step.config]))
+  return flat(steps) === flat(entry.steps)
+}
+
 /** How many of a saved session's games the catalogue no longer has. */
 export function missingGames(entry) {
   return entry.steps.filter((step) => !getGame(step.gameId)).length
@@ -207,4 +231,20 @@ export function importSessions(text) {
 
   if (added > 0 && !persist(merged)) return { ok: false, reason: 'storage' }
   return { ok: true, added, skipped, list: readSavedSessions() }
+}
+
+/* ---- The saved session the plan in progress comes from ---------------- */
+
+/**
+ * The id of the saved session the plan in progress was opened from or saved
+ * as, `null` for a plan that does not come from one. Kept like the plan, so
+ * that it survives a reload.
+ */
+export function readSessionSource() {
+  const id = readJson(SOURCE_KEY, null)
+  return typeof id === 'string' ? id : null
+}
+
+export function writeSessionSource(id) {
+  writeJson(SOURCE_KEY, id ?? null)
 }

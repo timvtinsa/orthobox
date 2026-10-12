@@ -8,8 +8,9 @@
  *   SavedList   the saved sessions, shown in place of the plan editor, each
  *               with an overview of its games: reopen or delete
  *
- * `useSavedSessions` keeps the list and the short confirmation message they
- * share. Everything is stored in this browser (see `lib/saved-sessions.js`).
+ * `useSavedSessions` keeps the list, the short confirmation message they share
+ * and the saved session the plan in progress comes from (the one it was opened
+ * from or saved as), so that saving a changed session offers to update it. Everything is stored in this browser (see `lib/saved-sessions.js`).
  * Replacing the plan in progress and deleting a session ask for a confirmation
  * on the line of the session concerned.
  */
@@ -25,7 +26,9 @@ import {
   missingGames,
   openSession,
   readSavedSessions,
+  readSessionSource,
   saveSession,
+  writeSessionSource,
 } from '../lib/saved-sessions.js'
 import Icon from './Icon.jsx'
 
@@ -54,6 +57,13 @@ function describe(entry) {
 export function useSavedSessions() {
   const [list, setList] = useState(readSavedSessions)
   const [message, setMessage] = useState('')
+  const [sourceId, setSourceId] = useState(readSessionSource)
+  const source = list.find((entry) => entry.id === sourceId) ?? null
+
+  const setSource = (id) => {
+    setSourceId(id)
+    writeSessionSource(id)
+  }
 
   useEffect(() => {
     if (!message) return undefined
@@ -61,31 +71,68 @@ export function useSavedSessions() {
     return () => window.clearTimeout(timer)
   }, [message])
 
-  return { list, setList, message, setMessage }
+  return { list, setList, message, setMessage, source, setSource }
 }
 
 export function SaveForm({ steps, saved, onDone }) {
-  const { list, setList, setMessage } = saved
+  const { list, setList, setMessage, source, setSource } = saved
+  // A plan that comes from a saved session is saved over it by default; the
+  // name field only shows for a new session, or for « sous un autre nom ».
+  const [asNew, setAsNew] = useState(!source)
   const [name, setName] = useState('')
   const [problem, setProblem] = useState('')
   const same = list.find((entry) => entry.name.toLowerCase() === cleanName(name).toLowerCase())
 
+  const finish = (result, text) => {
+    setList(result.list)
+    setSource(result.entry.id)
+    setMessage(text)
+    onDone()
+  }
+
+  const fail = (result) => setProblem(FAILURES[result.reason] ?? FAILURES.storage)
+
+  const update = () => {
+    const result = saveSession(source.name, steps, source.id)
+    if (!result.ok) return fail(result)
+    return finish(result, `« ${result.entry.name} » est mise à jour.`)
+  }
+
   const submit = (event) => {
     event.preventDefault()
     const result = saveSession(name, steps, same?.id ?? null)
-    if (!result.ok) {
-      setProblem(FAILURES[result.reason] ?? FAILURES.storage)
-      return
-    }
-    setList(result.list)
-    setMessage(`« ${result.entry.name} » est enregistrée.`)
-    onDone()
+    if (!result.ok) return fail(result)
+    return finish(result, `« ${result.entry.name} » est enregistrée.`)
+  }
+
+  if (!asNew) {
+    return (
+      <div className="saved-form" role="group" aria-label="Enregistrer les modifications">
+        <p className="saved-form__lead">
+          Cette séance vient de <strong>« {source.name} »</strong>.
+        </p>
+        <div className="saved-form__row">
+          <button type="button" className="btn" onClick={update}>
+            Mettre à jour « {source.name} »
+          </button>
+          <button type="button" className="btn btn--ghost" onClick={() => setAsNew(true)}>
+            Enregistrer sous un autre nom
+          </button>
+          <button type="button" className="btn btn--ghost" onClick={onDone}>
+            Annuler
+          </button>
+        </div>
+        <p className="saved-form__hint" role="status">
+          {problem}
+        </p>
+      </div>
+    )
   }
 
   return (
     <form className="saved-form" onSubmit={submit}>
       <label className="saved-form__label" htmlFor="saved-name">
-        Nom de la séance
+        {source ? 'Nom de la nouvelle séance' : 'Nom de la séance'}
       </label>
       <div className="saved-form__row">
         <input
@@ -104,8 +151,8 @@ export function SaveForm({ steps, saved, onDone }) {
         <button type="submit" className="btn">
           {same ? 'Remplacer' : 'Enregistrer'}
         </button>
-        <button type="button" className="btn btn--ghost" onClick={onDone}>
-          Annuler
+        <button type="button" className="btn btn--ghost" onClick={source ? () => setAsNew(false) : onDone}>
+          {source ? 'Retour' : 'Annuler'}
         </button>
       </div>
       <p className="saved-form__hint" role="status">
@@ -119,7 +166,7 @@ export function SaveForm({ steps, saved, onDone }) {
 }
 
 export function SavedList({ steps, saved, onOpen, onBack }) {
-  const { list, setList, setMessage } = saved
+  const { list, setList, setMessage, source, setSource } = saved
   const [confirming, setConfirming] = useState(null) // { type: 'open' | 'delete', id }
   const [problem, setProblem] = useState('')
   const [info, setInfo] = useState('')
@@ -133,6 +180,7 @@ export function SavedList({ steps, saved, onOpen, onBack }) {
       return
     }
     onOpen(plan)
+    setSource(entry.id)
     const lost = missingGames(entry)
     setMessage(
       `« ${entry.name} » est ouverte.` +
@@ -149,6 +197,7 @@ export function SavedList({ steps, saved, onOpen, onBack }) {
 
   const remove = (entry) => {
     setList(deleteSession(entry.id))
+    if (source?.id === entry.id) setSource(null)
     setConfirming(null)
     setInfo(`« ${entry.name} » est supprimée.`)
   }

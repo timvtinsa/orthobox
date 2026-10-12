@@ -16,6 +16,7 @@ import {
   summariseConfig,
   writeSessionPlan,
 } from '../lib/session-plan.js'
+import { sameAsSaved } from '../lib/saved-sessions.js'
 import { sessionShareLink } from '../lib/share-session.js'
 import { useDragSequence } from '../hooks/useDragSequence.js'
 
@@ -106,10 +107,22 @@ export default function SessionBuilderPage() {
       <div className="session-layout">
         <section className="session-column">
           <header className="session-column__header">
-            <h2 className="session-column__title">{view === 'saved' ? 'Mes séances' : 'La séance'}</h2>
+            <div className={`session-title${view === 'plan' && saved.source ? ' session-title--named' : ''}`}>
+              {view === 'plan' && saved.source && <p className="session-title__kicker">Séance enregistrée</p>}
+              <h2
+                className={`session-column__title${view === 'plan' && saved.source ? ' session-column__title--name' : ''}`}
+              >
+                {view === 'saved' ? 'Mes séances' : (saved.source?.name ?? 'La séance')}
+              </h2>
+            </div>
             {view === 'plan' && steps.length > 0 && (
               <span className="badge">
                 {steps.length} jeu{steps.length > 1 ? 'x' : ''}
+              </span>
+            )}
+            {view === 'plan' && saved.source && (
+              <span className="badge">
+                {sameAsSaved(steps, saved.source) ? 'Enregistrée' : 'Modifiée, non enregistrée'}
               </span>
             )}
             {view === 'saved' && saved.list.length > 0 && <span className="badge">{saved.list.length}</span>}
@@ -275,7 +288,10 @@ export default function SessionBuilderPage() {
               </button>
             )}
             {steps.length > 0 && (
-              <button type="button" className="btn btn--ghost" onClick={() => save([])}>
+              <button type="button" className="btn btn--ghost" onClick={() => {
+                  save([])
+                  saved.setSource(null)
+                }}>
                 Tout effacer
               </button>
             )}

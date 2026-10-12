@@ -205,3 +205,33 @@
 .saved-backup {
   text-align: left;
 }
+
+/* Le nom de la séance ouverte, en titre. */
+.session-title {
+  min-width: 0;
+}
+
+/* Un nom de séance prend sa propre ligne ; les pastilles et les boutons suivent. */
+.session-title--named {
+  flex-basis: 100%;
+}
+
+.session-title__kicker {
+  margin: 0;
+  font-size: var(--ui-xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.session-column__title--name {
+  font-size: 1.6rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.saved-form__lead {
+  margin: 0;
+  font-size: var(--ui-md);
+}

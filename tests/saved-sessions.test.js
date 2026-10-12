@@ -10,8 +10,11 @@ import {
   missingGames,
   openSession,
   readSavedSessions,
+  readSessionSource,
   renameSession,
+  sameAsSaved,
   saveSession,
+  writeSessionSource,
 } from '../src/lib/saved-sessions.js'
 import { GAMES } from '../src/games/registry.js'
 
@@ -160,5 +163,28 @@ describe('backup file', () => {
       sessions: [null, 3, { name: 'Sans jeux', steps: [] }, { name: 'Bonne', steps: [{ gameId: A }] }],
     })
     expect(importSessions(file)).toMatchObject({ ok: true, added: 1, skipped: 3 })
+  })
+
+  it('tells a plan left as saved from one that was changed', () => {
+    const saved = saveSession('Base', plan(A, B)).entry
+    expect(sameAsSaved(plan(A, B), saved)).toBe(true)
+    expect(sameAsSaved(plan(B, A), saved)).toBe(false)
+    expect(sameAsSaved(plan(A), saved)).toBe(false)
+    expect(sameAsSaved(plan(A, B), null)).toBe(false)
+  })
+
+  it('compares settings whatever the order of their keys', () => {
+    const saved = saveSession('Réglages', plan(A)).entry
+    const config = saved.steps[0].config
+    const reversed = Object.fromEntries(Object.entries(config).reverse())
+    expect(sameAsSaved([{ id: 'x', gameId: A, config: reversed }], saved)).toBe(true)
+  })
+
+  it('remembers which saved session the plan comes from', () => {
+    expect(readSessionSource()).toBe(null)
+    writeSessionSource('abc')
+    expect(readSessionSource()).toBe('abc')
+    writeSessionSource(null)
+    expect(readSessionSource()).toBe(null)
   })
 })
