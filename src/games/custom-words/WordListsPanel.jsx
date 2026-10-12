@@ -6,15 +6,18 @@
  * active one: it is the list the game plays. Every change is saved at once,
  * so the list is ready when « Démarrer » is pressed.
  */
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import Icon from '../../components/Icon.jsx'
 import {
   MAX_LISTS,
   MAX_NAME_LENGTH,
+  MAX_WORD_LENGTH,
   MAX_WORDS,
   addList,
-  parseWords,
+  addWords,
   readWordLists,
   removeList,
+  removeWord,
   setActive,
   updateList,
   wordsToText,
@@ -65,7 +68,7 @@ export default function WordListsPanel() {
               <ListForm
                 key={list.id}
                 initialName={list.name}
-                initialText={wordsToText(list.words)}
+                initialWords={list.words}
                 onSubmit={submit}
                 onCancel={() => setEditing(null)}
               />
@@ -116,7 +119,7 @@ export default function WordListsPanel() {
 
       {editing === 'new' ? (
         <div className="word-list-card">
-          <ListForm initialName="" initialText="" onSubmit={submit} onCancel={() => setEditing(null)} />
+          <ListForm initialName="" initialWords={[]} onSubmit={submit} onCancel={() => setEditing(null)} />
         </div>
       ) : (
         <div className="game-actions">
@@ -134,19 +137,52 @@ export default function WordListsPanel() {
   )
 }
 
-function ListForm({ initialName, initialText, onSubmit, onCancel }) {
+function ListForm({ initialName, initialWords, onSubmit, onCancel }) {
   const [name, setName] = useState(initialName)
-  const [text, setText] = useState(initialText)
-  const count = parseWords(text).length
+  const [words, setWords] = useState(initialWords)
+  const [draft, setDraft] = useState('')
+  const [notice, setNotice] = useState('')
+  const input = useRef(null)
+  const full = words.length >= MAX_WORDS
+
+  // What is typed joins the list; the field is cleared and keeps the focus,
+  // so the next word can follow at once.
+  const add = (text = draft) => {
+    if (text.trim() === '') return
+    const result = addWords(words, text)
+    setWords(result.words)
+    setDraft('')
+    if (result.duplicates.length > 0) {
+      setNotice(
+        result.duplicates.length === 1
+          ? `« ${result.duplicates[0]} » est déjà dans la liste.`
+          : 'Ces mots sont déjà dans la liste : ' + result.duplicates.join(', ') + '.',
+      )
+    } else if (result.overflow > 0) {
+      setNotice(`La liste est pleine (${MAX_WORDS} mots).`)
+    } else {
+      setNotice('')
+    }
+    input.current?.focus()
+  }
+
+  const remove = (word) => {
+    setWords((current) => removeWord(current, word))
+    setNotice('')
+    input.current?.focus()
+  }
+
+  // A word typed but not yet added is not lost when the list is saved.
+  const save = (event) => {
+    event.preventDefault()
+    const final = draft.trim() === '' ? words : addWords(words, draft).words
+    if (final.length > 0) onSubmit(name, wordsToText(final))
+  }
+
+  const count = words.length
 
   return (
-    <form
-      className="stack"
-      onSubmit={(event) => {
-        event.preventDefault()
-        if (count > 0) onSubmit(name, text)
-      }}
-    >
+    <form className="stack" onSubmit={save}>
       <label className="field">
         <span className="field__label">Nom de la liste</span>
         <input
@@ -158,20 +194,78 @@ function ListForm({ initialName, initialText, onSubmit, onCancel }) {
           onChange={(event) => setName(event.target.value)}
         />
       </label>
-      <label className="field">
-        <span className="field__label">Les mots, un par ligne</span>
-        <textarea
-          className="field__input"
-          rows={8}
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-        />
-        <span className="muted">
-          {count} mot{count > 1 ? 's' : ''} sur {MAX_WORDS} possibles
-        </span>
-      </label>
+
+      <div className="field">
+        <label className="field__label" htmlFor="word-draft">
+          Ajouter un mot
+        </label>
+        <div className="word-entry">
+          <input
+            ref={input}
+            id="word-draft"
+            className="field__input"
+            type="text"
+            maxLength={MAX_WORD_LENGTH * 10}
+            value={draft}
+            disabled={full}
+            autoComplete="off"
+            autoCapitalize="none"
+            spellCheck={false}
+            enterKeyHint="done"
+            placeholder={full ? 'Liste pleine' : 'Tapez un mot, puis Entrée'}
+            onChange={(event) => setDraft(event.target.value)}
+            onPaste={(event) => {
+              // A column of words (from a spreadsheet, a document) arrives with
+              // line breaks, which a single-line field would flatten into
+              // spaces: each line becomes a word instead.
+              const pasted = event.clipboardData?.getData('text') ?? ''
+              if (/[\n\r;]/.test(pasted)) {
+                event.preventDefault()
+                add(pasted)
+              }
+            }}
+            onKeyDown={(event) => {
+              // Entrée ajoute le mot ; elle n'enregistre pas la liste.
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                add()
+              }
+            }}
+          />
+          <button type="button" className="btn" disabled={full || draft.trim() === ''} onClick={() => add()}>
+            Ajouter
+          </button>
+        </div>
+        <p className="muted word-entry__notice" role="status">
+          {notice}
+        </p>
+      </div>
+
+      {count > 0 ? (
+        <ul className="word-chips" aria-label="Mots de la liste">
+          {words.map((word) => (
+            <li key={word} className="word-chip">
+              <span>{word}</span>
+              <button
+                type="button"
+                className="word-chip__remove"
+                aria-label={`Retirer « ${word} »`}
+                onClick={() => remove(word)}
+              >
+                <Icon name="cross" size={14} filled={false} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="muted">Aucun mot pour le moment.</p>
+      )}
+      <p className="muted">
+        {count} mot{count > 1 ? 's' : ''} sur {MAX_WORDS} possibles
+      </p>
+
       <div className="game-actions">
-        <button type="submit" className="btn btn--lg" disabled={count === 0}>
+        <button type="submit" className="btn btn--lg" disabled={count === 0 && draft.trim() === ''}>
           Enregistrer
         </button>
         <button type="button" className="btn btn--ghost" onClick={onCancel}>

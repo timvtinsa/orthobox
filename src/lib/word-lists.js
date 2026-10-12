@@ -34,6 +34,34 @@ export function parseWords(text) {
   return words
 }
 
+/**
+ * Adds what was typed to a list of words, for the word-by-word entry. The text
+ * is split like `parseWords` (a paste of several words works too). Doubles of
+ * a word already there, whatever their case, are skipped and reported, and so
+ * is whatever would go past `MAX_WORDS`.
+ */
+export function addWords(words, text) {
+  const known = new Set(words.map((word) => word.toLowerCase()))
+  const next = [...words]
+  const added = []
+  const duplicates = []
+  let overflow = 0
+  for (const word of parseWords(text)) {
+    if (known.has(word.toLowerCase())) duplicates.push(word)
+    else if (next.length >= MAX_WORDS) overflow += 1
+    else {
+      known.add(word.toLowerCase())
+      next.push(word)
+      added.push(word)
+    }
+  }
+  return { words: next, added, duplicates, overflow }
+}
+
+export function removeWord(words, word) {
+  return words.filter((other) => other !== word)
+}
+
 export function wordsToText(words) {
   return words.join('\n')
 }

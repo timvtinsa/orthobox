@@ -2834,3 +2834,61 @@
   flex-wrap: wrap;
   gap: var(--s2);
 }
+
+/* Saisie des mots un par un : un champ et un bouton, puis les mots en pastilles. */
+.word-entry {
+  display: flex;
+  gap: var(--s2);
+  align-items: stretch;
+}
+
+.word-entry .field__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.word-entry__notice {
+  margin: var(--s1) 0 0;
+  min-height: 1.5em;
+}
+
+.word-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.word-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  min-height: 44px;
+  padding: 0 var(--s1) 0 var(--s3);
+  border: 2px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.word-chip__remove {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -2px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.word-chip__remove:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}

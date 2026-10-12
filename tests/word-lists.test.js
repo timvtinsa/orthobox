@@ -5,6 +5,8 @@ import {
   MAX_WORD_LENGTH,
   activeList,
   addList,
+  addWords,
+  removeWord,
   parseWords,
   removeList,
   sanitise,
@@ -36,6 +38,42 @@ describe('parseWords', () => {
   it('copes with nothing', () => {
     expect(parseWords('')).toEqual([])
     expect(parseWords(undefined)).toEqual([])
+  })
+})
+
+describe('word-by-word entry', () => {
+  it('adds a typed word at the end of the list', () => {
+    expect(addWords(['chat'], ' chien ')).toMatchObject({ words: ['chat', 'chien'], added: ['chien'] })
+  })
+
+  it('skips a double whatever its case and reports it', () => {
+    const result = addWords(['Chat', 'chien'], 'CHAT')
+    expect(result.words).toEqual(['Chat', 'chien'])
+    expect(result.duplicates).toEqual(['CHAT'])
+    expect(result.added).toEqual([])
+  })
+
+  it('takes several words pasted at once, skipping the doubles among them', () => {
+    const result = addWords(['chat'], 'souris, chat\nlapin')
+    expect(result.words).toEqual(['chat', 'souris', 'lapin'])
+    expect(result.duplicates).toEqual(['chat'])
+  })
+
+  it('ignores an empty entry', () => {
+    expect(addWords(['chat'], '  ,; ').words).toEqual(['chat'])
+  })
+
+  it('stops at the limit and counts what did not fit', () => {
+    const full = Array.from({ length: MAX_WORDS - 1 }, (_, index) => `mot${index}`)
+    const result = addWords(full, 'un\ndeux\ntrois')
+    expect(result.words).toHaveLength(MAX_WORDS)
+    expect(result.added).toEqual(['un'])
+    expect(result.overflow).toBe(2)
+  })
+
+  it('removes a word and leaves the others in place', () => {
+    expect(removeWord(['a', 'b', 'c'], 'b')).toEqual(['a', 'c'])
+    expect(removeWord(['a'], 'z')).toEqual(['a'])
   })
 })
 
