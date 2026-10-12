@@ -86,30 +86,64 @@ jobs:
   e2e:
     name: Responsive and accessibility
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # To list the files a pull request changes (see "Does the change reach
+      # the screens?" below).
+      pull-requests: read
     steps:
+      # A pull request that only touches documentation, a Markdown file or the
+      # workflows around CI (not this one) cannot change what the browser
+      # tests look at: they are skipped, and the job still reports a success.
+      # The job itself always runs, so a required check never stays pending.
+      - name: Does the change reach the screens?
+        id: scope
+        env:
+          EVENT: ${{ github.event_name }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          run=true
+          if [ "$EVENT" = pull_request ]; then
+            files=$(gh api "repos/${GH_REPO}/pulls/${PR_NUMBER}/files" --paginate --jq '.[].filename')
+            if [ -n "$files" ] && ! echo "$files" | grep -qvE '^(docs/|.*\.md$|\.github/(dependabot\.yml|workflows/(release-please|claude-code-review)\.yml)$)'; then
+              run=false
+              echo "Only documentation or unrelated workflows changed: the browser tests are skipped."
+            fi
+          fi
+          echo "run=${run}" >> "$GITHUB_OUTPUT"
+
       - name: Check out the repository
+        if: steps.scope.outputs.run == 'true'
         uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Set up Node
+        if: steps.scope.outputs.run == 'true'
         uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
+        if: steps.scope.outputs.run == 'true'
         run: npm ci
 
       - name: Install the browser
+        if: steps.scope.outputs.run == 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Check every screen on every device size
+        if: steps.scope.outputs.run == 'true'
         run: npm run test:e2e
 
+      # Only what is worth reading: the traces of the retried tests, not a
+      # copy of every file of a long run.
       - name: Keep the report
-        if: failure()
+        if: failure() && steps.scope.outputs.run == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: e2e-results

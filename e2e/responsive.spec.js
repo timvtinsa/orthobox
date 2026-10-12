@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { GAME_IDS, axeViolations, layoutProblems, open, watchErrors } from './helpers.js'
+import { GAME_IDS, axeViolations, layoutProblems, open, startGame, watchErrors } from './helpers.js'
 
 const isTouch = (testInfo) => testInfo.project.use.hasTouch === true
+// The accessibility audit only runs on the sizes marked in playwright.config.js.
+const wantsAxe = (testInfo) => testInfo.project.metadata?.axe === true
 
 test.describe('pages', () => {
   for (const [name, route] of [
@@ -13,7 +15,7 @@ test.describe('pages', () => {
       const errors = watchErrors(page)
       await open(page, route)
       expect(await layoutProblems(page, { touch: isTouch(testInfo) })).toEqual([])
-      expect(await axeViolations(page)).toEqual([])
+      if (wantsAxe(testInfo)) expect(await axeViolations(page)).toEqual([])
       expect(errors).toEqual([])
     })
   }
@@ -27,14 +29,11 @@ test.describe('games', () => {
 
       await open(page, `/games/${id}`)
       expect(await layoutProblems(page, { touch }), 'setup layout').toEqual([])
-      expect(await axeViolations(page), 'setup accessibility').toEqual([])
+      if (wantsAxe(testInfo)) expect(await axeViolations(page), 'setup accessibility').toEqual([])
 
-      const start = page.getByRole('button', { name: /démarrer|commencer|lancer/i }).first()
-      await expect(start).toBeVisible()
-      await start.click()
-      await page.waitForTimeout(600)
+      await startGame(page)
       expect(await layoutProblems(page, { touch }), 'board layout').toEqual([])
-      expect(await axeViolations(page), 'board accessibility').toEqual([])
+      if (wantsAxe(testInfo)) expect(await axeViolations(page), 'board accessibility').toEqual([])
       expect(errors).toEqual([])
     })
   }

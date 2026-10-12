@@ -274,7 +274,7 @@ They hold for any addition:
 | `npm run lint` | ESLint over the whole repository |
 | `npm test` | unit tests (Vitest) |
 | `npm run test:coverage` | the same, plus a coverage report (`lib`, `hooks`, `games`) |
-| `npm run test:e2e` | every screen at six device sizes (320 to 1440 px, portrait and landscape): no overflow, clipped text or undersized tap target, no WCAG A/AA violation (axe), no console error |
+| `npm run test:e2e` | every screen at seven device sizes (320 to 1440 px, portrait and landscape): no overflow, clipped text or undersized tap target, no WCAG A/AA violation (axe), no console error |
 
 ### Responsive and accessibility checks
 
@@ -288,7 +288,11 @@ settings screen, starts the game, and on both screens checks:
 - controls are at least 40px on touch devices (24px on desktop, the WCAG 2.5.8
   minimum), a stretched pseudo-element counting as part of the target;
 - axe-core finds no WCAG 2.2 A/AA or best-practice violation (the Stroop ink
-  colours are excluded: the colour is the stimulus);
+  colours are excluded: the colour is the stimulus). This audit is the slow part
+  of a test and gives the same answer whatever the size (same DOM, roles, labels
+  and colours), so it only runs on three sizes: a phone, the tablet in
+  landscape and the desktop (`metadata.axe` in `playwright.config.js`). The
+  layout checks above, cheap and size-dependent, run on all seven;
 - no uncaught error or console error.
 
 `e2e/accessibility.spec.js` adds keyboard checks (visible focus, a game started
@@ -296,6 +300,14 @@ and left without a mouse) and `e2e/audit.mjs` is a non-asserting sweep that
 prints every distinct problem across all sizes (`node e2e/audit.mjs [device,…]`
 with `npm run preview` serving a build on port 4173). In CI it runs as a
 separate job, since it needs a browser.
+
+To keep that job short: waits follow the page (fonts loaded, two frames
+painted, the lazy game chunk arrived) instead of fixed sleeps; the workers
+follow the cores of the runner; traces are only recorded on a retry; and it
+stops after ten failures, since a broken screen fails on every page and every
+size. A pull request that only touches documentation, Markdown files or the
+workflows unrelated to CI skips the browser steps (the job still reports a
+success, so a required check never stays pending).
 
 ### What the tests cover
 
