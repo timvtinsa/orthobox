@@ -1,4 +1,4 @@
-/* --- Séances enregistrées : deux boutons et deux fenêtres ------------- */
+/* --- Séances enregistrées : deux boutons, un champ et une liste en place de l'éditeur --- */
 
 .session-column__header {
   align-items: center;
@@ -39,7 +39,18 @@
 
 .saved-form {
   display: grid;
-  gap: var(--s3);
+  gap: var(--s2);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.saved-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
 }
 
 .saved-form__label {
@@ -49,6 +60,8 @@
 }
 
 .saved-form__input {
+  flex: 1 1 200px;
+  min-width: 0;
   height: 52px;
   padding: 0 var(--s4);
   border: 1px solid var(--line-strong);
@@ -73,7 +86,7 @@
 }
 
 .saved-empty {
-  margin: 0 0 var(--s3);
+  margin: 0;
   color: var(--ink-soft);
 }
 
@@ -83,20 +96,56 @@
   margin: 0 0 var(--s3);
   padding: 0;
   list-style: none;
-  max-height: 50vh;
-  overflow-y: auto;
+}
+
+.saved-view {
+  display: grid;
+  gap: var(--s3);
 }
 
 .saved-item {
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.saved-item__head {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s2) var(--s3);
   align-items: center;
   justify-content: space-between;
-  padding: var(--s3);
-  border: 1px solid var(--line);
+}
+
+.saved-games {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.saved-game {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s1) var(--s3) var(--s1) var(--s1);
   border-radius: var(--radius-sm);
-  background: var(--surface-alt);
+  background: var(--category-tint);
+  font-size: var(--ui-sm);
+  font-weight: 700;
+}
+
+.saved-game img {
+  width: 56px;
+  height: 35px;
+  border-radius: 6px;
+  object-fit: cover;
 }
 
 .saved-item__text {

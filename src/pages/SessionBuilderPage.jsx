@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
 import Icon from '../components/Icon.jsx'
-import SavedSessions from '../components/SavedSessions.jsx'
+import { SaveForm, SavedList, useSavedSessions } from '../components/SavedSessions.jsx'
 import StyledQr from '../components/StyledQr.jsx'
 import { GAMES, getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -25,6 +25,10 @@ export default function SessionBuilderPage() {
   const [openSettings, setOpenSettings] = useState(null)
   const [shareOpen, setShareOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  // 'plan': the editor; 'saved': the saved sessions, in its place.
+  const [view, setView] = useState('plan')
+  const [saving, setSaving] = useState(false)
+  const saved = useSavedSessions()
 
   const save = (plan) => {
     setSteps(plan)
@@ -37,6 +41,7 @@ export default function SessionBuilderPage() {
     const plan = [...steps]
     plan.splice(position, 0, createStep(gameId, defaultConfig(game.settings)))
     save(plan)
+    setView('plan')
   }
 
   const handleDrop = useCallback(({ type, gameId, from, to }) => {
@@ -101,14 +106,58 @@ export default function SessionBuilderPage() {
       <div className="session-layout">
         <section className="session-column">
           <header className="session-column__header">
-            <h2 className="session-column__title">La séance</h2>
-            {steps.length > 0 && (
+            <h2 className="session-column__title">{view === 'saved' ? 'Mes séances' : 'La séance'}</h2>
+            {view === 'plan' && steps.length > 0 && (
               <span className="badge">
                 {steps.length} jeu{steps.length > 1 ? 'x' : ''}
               </span>
             )}
-            <SavedSessions steps={steps} onOpen={save} />
+            {view === 'saved' && saved.list.length > 0 && <span className="badge">{saved.list.length}</span>}
+            <div className="saved-bar">
+              {view === 'plan' ? (
+                <>
+                  {steps.length > 0 && (
+                    <button
+                      type="button"
+                      className="btn btn--ghost btn--sm"
+                      aria-expanded={saving}
+                      onClick={() => setSaving((open) => !open)}
+                    >
+                      Enregistrer
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn--ghost btn--sm"
+                    onClick={() => {
+                      setSaving(false)
+                      setView('saved')
+                    }}
+                  >
+                    Mes séances{saved.list.length > 0 ? ` (${saved.list.length})` : ''}
+                  </button>
+                </>
+              ) : (
+                <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView('plan')}>
+                  Retour à la séance
+                </button>
+              )}
+            </div>
           </header>
+
+          <p className="saved-bar__status" role="status">
+            {saved.message}
+          </p>
+
+          {view === 'plan' && saving && steps.length > 0 && (
+            <SaveForm steps={steps} saved={saved} onDone={() => setSaving(false)} />
+          )}
+
+          {view === 'saved' && (
+            <SavedList steps={steps} saved={saved} onOpen={save} onBack={() => setView('plan')} />
+          )}
+
+          <div className="session-editor" hidden={view === 'saved'}>
 
           <ol className={`sequence${drag ? ' sequence--hover' : ''}`} ref={zone}>
             {steps.length === 0 && (
@@ -263,6 +312,7 @@ export default function SessionBuilderPage() {
               </div>
             </div>
           )}
+          </div>
         </section>
 
         <section className="session-column">
