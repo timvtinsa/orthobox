@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Deux morceaux posés, une place vide à remplir">
+  <rect width="320" height="200" fill="#eaf4ee"/>
+  <rect x="28" y="60" width="72" height="80" rx="12" fill="#fff" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="46" y="92" width="36" height="12" rx="6" fill="#2f6b4c"/>
+  <rect x="124" y="60" width="72" height="80" rx="12" fill="#b9d8c2" stroke="#2f6b4c" stroke-width="6"/>
+  <rect x="142" y="92" width="36" height="12" rx="6" fill="#2f6b4c"/>
+  <rect x="220" y="60" width="72" height="80" rx="12" fill="none" stroke="#2f6b4c" stroke-width="6" stroke-dasharray="14 12"/>
+  <path d="M240 100h32M256 84v32" stroke="#2f6b4c" stroke-width="6" stroke-linecap="round"/>
+</svg>

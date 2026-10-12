@@ -295,6 +295,7 @@ a Cloudflare production deploy always corresponds to a real GitHub release.
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md): code structure and technical decisions
 - [`src/games/README.md`](src/games/README.md): the contract a game must honour
+- [`docs/presentation/`](docs/presentation/README.md): a short slide deck to present Orthobox to speech therapists
 - [`public/sounds/README.md`](public/sounds/README.md): plugging in your own sound effects
 - [`src/assets/fonts/README.md`](src/assets/fonts/README.md): fonts and licences
 
