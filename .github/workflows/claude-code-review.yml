@@ -1,74 +1,102 @@
-# Automated first-pass review on every pull request, using Claude Code
-# (https://github.com/anthropics/claude-code-action). It leaves PR comments
-# the same way a human reviewer would — it does not block merging and never
-# pushes a commit. Runs against a Claude subscription (CLAUDE_CODE_OAUTH_TOKEN)
-# rather than metered API billing, and is skipped rather than failed when
-# that token is missing or no longer valid.
+# A first-pass review of a pull request by Claude Code, posted as one comment.
+# It is a second opinion, not a gate: it never blocks a merge and never pushes
+# a commit.
+#
+# Two things shape it (the details are in scripts/claude-review.mjs):
+#
+# - Safe on untrusted text. The model gets the diff as text and no tool at all,
+#   runs from an empty directory, and only ever sees the subscription token.
+#   Its answer is validated and sanitised by a script, and the comment is
+#   posted by a plain `gh` call in a separate step, never by the model. The two
+#   secrets are never in the same step.
+# - Frugal with the subscription. One review per pull request when it is
+#   opened or marked ready, not on every push; asked again with the
+#   `claude-review` label (which also lifts the size ceiling). Not on drafts,
+#   forks, bots, documentation-only or lockfile-only changes, and not above
+#   1500 changed lines. One model call, on a diff without noise, cut at about
+#   15k tokens, with Sonnet rather than the default Opus.
+#
+# `pull_request` runs the workflow as it is on the pull request's own merge
+# commit, so someone who can push a branch here can change it: write access to
+# the repository is the trust boundary, as for every workflow. A pull request
+# from a fork gets no secret at all.
 name: Claude code review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, ready_for_review, labeled]
     branches: [main, integ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'package-lock.json'
+      - 'public/**'
 
-# `pull_request`, not `pull_request_target`: the workflow definition always
-# comes from the base branch, never from the PR itself, so a pull request
-# cannot smuggle in a different prompt or a wider set of allowed tools.
 permissions:
   contents: read
   pull-requests: write
-  id-token: write
 
 jobs:
   review:
     name: Review with Claude
+    # `labeled` only counts for the label that asks for a review: any other
+    # label must not spend one. Bots (Dependabot, release-please) are skipped.
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot' &&
+      (github.event.action != 'labeled' || github.event.label.name == 'claude-review')
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    # A new run for the same pull request (a second label, say) replaces the
+    # one in progress instead of queuing a second review.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    env:
+      # `secrets` cannot be used in a step's `if`: it goes through `env`.
+      HAS_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v5
+      - name: Check out the merge of the pull request
+        if: ${{ env.HAS_TOKEN == 'true' }}
+        uses: actions/checkout@v7
         with:
+          # The review reads `git diff HEAD^1 HEAD`, the changes the pull
+          # request brings; nothing here pushes, so no credentials are kept.
+          fetch-depth: 2
           persist-credentials: false
-          fetch-depth: 1
 
-      - name: Review the pull request
-        # Skipped rather than failed when the token is missing or no longer
-        # valid (subscription lapsed, token revoked): `if` only checks that
-        # the secret is set before the step runs, so `continue-on-error`
-        # covers the run-time case, and either way nothing here is a
-        # required check that would block a merge.
-        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+      # The subscription token (read by the Claude Code CLI) is in this step
+      # only; the GitHub token is not. `continue-on-error`: a lapsed
+      # subscription or a model hiccup shows as a failed step but never blocks
+      # the pull request.
+      - name: Write the review
+        id: review
+        if: ${{ env.HAS_TOKEN == 'true' }}
         continue-on-error: true
-        uses: anthropics/claude-code-action@v1
-        with:
-          # `claude setup-token` on a Claude subscription: the review draws
-          # from that plan rather than pay-as-you-go API billing.
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          prompt: |
-            REPO: ${{ github.repository }}
-            PR NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/claude-review.mjs
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_ADDITIONS: ${{ github.event.pull_request.additions }}
+          PR_DELETIONS: ${{ github.event.pull_request.deletions }}
+          FORCE_REVIEW: ${{ github.event.action == 'labeled' }}
 
-            Review this pull request. Orthobox is a 100% client-side PWA
-            (no server, no patient data): weigh anything touching
-            localStorage, a shared/QR-encoded link, or a GitHub Actions
-            workflow more carefully than a purely visual change.
-
-            Focus on:
-            - correctness bugs and edge cases a reviewer would flag
-            - security (XSS, unsanitised input reaching the DOM, secrets or
-              command injection in CI scripts)
-            - test coverage for new logic (see ARCHITECTURE.md — this
-              project only unit-tests `src/lib`, `src/hooks` and
-              `src/games`; rendering is checked in a real browser instead)
-            - unnecessary complexity or duplication
-
-            The PR branch is already checked out in the current working
-            directory.
-
-            Use `gh pr comment` for overall feedback.
-            Use `mcp__github_inline_comment__create_inline_comment` (with
-            `confirmed: true`) to point at specific lines.
-            Only post GitHub comments — don't just narrate your review as
-            plain output.
-          claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+      # The GitHub token is in this step only. It posts the sanitised text
+      # the script wrote, in a single comment that later runs update in place
+      # (found by its marker) instead of piling up.
+      - name: Post the review
+        if: ${{ steps.review.outputs.body_path != '' }}
+        run: |
+          comment=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" --paginate \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- claude-code-review -->")))][0].id // empty')
+          if [ -n "$comment" ]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${comment}" -F body=@"${BODY_PATH}"
+          else
+            gh pr comment "${PR_NUMBER}" --body-file "${BODY_PATH}"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BODY_PATH: ${{ steps.review.outputs.body_path }}
