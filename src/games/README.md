@@ -73,6 +73,11 @@ A setting that only means something under another one adds `showIf:
 (config) => …` and stays out of the screen otherwise (a memorisation time
 when nothing is ever memorised, say).
 
+A game that needs more than settings before it starts (its own word lists, for
+instance) adds `setupPanel`, a React component with no props: it is shown under
+the settings on the same screen, and whatever it keeps is read by the game when
+it starts.
+
 Required fields: `id`, `title`, `tagline`, `category`, `cover`, `component`.
 The registry fails at startup when a field is missing, when the category is
 unknown, or when `id` does not match the folder name.

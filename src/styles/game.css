@@ -2770,7 +2770,7 @@
   color: var(--ink-soft);
 }
 
-/* --- Mes mots : le mot à lire, et la page des listes ---------------- */
+/* --- Mes mots : le mot à lire, et les listes des réglages ------------ */
 
 .custom-word {
   margin: 0;
@@ -2779,6 +2779,11 @@
   font-size: clamp(2.6rem, 1.6rem + 6vw, 4.4rem);
   font-weight: 700;
   overflow-wrap: anywhere;
+}
+
+.word-lists__title {
+  margin: 0 0 var(--s2);
+  font-size: var(--ui-lg);
 }
 
 .word-lists__items {

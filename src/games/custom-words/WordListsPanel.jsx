@@ -1,11 +1,12 @@
 /**
- * « Mes listes »: the practitioner's own word lists, for the game « Mes mots ».
+ * The practitioner's own word lists, managed on the settings screen of the
+ * game « Mes mots » (its `setupPanel`), the only place they are used.
  *
- * Everything stays in the browser. One list is the active one: it is the list
- * the game plays.
+ * Everything stays in the browser, like the session plan. One list is the
+ * active one: it is the list the game plays. Every change is saved at once,
+ * so the list is ready when « Démarrer » is pressed.
  */
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   MAX_LISTS,
   MAX_NAME_LENGTH,
@@ -18,11 +19,11 @@ import {
   updateList,
   wordsToText,
   writeWordLists,
-} from '../lib/word-lists.js'
+} from '../../lib/word-lists.js'
 
 const PREVIEW = 8
 
-export default function WordListsPage() {
+export default function WordListsPanel() {
   const [state, setState] = useState(readWordLists)
   // `null`: nothing open; `'new'`: the creation form; a list id: that list's form.
   const [editing, setEditing] = useState(null)
@@ -42,19 +43,19 @@ export default function WordListsPage() {
   const full = state.lists.length >= MAX_LISTS
 
   return (
-    <div className="stack word-lists">
-      <header className="hero">
-        <h1 className="hero__title">Mes listes de mots</h1>
-        <p className="hero__text">
+    <section className="panel stack word-lists" aria-labelledby="word-lists-title">
+      <header>
+        <h2 id="word-lists-title" className="word-lists__title">
+          Vos listes de mots
+        </h2>
+        <p className="muted">
           Le vocabulaire du moment : les mots d’un patient, un thème, un son travaillé. Les listes
-          restent dans ce navigateur et servent au jeu « Mes mots ».
+          restent dans ce navigateur. Le jeu utilise la liste active.
         </p>
       </header>
 
       {state.lists.length === 0 && editing !== 'new' && (
-        <div className="panel stack empty">
-          <p className="muted">Aucune liste pour le moment.</p>
-        </div>
+        <p className="muted">Aucune liste pour le moment : créez-en une pour jouer.</p>
       )}
 
       <ul className="word-lists__items">
@@ -122,11 +123,6 @@ export default function WordListsPage() {
           <button type="button" className="btn btn--lg" disabled={full} onClick={() => setEditing('new')}>
             Nouvelle liste
           </button>
-          {state.activeId && (
-            <Link to="/games/custom-words" className="btn btn--ghost">
-              Jouer avec la liste active
-            </Link>
-          )}
           {full && <span className="muted">Limite de {MAX_LISTS} listes atteinte.</span>}
         </div>
       )}
@@ -134,7 +130,7 @@ export default function WordListsPage() {
       {!editedList && editing !== 'new' && state.lists.length > 0 && (
         <p className="muted">Une liste compte jusqu’à {MAX_WORDS} mots.</p>
       )}
-    </div>
+    </section>
   )
 }
 

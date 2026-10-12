@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import cover from './cover.svg'
+import WordListsPanel from './WordListsPanel.jsx'
 
 export default {
   id: 'custom-words',
@@ -15,7 +16,7 @@ export default {
     'Reconnaissance écrite d’un mot entendu',
   ],
   materials: [
-    'La liste se prépare dans « Mes listes » (menu du haut) : un mot par ligne. La liste active est celle que le jeu utilise.',
+    'Les listes se préparent sous les réglages : un mot par ligne. La liste active est celle que le jeu utilise.',
     'En lecture, c’est le praticien qui juge : « Bien lu » ou « À revoir ». Les mots à revoir figurent dans le bilan de séance.',
     'Le mode écoute demande au moins deux mots dans la liste ; les propositions sont tirées de la même liste.',
   ],
@@ -41,5 +42,6 @@ export default {
       default: 10,
     },
   ],
+  setupPanel: WordListsPanel,
   component: lazy(() => import('./CustomWords.jsx')),
 }

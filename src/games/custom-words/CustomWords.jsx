@@ -1,12 +1,11 @@
 /**
  * « Mes mots »: the practitioner's own list, read aloud or recognised by ear.
  *
- * The list is the *active* one of « Mes listes ». It is read once, when the
+ * The list is the *active* one of the word lists panel, on the settings screen. It is read once, when the
  * game starts: a list edited in another tab does not change a series that
  * has begun.
  */
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import SpeakButton from '../../components/SpeakButton.jsx'
@@ -36,11 +35,7 @@ function NoList({ list, mode }) {
         {list
           ? `Ce mode demande au moins ${needed} mot${needed > 1 ? 's' : ''}.`
           : 'Préparez d’abord une liste, un mot par ligne.'}
-      </p>
-      <p>
-        <Link to="/listes" className="btn">
-          {list ? 'Modifier la liste' : 'Créer une liste'}
-        </Link>
+        {' '}Quittez la partie (la croix) pour revenir aux réglages, où se gèrent les listes.
       </p>
     </div>
   )
