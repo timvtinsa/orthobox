@@ -24,7 +24,7 @@ While they are empty, the last slide shows dashed placeholders.
 
 ## Keeping it accurate
 
-The slides state the number of games (41) and the games per domain (10, 8, 12
+The slides state the number of games (42) and the games per domain (11, 8, 12
 and 11). Update them, and take the two screenshots again (`images/gallery.png`
 and `images/session.png`, tablet landscape 1024 × 768, adult mode, no patient
 data), when the catalogue or the interface changes. The same message is also
