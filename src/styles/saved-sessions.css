@@ -1,0 +1,237 @@
+/* --- Séances enregistrées : deux boutons, un champ et une liste en place de l'éditeur --- */
+
+.session-column__header {
+  align-items: center;
+}
+
+.session-column__header .saved-bar {
+  margin-left: auto;
+}
+
+.saved-bar {
+  display: flex;
+  gap: var(--s2);
+}
+
+.btn--sm {
+  min-height: 44px;
+  padding: 6px 16px;
+  font-size: var(--ui-sm);
+}
+
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.saved-bar__status {
+  flex-basis: 100%;
+  margin: 0;
+  min-height: 0;
+  font-size: var(--ui-sm);
+  font-weight: 700;
+  color: var(--success);
+}
+
+.saved-bar__status:empty {
+  display: none;
+}
+
+.saved-form {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.saved-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
+}
+
+.saved-form__label {
+  font-size: var(--ui-sm);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.saved-form__input {
+  flex: 1 1 200px;
+  min-width: 0;
+  height: 52px;
+  padding: 0 var(--s4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--ui-lg);
+}
+
+.saved-form__hint {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: var(--ui-sm);
+  color: var(--ink-soft);
+}
+
+.saved-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.saved-empty {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.saved-list {
+  display: grid;
+  gap: var(--s2);
+  margin: 0 0 var(--s3);
+  padding: 0;
+  list-style: none;
+}
+
+.saved-view {
+  display: grid;
+  gap: var(--s3);
+}
+
+.saved-item {
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.saved-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.saved-games {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.saved-game {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s1) var(--s3) var(--s1) var(--s1);
+  border-radius: var(--radius-sm);
+  background: var(--category-tint);
+  font-size: var(--ui-sm);
+  font-weight: 700;
+}
+
+.saved-game img {
+  width: 56px;
+  height: 35px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.saved-item__text {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.saved-item__name {
+  margin: 0;
+  font-size: var(--ui-md);
+  overflow-wrap: anywhere;
+}
+
+.saved-item__meta {
+  margin: 2px 0 0;
+  font-size: var(--ui-sm);
+  color: var(--ink-soft);
+}
+
+.saved-item__actions,
+.saved-item__confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
+}
+
+.saved-item__confirm span {
+  font-size: var(--ui-sm);
+  font-weight: 700;
+}
+
+.saved-backup {
+  padding-top: var(--s3);
+  border-top: 1px solid var(--line);
+  font-size: var(--ui-sm);
+}
+
+.saved-backup summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.saved-backup p {
+  margin: 0 0 var(--s3);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.saved-form,
+.saved-list,
+.saved-empty,
+.saved-backup {
+  text-align: left;
+}
+
+/* Le nom de la séance ouverte, en titre. */
+.session-title {
+  min-width: 0;
+}
+
+/* Un nom de séance prend sa propre ligne ; les pastilles et les boutons suivent. */
+.session-title--named {
+  flex-basis: 100%;
+}
+
+.session-title__kicker {
+  margin: 0;
+  font-size: var(--ui-xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.session-column__title--name {
+  font-size: 1.6rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.saved-form__lead {
+  margin: 0;
+  font-size: var(--ui-md);
+}
