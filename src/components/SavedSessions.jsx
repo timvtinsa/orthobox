@@ -1,25 +1,30 @@
 /**
- * Saved sessions panel of the session builder: save the plan being prepared
- * under a name, reopen it later, rename, delete, back up and restore.
+ * Saved sessions of the session builder: two small buttons beside the title of
+ * the plan, each opening a dialog, so the page itself stays light.
  *
- * Everything is kept in this browser (see `lib/saved-sessions.js`). Destructive
- * actions (replacing the plan in progress, deleting a saved session) ask for
- * an inline confirmation instead of a pop-up, which is easier to reach on a
- * phone and cannot be blocked by the browser.
+ *   « Enregistrer »  save the plan under a name (typing the name of a session
+ *                    already saved replaces it)
+ *   « Mes séances »  reopen or delete a saved session, back up and restore
+ *
+ * Everything is kept in this browser (see `lib/saved-sessions.js`). Replacing
+ * the plan in progress and deleting a session ask for a confirmation on the
+ * line of the session concerned, not in another pop-up.
  */
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getGame } from '../games/registry.js'
 import {
   MAX_NAME_LENGTH,
+  cleanName,
   deleteSession,
   exportSessions,
   importSessions,
   missingGames,
   openSession,
   readSavedSessions,
-  renameSession,
   saveSession,
 } from '../lib/saved-sessions.js'
+import Icon from './Icon.jsx'
+import Modal from './Modal.jsx'
 
 const FAILURES = {
   name: 'Donnez un nom à la séance.',
@@ -30,86 +35,160 @@ const FAILURES = {
   format: 'Ce fichier n’est pas une sauvegarde de séances Orthobox.',
 }
 
+function plural(count, one, many) {
+  return `${count} ${count > 1 ? many : one}`
+}
+
 function describe(entry) {
   const date = entry.savedAt
     ? new Date(entry.savedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
     : ''
-  const count = `${entry.steps.length} jeu${entry.steps.length > 1 ? 'x' : ''}`
+  const count = plural(entry.steps.length, 'jeu', 'jeux')
   return date ? `${count} · ${date}` : count
-}
-
-function titles(entry) {
-  return entry.steps
-    .map((step) => getGame(step.gameId)?.title)
-    .filter(Boolean)
-    .join(' · ')
 }
 
 export default function SavedSessions({ steps, onOpen }) {
   const [list, setList] = useState(readSavedSessions)
-  const [name, setName] = useState('')
-  const [activeId, setActiveId] = useState(null)
-  const [confirming, setConfirming] = useState(null) // { type: 'open' | 'delete', id }
-  const [renaming, setRenaming] = useState(null) // { id, value }
+  const [dialog, setDialog] = useState(null) // 'save' | 'list'
   const [message, setMessage] = useState('')
-  const fileInput = useRef(null)
 
-  const active = list.find((entry) => entry.id === activeId) ?? null
-  const fail = (reason) => setMessage(FAILURES[reason] ?? FAILURES.storage)
+  // The confirmation of what was just done fades on its own.
+  useEffect(() => {
+    if (!message) return undefined
+    const timer = window.setTimeout(() => setMessage(''), 5000)
+    return () => window.clearTimeout(timer)
+  }, [message])
 
-  const save = (event) => {
+  return (
+    <>
+      <div className="saved-bar">
+        {steps.length > 0 && (
+          <button type="button" className="btn btn--ghost btn--sm" onClick={() => setDialog('save')}>
+            Enregistrer
+          </button>
+        )}
+        <button type="button" className="btn btn--ghost btn--sm" onClick={() => setDialog('list')}>
+          Mes séances{list.length > 0 ? ` (${list.length})` : ''}
+        </button>
+      </div>
+
+      <p className="saved-bar__status" role="status">
+        {message}
+      </p>
+
+      {dialog === 'save' && (
+        <SaveDialog
+          steps={steps}
+          list={list}
+          onClose={() => setDialog(null)}
+          onSaved={(nextList, entry) => {
+            setList(nextList)
+            setDialog(null)
+            setMessage(`« ${entry.name} » est enregistrée.`)
+          }}
+        />
+      )}
+
+      {dialog === 'list' && (
+        <ListDialog
+          steps={steps}
+          list={list}
+          setList={setList}
+          onClose={() => setDialog(null)}
+          onOpened={(entry, lost) => {
+            setDialog(null)
+            setMessage(
+              `« ${entry.name} » est ouverte.` +
+                (lost > 0 ? ` ${plural(lost, 'jeu n’existe', 'jeux n’existent')} plus et a été retiré.` : ''),
+            )
+          }}
+          onOpen={onOpen}
+        />
+      )}
+    </>
+  )
+}
+
+function SaveDialog({ steps, list, onClose, onSaved }) {
+  const [name, setName] = useState('')
+  const [problem, setProblem] = useState('')
+  const same = list.find((entry) => entry.name.toLowerCase() === cleanName(name).toLowerCase())
+
+  const submit = (event) => {
     event.preventDefault()
-    const result = saveSession(name, steps)
-    if (!result.ok) return fail(result.reason)
-    setList(result.list)
-    setActiveId(result.entry.id)
-    setName('')
-    setMessage(`« ${result.entry.name} » est enregistrée.`)
+    const result = saveSession(name, steps, same?.id ?? null)
+    if (!result.ok) {
+      setProblem(FAILURES[result.reason] ?? FAILURES.storage)
+      return
+    }
+    onSaved(result.list, result.entry)
   }
 
-  const update = () => {
-    if (!active) return
-    const result = saveSession(active.name, steps, active.id)
-    if (!result.ok) return fail(result.reason)
-    setList(result.list)
-    setMessage(`« ${result.entry.name} » est mise à jour.`)
-  }
+  return (
+    <Modal titleId="save-title" title="Enregistrer la séance" onClose={onClose}>
+      <form className="saved-form" onSubmit={submit}>
+        <label className="saved-form__label" htmlFor="saved-name">
+          Nom de la séance
+        </label>
+        <input
+          id="saved-name"
+          className="saved-form__input"
+          type="text"
+          autoFocus
+          maxLength={MAX_NAME_LENGTH}
+          placeholder="Ex. Langage écrit, CE1"
+          value={name}
+          onChange={(event) => {
+            setName(event.target.value)
+            setProblem('')
+          }}
+        />
+        <p className="saved-form__hint" role="status">
+          {problem ||
+            (same
+              ? `Une séance porte déjà ce nom : elle sera remplacée (${describe(same)}).`
+              : `${plural(steps.length, 'jeu', 'jeux')} et leurs réglages. Aucune donnée patient.`)}
+        </p>
+        <div className="saved-form__actions">
+          <button type="submit" className="btn btn--lg">
+            {same ? 'Remplacer' : 'Enregistrer'}
+          </button>
+          <button type="button" className="btn btn--ghost" onClick={onClose}>
+            Annuler
+          </button>
+        </div>
+      </form>
+    </Modal>
+  )
+}
+
+function ListDialog({ steps, list, setList, onClose, onOpened, onOpen }) {
+  const [confirming, setConfirming] = useState(null) // { type: 'open' | 'delete', id }
+  const [problem, setProblem] = useState('')
+  const [info, setInfo] = useState('')
+  const fileInput = useRef(null)
 
   const open = (entry) => {
     const plan = openSession(entry)
     if (plan.length === 0) {
-      setMessage('Aucun jeu de cette séance n’existe plus dans Orthobox.')
+      setProblem('Aucun jeu de cette séance n’existe plus dans Orthobox.')
+      setConfirming(null)
       return
     }
     onOpen(plan)
-    setActiveId(entry.id)
-    setConfirming(null)
-    const lost = missingGames(entry)
-    setMessage(
-      `« ${entry.name} » est ouverte.` +
-        (lost > 0 ? ` ${lost} jeu${lost > 1 ? 'x' : ''} n’existe${lost > 1 ? 'nt' : ''} plus et a été retiré.` : ''),
-    )
+    onOpened(entry, missingGames(entry))
   }
 
   const askOpen = (entry) => {
+    setProblem('')
     if (steps.length === 0) open(entry)
     else setConfirming({ type: 'open', id: entry.id })
   }
 
   const remove = (entry) => {
     setList(deleteSession(entry.id))
-    if (activeId === entry.id) setActiveId(null)
     setConfirming(null)
-    setMessage(`« ${entry.name} » est supprimée.`)
-  }
-
-  const rename = (event) => {
-    event.preventDefault()
-    const result = renameSession(renaming.id, renaming.value)
-    if (!result.ok) return fail(result.reason)
-    setList(result.list)
-    setRenaming(null)
-    setMessage('Séance renommée.')
+    setInfo(`« ${entry.name} » est supprimée.`)
   }
 
   const download = () => {
@@ -120,159 +199,98 @@ export default function SavedSessions({ steps, onOpen }) {
     link.download = 'orthobox-seances.json'
     link.click()
     URL.revokeObjectURL(url)
-    setMessage('Sauvegarde téléchargée.')
+    setInfo('Sauvegarde téléchargée.')
   }
 
   const upload = async (event) => {
     const file = event.target.files?.[0]
     event.target.value = ''
     if (!file) return
+    setProblem('')
     // A backup is a few kilobytes: anything bigger is not one.
-    if (file.size > 1_000_000) return fail('format')
+    if (file.size > 1_000_000) return setProblem(FAILURES.format)
     const result = importSessions(await file.text())
-    if (!result.ok) return fail(result.reason)
+    if (!result.ok) return setProblem(FAILURES[result.reason] ?? FAILURES.format)
     setList(result.list)
-    setMessage(
+    setInfo(
       result.added > 0
-        ? `${result.added} séance${result.added > 1 ? 's' : ''} importée${result.added > 1 ? 's' : ''}` +
-            (result.skipped > 0 ? `, ${result.skipped} déjà présente${result.skipped > 1 ? 's' : ''} ou ignorée${result.skipped > 1 ? 's' : ''}.` : '.')
+        ? `${plural(result.added, 'séance importée', 'séances importées')}` +
+            (result.skipped > 0 ? `, ${plural(result.skipped, 'déjà présente', 'déjà présentes')}.` : '.')
         : 'Aucune nouvelle séance dans ce fichier.',
     )
   }
 
   return (
-    <section className="saved" aria-labelledby="saved-title">
-      <header className="saved__header">
-        <h2 id="saved-title" className="session-column__title">
-          Séances enregistrées
-        </h2>
-        {list.length > 0 && <span className="badge">{list.length}</span>}
-      </header>
-
-      <form className="saved__save" onSubmit={save}>
-        <label className="saved__label" htmlFor="saved-name">
-          Nom de la séance en cours
-        </label>
-        <div className="saved__row">
-          <input
-            id="saved-name"
-            className="saved__input"
-            type="text"
-            maxLength={MAX_NAME_LENGTH}
-            placeholder="Ex. Langage écrit, CE1"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-          <button type="submit" className="btn" disabled={steps.length === 0}>
-            Enregistrer
-          </button>
-          {active && (
-            <button type="button" className="btn btn--subtle" disabled={steps.length === 0} onClick={update}>
-              Mettre à jour « {active.name} »
-            </button>
-          )}
-        </div>
-      </form>
-
-      <p className="saved__status" role="status">
-        {message}
-      </p>
-
+    <Modal titleId="saved-list-title" title="Mes séances" onClose={onClose}>
       {list.length === 0 ? (
-        <p className="saved__empty">
-          Aucune séance enregistrée. Préparez une séance, donnez-lui un nom, et retrouvez-la au
-          prochain rendez-vous.
+        <p className="saved-empty">
+          Aucune séance enregistrée. Composez une séance, puis appuyez sur « Enregistrer » pour la
+          retrouver au prochain rendez-vous.
         </p>
       ) : (
-        <ul className="saved__list">
-          {list.map((entry) => (
-            <li key={entry.id} className={`saved__item${entry.id === activeId ? ' saved__item--active' : ''}`}>
-              {renaming?.id === entry.id ? (
-                <form className="saved__row" onSubmit={rename}>
-                  <label className="visually-hidden" htmlFor={`rename-${entry.id}`}>
-                    Nouveau nom
-                  </label>
-                  <input
-                    id={`rename-${entry.id}`}
-                    className="saved__input"
-                    type="text"
-                    maxLength={MAX_NAME_LENGTH}
-                    value={renaming.value}
-                    onChange={(event) => setRenaming({ ...renaming, value: event.target.value })}
-                  />
-                  <button type="submit" className="btn">
-                    Valider
-                  </button>
-                  <button type="button" className="btn btn--ghost" onClick={() => setRenaming(null)}>
-                    Annuler
-                  </button>
-                </form>
-              ) : (
-                <>
-                  <div className="saved__text">
-                    <h3 className="saved__name">{entry.name}</h3>
-                    <p className="saved__meta">{describe(entry)}</p>
-                    <p className="saved__games">{titles(entry)}</p>
-                  </div>
+        <ul className="saved-list">
+          {list.map((entry) => {
+            const games = entry.steps.map((step) => getGame(step.gameId)?.title).filter(Boolean)
+            return (
+              <li key={entry.id} className="saved-item">
+                <div className="saved-item__text">
+                  <h3 className="saved-item__name">{entry.name}</h3>
+                  <p className="saved-item__meta" title={games.join(' · ')}>
+                    {describe(entry)}
+                  </p>
+                </div>
 
-                  {confirming?.id === entry.id ? (
-                    <div className="saved__actions" role="group" aria-label={`Confirmer pour ${entry.name}`}>
-                      <span className="saved__confirm">
-                        {confirming.type === 'open' ? 'Remplacer la séance en cours ?' : 'Supprimer cette séance ?'}
-                      </span>
-                      <button
-                        type="button"
-                        className={`btn ${confirming.type === 'delete' ? 'btn--danger' : ''}`}
-                        onClick={() => (confirming.type === 'open' ? open(entry) : remove(entry))}
-                      >
-                        {confirming.type === 'open' ? 'Remplacer' : 'Supprimer'}
-                      </button>
-                      <button type="button" className="btn btn--ghost" onClick={() => setConfirming(null)}>
-                        Annuler
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="saved__actions">
-                      <button type="button" className="btn" onClick={() => askOpen(entry)}>
-                        Ouvrir
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn--ghost"
-                        aria-label={`Renommer ${entry.name}`}
-                        onClick={() => setRenaming({ id: entry.id, value: entry.name })}
-                      >
-                        Renommer
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn--ghost"
-                        aria-label={`Supprimer ${entry.name}`}
-                        onClick={() => setConfirming({ type: 'delete', id: entry.id })}
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
-            </li>
-          ))}
+                {confirming?.id === entry.id ? (
+                  <div className="saved-item__confirm" role="group" aria-label={`Confirmer pour ${entry.name}`}>
+                    <span>{confirming.type === 'open' ? 'Remplacer la séance en cours ?' : 'Supprimer cette séance ?'}</span>
+                    <button
+                      type="button"
+                      className={`btn btn--sm${confirming.type === 'delete' ? ' btn--danger' : ''}`}
+                      onClick={() => (confirming.type === 'open' ? open(entry) : remove(entry))}
+                    >
+                      {confirming.type === 'open' ? 'Remplacer' : 'Supprimer'}
+                    </button>
+                    <button type="button" className="btn btn--ghost btn--sm" onClick={() => setConfirming(null)}>
+                      Annuler
+                    </button>
+                  </div>
+                ) : (
+                  <div className="saved-item__actions">
+                    <button type="button" className="btn" onClick={() => askOpen(entry)}>
+                      Ouvrir
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn icon-btn--danger"
+                      aria-label={`Supprimer ${entry.name}`}
+                      onClick={() => setConfirming({ type: 'delete', id: entry.id })}
+                    >
+                      <Icon name="cross" size={18} filled={false} />
+                    </button>
+                  </div>
+                )}
+              </li>
+            )
+          })}
         </ul>
       )}
 
-      <div className="saved__backup">
-        <p className="saved__note">
-          Les séances restent sur cet appareil, dans ce navigateur : elles disparaissent si les
-          données du navigateur sont effacées. Une sauvegarde permet de les garder ou de les
-          copier sur un autre appareil. Elle ne contient que des jeux et des réglages, aucune
-          donnée patient.
+      <p className="saved-form__hint" role="status">
+        {problem || info}
+      </p>
+
+      <details className="saved-backup">
+        <summary>Sauvegarde et copie sur un autre appareil</summary>
+        <p>
+          Les séances restent dans ce navigateur : elles disparaissent si ses données sont
+          effacées. Un fichier de sauvegarde les garde ou les copie ailleurs. Il ne contient que
+          des jeux et des réglages, aucune donnée patient.
         </p>
-        <div className="saved__row">
-          <button type="button" className="btn btn--ghost" disabled={list.length === 0} onClick={download}>
-            Sauvegarder (fichier)
+        <div className="saved-form__actions">
+          <button type="button" className="btn btn--ghost btn--sm" disabled={list.length === 0} onClick={download}>
+            Télécharger la sauvegarde
           </button>
-          <button type="button" className="btn btn--ghost" onClick={() => fileInput.current?.click()}>
+          <button type="button" className="btn btn--ghost btn--sm" onClick={() => fileInput.current?.click()}>
             Importer une sauvegarde
           </button>
           <input
@@ -285,7 +303,7 @@ export default function SavedSessions({ steps, onOpen }) {
             onChange={upload}
           />
         </div>
-      </div>
-    </section>
+      </details>
+    </Modal>
   )
 }

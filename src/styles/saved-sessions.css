@@ -1,79 +1,96 @@
-/* --- Séances enregistrées (page « Préparer une séance ») -------------- */
+/* --- Séances enregistrées : deux boutons et deux fenêtres ------------- */
 
-.saved {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s3);
-  padding: var(--s4);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.saved__header {
-  display: flex;
+.session-column__header {
   align-items: center;
-  gap: var(--s3);
 }
 
-.saved__save {
-  display: grid;
+.session-column__header .saved-bar {
+  margin-left: auto;
+}
+
+.saved-bar {
+  display: flex;
   gap: var(--s2);
 }
 
-.saved__label {
+.btn--sm {
+  min-height: 44px;
+  padding: 6px 16px;
   font-size: var(--ui-sm);
-  font-weight: 700;
-  color: var(--ink-soft);
 }
 
-.saved__row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s2);
-  align-items: center;
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
 }
 
-.saved__input {
-  flex: 1 1 200px;
-  min-width: 0;
-  height: 46px;
-  padding: 0 var(--s3);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--ink);
-  font: inherit;
-}
-
-.saved__status {
+.saved-bar__status {
+  flex-basis: 100%;
   margin: 0;
-  min-height: 1.4em;
+  min-height: 0;
   font-size: var(--ui-sm);
   font-weight: 700;
   color: var(--success);
 }
 
-.saved__empty,
-.saved__note {
-  margin: 0;
+.saved-bar__status:empty {
+  display: none;
+}
+
+.saved-form {
+  display: grid;
+  gap: var(--s3);
+}
+
+.saved-form__label {
   font-size: var(--ui-sm);
-  line-height: 1.5;
+  font-weight: 700;
   color: var(--ink-soft);
 }
 
-.saved__list {
-  display: grid;
-  gap: var(--s2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.saved-form__input {
+  height: 52px;
+  padding: 0 var(--s4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--ui-lg);
 }
 
-.saved__item {
+.saved-form__hint {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: var(--ui-sm);
+  color: var(--ink-soft);
+}
+
+.saved-form__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s3);
+  gap: var(--s2);
+}
+
+.saved-empty {
+  margin: 0 0 var(--s3);
+  color: var(--ink-soft);
+}
+
+.saved-list {
+  display: grid;
+  gap: var(--s2);
+  margin: 0 0 var(--s3);
+  padding: 0;
+  list-style: none;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.saved-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s3);
   align-items: center;
   justify-content: space-between;
   padding: var(--s3);
@@ -82,50 +99,60 @@
   background: var(--surface-alt);
 }
 
-.saved__item--active {
-  border-color: var(--accent);
-  background: var(--accent-tint);
-}
-
-.saved__text {
-  flex: 1 1 220px;
+.saved-item__text {
+  flex: 1 1 180px;
   min-width: 0;
 }
 
-.saved__name {
+.saved-item__name {
   margin: 0;
   font-size: var(--ui-md);
   overflow-wrap: anywhere;
 }
 
-.saved__meta,
-.saved__games {
+.saved-item__meta {
   margin: 2px 0 0;
   font-size: var(--ui-sm);
   color: var(--ink-soft);
-  overflow-wrap: anywhere;
 }
 
-.saved__actions {
+.saved-item__actions,
+.saved-item__confirm {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s2);
   align-items: center;
 }
 
-.saved__confirm {
+.saved-item__confirm span {
   font-size: var(--ui-sm);
   font-weight: 700;
 }
 
-.btn--danger {
-  background: var(--danger);
-  color: #fff;
-}
-
-.saved__backup {
-  display: grid;
-  gap: var(--s2);
+.saved-backup {
   padding-top: var(--s3);
   border-top: 1px solid var(--line);
+  font-size: var(--ui-sm);
+}
+
+.saved-backup summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.saved-backup p {
+  margin: 0 0 var(--s3);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.saved-form,
+.saved-list,
+.saved-empty,
+.saved-backup {
+  text-align: left;
 }

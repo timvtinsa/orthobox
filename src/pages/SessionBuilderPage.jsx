@@ -107,6 +107,7 @@ export default function SessionBuilderPage() {
                 {steps.length} jeu{steps.length > 1 ? 'x' : ''}
               </span>
             )}
+            <SavedSessions steps={steps} onOpen={save} />
           </header>
 
           <ol className={`sequence${drag ? ' sequence--hover' : ''}`} ref={zone}>
@@ -262,7 +263,6 @@ export default function SessionBuilderPage() {
               </div>
             </div>
           )}
-          <SavedSessions steps={steps} onOpen={save} />
         </section>
 
         <section className="session-column">
