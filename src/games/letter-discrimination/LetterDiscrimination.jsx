@@ -13,11 +13,12 @@ import StateMark from '../../components/StateMark.jsx'
 import { useAnswerLock } from '../../hooks/useAnswerLock.js'
 import { useRounds } from '../../hooks/useRounds.js'
 import { answerState, stateClass } from '../../lib/answer-state.js'
-import { buildRound } from './letters.js'
+import { createLetterDrawer } from './letters.js'
 
 export default function LetterDiscrimination({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createLetterDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [picked, setPicked] = useState(null)
   const lock = useAnswerLock()
 
@@ -32,7 +33,7 @@ export default function LetterDiscrimination({ config, session }) {
   const goNext = () => {
     lock.release()
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     setPicked(null)
   }
 
@@ -40,7 +41,8 @@ export default function LetterDiscrimination({ config, session }) {
     lock.release()
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     setPicked(null)
   }
 

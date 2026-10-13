@@ -274,6 +274,40 @@ They hold for any addition:
 | `npm run lint` | ESLint over the whole repository |
 | `npm test` | unit tests (Vitest) |
 | `npm run test:coverage` | the same, plus a coverage report (`lib`, `hooks`, `games`) |
+| `npm run test:e2e` | every screen at seven device sizes (320 to 1440 px, portrait and landscape): no overflow, clipped text or undersized tap target, no WCAG A/AA violation (axe), no console error |
+
+### Responsive and accessibility checks
+
+`e2e/` drives a real browser (Playwright) over a build without service worker.
+For the gallery, the session builder, the 404 page and **every game** (found in
+`src/games`, so a new game is covered without touching the suite), it opens the
+settings screen, starts the game, and on both screens checks:
+
+- the page never scrolls sideways and nothing sticks out of the screen;
+- text is never cut off, and never smaller than 12px;
+- controls are at least 40px on touch devices (24px on desktop, the WCAG 2.5.8
+  minimum), a stretched pseudo-element counting as part of the target;
+- axe-core finds no WCAG 2.2 A/AA or best-practice violation (the Stroop ink
+  colours are excluded: the colour is the stimulus). This audit is the slow part
+  of a test and gives the same answer whatever the size (same DOM, roles, labels
+  and colours), so it only runs on three sizes: a phone, the tablet in
+  landscape and the desktop (`metadata.axe` in `playwright.config.js`). The
+  layout checks above, cheap and size-dependent, run on all seven;
+- no uncaught error or console error.
+
+`e2e/accessibility.spec.js` adds keyboard checks (visible focus, a game started
+and left without a mouse) and `e2e/audit.mjs` is a non-asserting sweep that
+prints every distinct problem across all sizes (`node e2e/audit.mjs [device,…]`
+with `npm run preview` serving a build on port 4173). In CI it runs as a
+separate job, since it needs a browser.
+
+To keep that job short: waits follow the page (fonts loaded, two frames
+painted, the lazy game chunk arrived) instead of fixed sleeps; the workers
+follow the cores of the runner; traces are only recorded on a retry; and it
+stops after ten failures, since a broken screen fails on every page and every
+size. A pull request that only touches documentation, Markdown files or the
+workflows unrelated to CI skips the browser steps (the job still reports a
+success, so a required check never stays pending).
 
 ### What the tests cover
 
@@ -306,10 +340,7 @@ kept as a build artifact either way, so a failure can be traced to the file
 that dropped. `.github/workflows/release-please.yml` computes the
 version from the commit messages, keeps `CHANGELOG.md` up to date, and creates
 the tag and the release when the release pull request is merged — then builds
-once more and publishes that same `dist/` to GitHub Pages
-(`actions/upload-pages-artifact` and `actions/deploy-pages`, in a job scoped
-to the `pages`/`id-token` permissions it alone needs), so the zip attached to
-the release and the hosted copy are provably the same build.
+once more and attaches that `dist/` to the release as a zip.
 
 Right after the tag is created, a plain step ("Prepare the release commit
 log") computes the commit range since the previous tag and captures every

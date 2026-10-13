@@ -13,6 +13,7 @@ import CategoryShape from '../components/CategoryShape.jsx'
 import GameBrief from '../components/GameBrief.jsx'
 import GameCompanion from '../components/GameCompanion.jsx'
 import GameSetup, { defaultConfig } from '../components/GameSetup.jsx'
+import { ProgressionProvider } from '../components/ProgressionContext.jsx'
 import Icon from '../components/Icon.jsx'
 import { getGame } from '../games/registry.js'
 import { categoryStyle, getCategory } from '../lib/categories.js'
@@ -51,8 +52,14 @@ function GameScreen({ gameId }) {
   const GameComponent = game.component
   const initialSettings = shared ? { ...defaultConfig(game.settings), ...shared } : defaultConfig(game.settings)
 
+  // The settings screen is often scrolled down when « Démarrer » is pressed
+  // (phones): without this, the board opens with its bar under the sticky
+  // header.
+  const backToTop = () => window.scrollTo({ top: 0 })
+
   const start = (settings) => {
     session.reset()
+    backToTop()
     setConfig(settings)
     setRunKey((key) => key + 1)
   }
@@ -61,6 +68,7 @@ function GameScreen({ gameId }) {
   // practitioner cuts a game short more often than they finish it.
   const quit = () => {
     session.reset()
+    backToTop()
     setConfig(null)
   }
 
@@ -72,7 +80,9 @@ function GameScreen({ gameId }) {
         <div className="board__area">
           <div className="board__content">
             <Suspense fallback={<p className="muted">Chargement du jeu…</p>}>
-              <GameComponent key={runKey} config={config} session={session} />
+              <ProgressionProvider value={{ game, config, apply: start }}>
+                <GameComponent key={runKey} config={config} session={session} />
+              </ProgressionProvider>
             </Suspense>
           </div>
 

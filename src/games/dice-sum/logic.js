@@ -6,7 +6,7 @@
  * add up is fixed from the start. That keeps the answer independent of when
  * the animation happens to stop.
  */
-import { randomInt } from '../../lib/random.js'
+import { createDrawer, randomInt } from '../../lib/random.js'
 
 export const FACES = 6
 export const MIN_DICE = 2
@@ -19,6 +19,19 @@ export function rollDice(config) {
     id: index,
     value: randomInt(1, FACES),
   }))
+}
+
+/**
+ * The source of throws for one game: never the same total twice within the
+ * last three throws, nor the same combination of faces twice in the session
+ * while the dice leave others to come up.
+ */
+export function createRollDrawer(config) {
+  return createDrawer(() => rollDice(config), {
+    recent: (roll) => [sumOf(roll)],
+    series: (roll) => [roll.map((die) => die.value).sort().join('')],
+    memory: 3,
+  })
 }
 
 export function sumOf(roll) {

@@ -18,7 +18,7 @@ export default function BoardBar({ title, session, onQuit, quitLabel = 'Quitter 
         <Icon name="cross" size={22} filled={false} />
       </button>
 
-      <span className="board-bar__title">{title}</span>
+      <h1 className="board-bar__title">{title}</h1>
 
       <span className="board-bar__progress">
         {total ? (

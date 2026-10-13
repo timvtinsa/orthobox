@@ -22,6 +22,9 @@ export default {
   ],
   instructions:
     'Les cartes sont face cachée, certaines montrent un nombre, d’autres un calcul. Le patient en retourne deux : si le calcul donne bien ce nombre elles restent visibles, sinon elles se retournent après le temps d’observation choisi.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'level' },
   settings: [
     {
       id: 'level',

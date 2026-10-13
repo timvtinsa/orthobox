@@ -6,7 +6,7 @@
  * it either, and the tolerance never collapses to zero, which would make a
  * placement impossible to get right with a finger.
  */
-import { randomInt, shuffle } from '../../lib/random.js'
+import { createDrawer, randomInt, shuffle } from '../../lib/random.js'
 
 export const RANGES = { ten: 10, twenty: 20, hundred: 100 }
 
@@ -70,6 +70,18 @@ export function buildRound(config) {
   if (config.task === 'read') return readRound(max)
   if (config.task === 'compute') return computeRound(max)
   return placeRound(max)
+}
+
+/**
+ * The source of rounds for one game: no number to find (or to reach) twice
+ * within the last three rounds, and no round twice while the line has others.
+ */
+export function createLineDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [round.target],
+    series: (round) => [`${round.kind}:${round.target}:${round.start ?? ''}:${round.step ?? ''}`],
+    memory: 3,
+  })
 }
 
 /** The graduations drawn under the line, for a given setting. */

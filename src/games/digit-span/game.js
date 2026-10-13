@@ -21,6 +21,9 @@ export default {
   ],
   instructions:
     'La suite s’affiche pendant le temps choisi, puis disparaît. Le patient la retape dans le même ordre, ou à l’envers selon le réglage.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'length' },
   settings: [
     {
       id: 'length',

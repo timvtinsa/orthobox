@@ -13,7 +13,7 @@ import Feedback from '../../components/Feedback.jsx'
 import GameOver from '../../components/GameOver.jsx'
 import StudyPhase from '../../components/StudyPhase.jsx'
 import { useRounds } from '../../hooks/useRounds.js'
-import { buildRound } from './logic.js'
+import { createSequenceDrawer } from './logic.js'
 import ShapeIcon from './ShapeIcon.jsx'
 
 function itemLabel(item) {
@@ -41,7 +41,8 @@ function Item({ item, onClick, label, rank, disabled }) {
 
 export default function ShapeSequence({ config, session }) {
   const rounds = useRounds(config.rounds, session)
-  const [round, setRound] = useState(() => buildRound(config))
+  const [drawer] = useState(() => createSequenceDrawer(config))
+  const [round, setRound] = useState(() => drawer.next())
   const [phase, setPhase] = useState('study') // study -> test
   const [placed, setPlaced] = useState([])
   const [result, setResult] = useState(null)
@@ -78,7 +79,7 @@ export default function ShapeSequence({ config, session }) {
 
   const goNext = () => {
     rounds.next()
-    setRound(buildRound(config))
+    setRound(drawer.next())
     updatePlaced([])
     setResult(null)
     setPhase('study')
@@ -87,7 +88,8 @@ export default function ShapeSequence({ config, session }) {
   const replay = () => {
     session.reset()
     rounds.restart()
-    setRound(buildRound(config))
+    drawer.reset()
+    setRound(drawer.next())
     updatePlaced([])
     setResult(null)
     setPhase('study')

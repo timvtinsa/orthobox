@@ -7,7 +7,7 @@
  * game progressive: plain colours to start, shapes and colours combined once
  * that is mastered.
  */
-import { shuffle } from '../../lib/random.js'
+import { shuffle, createDrawer } from '../../lib/random.js'
 import { COLORS, SHAPES } from './data.js'
 
 export const POOL_SIZE = 6
@@ -40,6 +40,18 @@ function allItems(material) {
 
 export function lengthFor(config) {
   return LENGTH_BY_LEVEL[config.length] ?? 3
+}
+
+/**
+ * The source of sequences for one game: the same sequence is not given twice,
+ * and two in a row never start with the same item.
+ */
+export function createSequenceDrawer(config) {
+  return createDrawer(() => buildRound(config), {
+    recent: (round) => [`first:${round.target[0].id}`],
+    series: (round) => [round.target.map((item) => item.id).join('>')],
+    memory: 2,
+  })
 }
 
 export function buildRound(config) {

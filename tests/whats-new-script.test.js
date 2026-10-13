@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildPrompt, extractHighlights, whatsNewFor } from '../scripts/write-whats-new.mjs'
+import { MAX_HIGHLIGHTS, buildPrompt, extractHighlights, whatsNewFor } from '../scripts/write-whats-new.mjs'
 
 describe('write-whats-new', () => {
   it('puts the tag and the commit log in the prompt', () => {
@@ -26,6 +26,13 @@ describe('write-whats-new', () => {
     expect(() => extractHighlights('{"highlights": "oops"}')).toThrow()
     expect(() => extractHighlights('{"highlights": ["Ok.", ""]}')).toThrow()
     expect(() => extractHighlights('{"highlights": [3]}')).toThrow()
+  })
+
+  it('asks for three highlights and keeps no more than that', () => {
+    expect(buildPrompt('v1.0.0', 'x')).toContain('three main highlights at most')
+    const many = JSON.stringify({ highlights: ['A.', 'B.', 'C.', 'D.', 'E.'] })
+    expect(extractHighlights(many)).toEqual(['A.', 'B.', 'C.'])
+    expect(MAX_HIGHLIGHTS).toBe(3)
   })
 
   it('strips the leading v from the version', () => {

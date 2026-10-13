@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Orthobox">
+  <rect width="512" height="512" rx="154" fill="#a8c8ec"/>
+  <circle cx="166.4" cy="204.8" r="51.2" fill="#35608f"/>
+  <circle cx="345.6" cy="204.8" r="51.2" fill="#f6bdab"/>
+  <circle cx="166.4" cy="358.4" r="51.2" fill="#b9d8c2"/>
+  <circle cx="345.6" cy="358.4" r="51.2" fill="#cdc3ec"/>
+</svg>

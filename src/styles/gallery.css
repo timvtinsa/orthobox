@@ -340,6 +340,28 @@
   flex-wrap: wrap;
 }
 
+/* L'éditeur garde l'écart des éléments de la colonne, dont il est le contenu. */
+.session-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.session-editor[hidden] {
+  display: none;
+}
+
+/* Les boutons de la séance restent collés au bas de l'écran quand l'éditeur est
+   plus haut qu'elle : un fond qui s'estompe et de l'air autour les séparent des
+   jeux qui défilent dessous, au lieu de les poser dessus. */
+.session-editor > .game-actions {
+  bottom: 0;
+  margin-top: 4px;
+  padding: var(--s5) 0 var(--s4);
+  background: linear-gradient(to top, var(--ground) 65%, transparent);
+}
+
 .session-column__title {
   font-size: 1.25rem;
 }

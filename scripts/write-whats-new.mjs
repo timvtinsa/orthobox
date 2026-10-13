@@ -24,6 +24,9 @@ import { fileURLToPath } from 'node:url'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const MODEL = 'claude-haiku-4-5'
 
+/** The popup is read in a few seconds: only the main changes make it in. */
+export const MAX_HIGHLIGHTS = 3
+
 export function buildPrompt(tag, log) {
   return `You are writing the "what's new" summary shown once to Orthobox users right after they update to a new version. Orthobox is a French-language web app used during speech-therapy sessions: a toolbox of short games for a speech therapist and their patient, often a child. Your audience is a parent, a speech therapist, or occasionally a curious teenager, never a developer.
 
@@ -31,7 +34,7 @@ This release is tagged ${tag}. Here are every commit's subject and body since th
 
 ${log}
 
-From those commits, write a short list of highlights, each a single short French sentence, for a change a user would actually notice: a new game, a visible interface or usability improvement, or a bug fix that affected what they could do or see. Leave out anything purely internal: dependency bumps, CI or release-workflow changes, refactors, test additions, documentation, build tooling, or performance work invisible to the user. If the release has nothing a user would notice, use an empty list rather than inventing a line. Merge commits that describe facets of the same visible change into a single line rather than listing each separately.
+From those commits, write the list of the three main highlights at most (fewer if there is less to say), the most important first, each a single short French sentence, for a change a user would actually notice: a new game, a visible interface or usability improvement, or a bug fix that affected what they could do or see. Leave out anything purely internal: dependency bumps, CI or release-workflow changes, refactors, test additions, documentation, build tooling, or performance work invisible to the user. If the release has nothing a user would notice, use an empty list rather than inventing a line. Merge commits that describe facets of the same visible change into a single line rather than listing each separately, and when several new games arrive together, announce them in one line rather than one line each.
 
 Write in plain, warm French: one clause per idea, no jargon, no markdown, no emoji, each line capitalised and ending with a period like an ordinary sentence.
 
@@ -49,7 +52,7 @@ export function extractHighlights(answer) {
   if (!Array.isArray(highlights)) throw new Error('"highlights" is not a list')
   const lines = highlights.map((line) => (typeof line === 'string' ? line.trim() : ''))
   if (lines.some((line) => line === '')) throw new Error('"highlights" holds an empty or non-text line')
-  return lines
+  return lines.slice(0, MAX_HIGHLIGHTS)
 }
 
 export function whatsNewFor(tag, highlights) {

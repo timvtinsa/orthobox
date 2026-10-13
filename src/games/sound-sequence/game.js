@@ -23,6 +23,9 @@ export default {
   ],
   instructions:
     'La suite est jouée sans que les cartes soient visibles. Le patient les remet ensuite dans l’ordre entendu, un clic plaçant la carte à la suite des précédentes.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'length' },
   settings: [
     {
       id: 'bank',

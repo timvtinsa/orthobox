@@ -24,7 +24,7 @@
   --line-strong: #d6cdc6;
   --ink: #33303a;
   --ink-soft: #6b6674;
-  --ink-faint: #98929f;
+  --ink-faint: #6e6978; /* 4.5:1 on every surface: it carries text, not only decoration */
 
   /* Sémantique */
   --success: #2f7d57;
@@ -254,8 +254,16 @@ a {
   font-size: 0.85rem;
 }
 
+/* The « Découvrir Orthobox » link: a line of small text is far under the
+   44 px a finger needs, so the link takes a target of its own. */
+.app-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s2);
+}
+
 .app-footer__version {
-  opacity: 0.6;
   font-variant-numeric: tabular-nums;
 }
 

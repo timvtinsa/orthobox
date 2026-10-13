@@ -22,6 +22,9 @@ export default {
   ],
   instructions:
     'Une suite d’éléments (des couleurs, ou des formes et des couleurs) s’affiche pendant quelques instants, puis disparaît. Le patient la reconstitue dans le même ordre en touchant les bons éléments, parmi d’autres qui ne sont pas demandés.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'length' },
   settings: [
     {
       id: 'material',

@@ -12,6 +12,14 @@
  * The order is imposed here rather than by each manifest: numbers first, then
  * choices, and a choice of more than three options takes a row of its own.
  *
+ * A choice with many options can declare `display: 'select'` to be shown as a
+ * drop-down instead of cards, its options optionally sorted under a `group`.
+ *
+ * A game whose material cannot be described by simple settings (the
+ * practitioner's own word lists, say) can declare a `setupPanel` component: it
+ * is shown under the settings, on this same screen, so everything the game
+ * needs is prepared before « Démarrer ».
+ *
  * A field can declare `showIf(config)` to appear only once another field
  * holds a given value, for a setting that means nothing without it (a
  * memorisation time when the model is never hidden, say). Hidden fields keep
@@ -22,6 +30,7 @@ import { useState } from 'react'
 import { shareLink } from '../lib/share-settings.js'
 import Stepper from './Stepper.jsx'
 import StyledQr from './StyledQr.jsx'
+import SettingSelect from './SettingSelect.jsx'
 import SwitchGroup from './SwitchGroup.jsx'
 
 /** Default values declared by a game in its `game.js` manifest. */
@@ -69,6 +78,8 @@ export default function GameSetup({
       return a.type === 'number' ? -1 : 1
     })
 
+  const SetupPanel = game.setupPanel
+
   const isDefault = game.settings.every((field) => config[field.id] === field.default)
 
   return (
@@ -105,6 +116,13 @@ export default function GameSetup({
                   step={field.step ?? 1}
                   onChange={(value) => update(field.id, value)}
                 />
+              ) : field.display === 'select' ? (
+                <SettingSelect
+                  labelId={fieldId(field)}
+                  value={config[field.id]}
+                  options={field.options}
+                  onChange={(value) => update(field.id, value)}
+                />
               ) : (
                 <SwitchGroup
                   labelId={fieldId(field)}
@@ -117,6 +135,8 @@ export default function GameSetup({
           )
         })}
       </div>
+
+      {SetupPanel && <SetupPanel />}
 
       <div className="setup__actions">
         <button

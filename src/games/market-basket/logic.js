@@ -10,7 +10,7 @@
  * The basket is held as a plain `{ [id]: count }` map: comparing it to the
  * order is then a set comparison, and an item taken back simply decrements.
  */
-import { randomInt, sample } from '../../lib/random.js'
+import { createDrawer, randomInt, sample } from '../../lib/random.js'
 import { PRODUCE } from './data.js'
 
 export const MAX_PER_KIND = 5
@@ -23,6 +23,18 @@ export function buildOrder(config) {
     ...item,
     count: randomInt(1, MAX_PER_KIND),
   }))
+}
+
+/**
+ * The source of orders for one game: never the same order twice, nor two
+ * orders holding the same number of items in a row.
+ */
+export function createOrderDrawer(config) {
+  return createDrawer(() => buildOrder(config), {
+    recent: (order) => [`size:${orderSize(order)}`],
+    series: (order) => [order.map((item) => `${item.id}${item.count}`).join(',')],
+    memory: 2,
+  })
 }
 
 /** How many items the order holds in total, quantities included. */

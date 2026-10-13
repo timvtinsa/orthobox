@@ -21,6 +21,9 @@ export default {
   ],
   instructions:
     'Les cases s’allument l’une après l’autre. L’enfant reproduit la suite en cliquant dans le même ordre, ou dans l’ordre inverse selon le réglage.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'start' },
   settings: [
     {
       id: 'cells',

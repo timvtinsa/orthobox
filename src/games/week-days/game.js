@@ -22,6 +22,9 @@ export default {
   ],
   instructions:
     'Une question porte sur les jours de la semaine. Le patient touche le bon jour parmi quatre propositions, avec ou sans la bande de la semaine pour l’aider.',
+  // The setting the end screen moves one notch when the series was very well
+  // or poorly answered (see src/lib/progression.js).
+  progression: { setting: 'level' },
   settings: [
     {
       id: 'level',
