@@ -1,5 +1,61 @@
 # Changelog
 
+## [0.7.0](https://github.com/timvtinsa/orthobox/compare/v0.6.0...v0.7.0) (2026-10-13)
+
+
+### Features
+
+* **gallery:** add a short presentation page at #/what ([f88cbaf](https://github.com/timvtinsa/orthobox/commit/f88cbaf9870794e082245aa7ab6fd8a5346f47c6))
+* **gallery:** add a short presentation page at #/what ([d728d97](https://github.com/timvtinsa/orthobox/commit/d728d970aabd8caa0d35205ee91142f0a0358f80))
+* **games:** add a/à, ou/où and distant subject-verb agreement ([a13603b](https://github.com/timvtinsa/orthobox/commit/a13603b645b27c47c895d539ae1e8ecaa92b2a2b))
+* **games:** add conjugation, pronouns, derivation and inflection to word forms ([f4c3e13](https://github.com/timvtinsa/orthobox/commit/f4c3e13c6bb090f9fcdb4b82387d7df1aeb195d8))
+* **games:** add stories and everyday words ([#90](https://github.com/timvtinsa/orthobox/issues/90)) ([ce058c3](https://github.com/timvtinsa/orthobox/commit/ce058c3a53e1c5f1253e1948db0c64c002681e2b))
+* **games:** enlarge the oral-language content banks ([#89](https://github.com/timvtinsa/orthobox/issues/89)) ([d1b7214](https://github.com/timvtinsa/orthobox/commit/d1b7214f25f625157e7d14d971e19c89e9bc250f))
+* **games:** enlarge the written-language content banks ([#88](https://github.com/timvtinsa/orthobox/issues/88)) ([f331143](https://github.com/timvtinsa/orthobox/commit/f33114389e8a678058fd4d44e8cffbf7f290d528))
+* **games:** enter the words of a list one by one ([25e7ea5](https://github.com/timvtinsa/orthobox/commit/25e7ea50051b871d102479724d83d992631e3f66))
+* **games:** La bonne forme du mot, a spelling and morphology game ([a6a29d7](https://github.com/timvtinsa/orthobox/commit/a6a29d7cb02f46e25614eea531432b3b5de7e3b1))
+* **games:** manage the word lists in the game settings ([67951f2](https://github.com/timvtinsa/orthobox/commit/67951f25af299ead63b9338f21b7040ff3b6769a))
+* **games:** on/ont, son/sont, ces/ses/c'est/s'est, and a drop-down setting ([c1c960a](https://github.com/timvtinsa/orthobox/commit/c1c960a3da38c4fb18b1bd9491dfbcfdd8f1f2f1))
+* **games:** own word lists and the game "Mes mots" ([0073d5b](https://github.com/timvtinsa/orthobox/commit/0073d5b9cb62ea91b69b384edf2a9d899b143e4e))
+* **games:** own word lists and the game Mes mots ([cbc072f](https://github.com/timvtinsa/orthobox/commit/cbc072f05478ab9ce7681d7a1adeba378f7b9e00))
+* **games:** propose a harder or easier next game from the result ([7870260](https://github.com/timvtinsa/orthobox/commit/787026027f5d4255fbda3b8acda6d4220b4af9e4))
+* **games:** propose a harder or easier next game from the result ([ffb8ab7](https://github.com/timvtinsa/orthobox/commit/ffb8ab711bb21fc74012ced8d1f825602f3d86ce))
+* **games:** word endings, a spelling decision game ([d981618](https://github.com/timvtinsa/orthobox/commit/d981618d5496a47cdb53e004573ccbd52cfcf5d9))
+* **session:** open a saved session at once when the plan is kept ([6f2ee17](https://github.com/timvtinsa/orthobox/commit/6f2ee178478c483e5089e7a84c3a808877f7e519))
+* **session:** richer session report with items to review and domain totals ([e25e874](https://github.com/timvtinsa/orthobox/commit/e25e8743eae41c3959f461505fa664f68f6b710a))
+* **session:** richer session report with items to review and domain totals ([b9c6ee2](https://github.com/timvtinsa/orthobox/commit/b9c6ee2f909313df615c3a5973142cb131f25c7d))
+* **session:** save, reopen and back up named sessions ([ec19a5c](https://github.com/timvtinsa/orthobox/commit/ec19a5cb99ad987a909440c034ecb8f05df96e72))
+* **session:** save, reopen and back up named sessions ([d0c2610](https://github.com/timvtinsa/orthobox/commit/d0c2610899126ba7e2dd155b00aaa3122fdb99a3))
+* **session:** show the name of the opened session and update it in place ([ecf67a7](https://github.com/timvtinsa/orthobox/commit/ecf67a7842545f889cceabd7372718776a6c1bf4))
+* **session:** show the saved sessions in place of the plan editor ([2414716](https://github.com/timvtinsa/orthobox/commit/241471610d255ec0dffdc9450ea60437a1cf275d))
+
+
+### Bug fixes
+
+* **games:** stop the same result coming back in a row ([bf0002f](https://github.com/timvtinsa/orthobox/commit/bf0002f63ae6c8d65574b34811b5e9cc5147759a))
+* **games:** stop the same result coming back in a row ([2652c69](https://github.com/timvtinsa/orthobox/commit/2652c699c833673f607836b6e2a61149eddbda55))
+* **release:** generate the user-facing changelog without claude-code-action ([9a3dba4](https://github.com/timvtinsa/orthobox/commit/9a3dba4831a00502e98b1a02feab009e01dcddfd))
+* **release:** generate the user-facing changelog without claude-code-action ([4926a27](https://github.com/timvtinsa/orthobox/commit/4926a2768931423c31b035bbb92ca12bf8731c43))
+* **release:** limit the user-facing changelog to three highlights ([a0d65e5](https://github.com/timvtinsa/orthobox/commit/a0d65e58714c2a7aa549e4b3c5f3d02453590ee6))
+* **release:** limit the user-facing changelog to three highlights ([0950edf](https://github.com/timvtinsa/orthobox/commit/0950edf8d74f9f99877b4bbf8d65124385a045c8))
+* **session:** give the sticky session buttons room and a backdrop ([ab00cb0](https://github.com/timvtinsa/orthobox/commit/ab00cb0423620efca74e0c05507de08116cb39f7))
+* **test:** make the browser tests pass and about twice as fast ([185e27b](https://github.com/timvtinsa/orthobox/commit/185e27b95ee8a207d43b848bfbfd88700b806cfb))
+* **test:** make the browser tests pass and about twice as fast ([4107ebc](https://github.com/timvtinsa/orthobox/commit/4107ebcca38b5a8e7bf3a1ba4ecb8928e89a1b6e))
+
+
+### Internal refactors
+
+* **session:** drop the items to review, make the report actions icons ([719939e](https://github.com/timvtinsa/orthobox/commit/719939e10d6a9b79f66c8e692822462d6e98cf9a))
+* **session:** move the saved sessions into two dialogs ([5b2ecde](https://github.com/timvtinsa/orthobox/commit/5b2ecde17a9d1dd8fa64374ebba8e7ee0cb43f45))
+
+
+### Documentation
+
+* add a short presentation deck for speech therapists ([1ee1d2a](https://github.com/timvtinsa/orthobox/commit/1ee1d2a98be8e9e4769976c2accb7bf468e14df5))
+* add a short presentation deck for speech therapists ([94e576a](https://github.com/timvtinsa/orthobox/commit/94e576a5ef948f9805404ef4da46a7b3319e58da))
+* show the saved sessions in the deck ([24474b7](https://github.com/timvtinsa/orthobox/commit/24474b7cef7488fc40265b287152bdfa4e87d78d))
+* update the deck to 42 games ([3b33465](https://github.com/timvtinsa/orthobox/commit/3b33465495af1cd78b6ff14bc0272764555a778d))
+
 ## [0.6.0](https://github.com/timvtinsa/orthobox/compare/v0.5.0...v0.6.0) (2026-10-05)
 
 
