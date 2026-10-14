@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MAX_HIGHLIGHTS, buildPrompt, extractHighlights, whatsNewFor } from '../scripts/write-whats-new.mjs'
+import { MAX_HIGHLIGHTS, buildPrompt, extractHighlights, readGameTitles, whatsNewFor } from '../scripts/write-whats-new.mjs'
 
 describe('write-whats-new', () => {
   it('puts the tag and the commit log in the prompt', () => {
@@ -33,6 +33,23 @@ describe('write-whats-new', () => {
     const many = JSON.stringify({ highlights: ['A.', 'B.', 'C.', 'D.', 'E.'] })
     expect(extractHighlights(many)).toEqual(['A.', 'B.', 'C.'])
     expect(MAX_HIGHLIGHTS).toBe(3)
+  })
+
+  it('lists the exact game titles so the model does not invent names', () => {
+    const prompt = buildPrompt('v1.0.0', 'x', ['Mes mots', 'Dés et sommes'])
+    expect(prompt).toContain('Mes mots ; Dés et sommes')
+    expect(buildPrompt('v1.0.0', 'x')).not.toContain('exact names')
+  })
+
+  it('reads the real game titles from the manifests', () => {
+    const titles = readGameTitles()
+    expect(titles.length).toBeGreaterThan(10)
+    expect(titles).toContain('Mes mots')
+    expect(titles.every((title) => title.length > 0 && !title.includes('\\'))).toBe(true)
+  })
+
+  it('uses typographic apostrophes', () => {
+    expect(extractHighlights('{"highlights": ["L\'écoute d\'un mot."]}')).toEqual(['L’écoute d’un mot.'])
   })
 
   it('strips the leading v from the version', () => {

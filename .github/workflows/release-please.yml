@@ -12,10 +12,11 @@
 # subscription rather than paid API credits) turns the release's commits
 # into a short, French, user-facing changelog (see "Write the user-facing
 # changelog" below) — the in-app "what's new" popup reads it, and it is
-# never the same text as the technical CHANGELOG.md above. That step never
-# blocks the release: without a working CLAUDE_CODE_OAUTH_TOKEN, or on any
-# other failure, the release still publishes, just without a user-facing
-# changelog that time.
+# never the same text as the technical CHANGELOG.md above. It is committed on
+# the release pull request (`changelog` job) so that it is in the tagged
+# source, which is what Cloudflare builds. That never blocks the release:
+# without a working CLAUDE_CODE_OAUTH_TOKEN, or on any other failure, the
+# release still publishes, just without a user-facing changelog that time.
 #
 # Cloudflare is deployed separately, by Cloudflare's own git integration
 # (production branch: main), not from here: it already gives every other
@@ -53,6 +54,8 @@ jobs:
     name: Prepare and publish the release
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      pr_branch: ${{ steps.release.outputs.prs_created == 'true' && fromJSON(steps.release.outputs.pr).headBranchName || '' }}
     steps:
       - name: Compute the version and the changelog
         id: release
@@ -131,6 +134,11 @@ jobs:
             echo "COMMIT_LOG_EOF"
           } >> "$GITHUB_OUTPUT"
 
+      # Fallback only: the file is normally generated earlier, on the release
+      # pull request (see the `changelog` job below), and arrives here already
+      # committed. This runs when it is missing (a manual re-run, or a release
+      # pull request whose generation failed).
+      #
       # A short, French, user-facing summary of the release — never the
       # technical CHANGELOG.md above — read by the in-app "what's new"
       # popup. The Claude Code CLI is called directly (see the script): the
@@ -143,7 +151,7 @@ jobs:
       # be blocked by this step — but the script reports its failure as an
       # error annotation, so it can no longer pass unnoticed.
       - name: Write the user-facing changelog
-        if: ${{ steps.target.outputs.tag != '' }}
+        if: ${{ steps.target.outputs.tag != '' && hashFiles('public/whats-new.json') == '' }}
         continue-on-error: true
         run: node scripts/write-whats-new.mjs
         env:
@@ -181,3 +189,53 @@ jobs:
           # variable expansion, which is the safe pattern regardless of how
           # trusted `tag_name` happens to be today.
           TAG_NAME: ${{ steps.target.outputs.tag }}
+
+  # The user-facing changelog is committed on the release pull request, so it
+  # is part of the source that gets tagged: Cloudflare builds production from
+  # git, and a file generated only inside this workflow never reached it.
+  # It is regenerated every time release-please rewrites the pull request
+  # (each landing on main), so editing it by hand is a last step, just before
+  # merging. A failure leaves the pull request without the file: the release
+  # then falls back to the step above, for the release notes only.
+  changelog:
+    name: Write the user-facing changelog on the release pull request
+    needs: release
+    if: ${{ needs.release.outputs.pr_branch != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the release pull request
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.release.outputs.pr_branch }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Write public/whats-new.json
+        id: write
+        continue-on-error: true
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          previous=$(git describe --tags --abbrev=0 --match 'v*' origin/main)
+          echo "Commits since $previous, for v$version"
+          NEW_TAG="v$version" COMMIT_LOG="$(git log "$previous..origin/main" --no-merges --format='%s%n%b%n---')" \
+            node scripts/write-whats-new.mjs
+
+      - name: Commit it to the release pull request
+        if: ${{ steps.write.outcome == 'success' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/whats-new.json
+          if git diff --cached --quiet; then
+            echo "Already up to date."
+          else
+            git commit -m 'chore(main): user-facing changelog'
+            git push origin HEAD
+          fi
