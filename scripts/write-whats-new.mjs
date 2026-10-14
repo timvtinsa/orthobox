@@ -17,7 +17,7 @@
  * CLAUDE_CODE_OAUTH_TOKEN (read by the CLI itself).
  */
 import { execFileSync } from 'node:child_process'
-import { writeFileSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -27,14 +27,37 @@ const MODEL = 'claude-haiku-4-5'
 /** The popup is read in a few seconds: only the main changes make it in. */
 export const MAX_HIGHLIGHTS = 3
 
-export function buildPrompt(tag, log) {
+/** The French titles of the games, read from the `game.js` manifests, so the
+ * model names a game as the user sees it instead of guessing from commits. */
+export function readGameTitles(root = ROOT) {
+  const gamesDir = resolve(root, 'src/games')
+  const titles = []
+  for (const entry of readdirSync(gamesDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    try {
+      const manifest = readFileSync(resolve(gamesDir, entry.name, 'game.js'), 'utf8')
+      const match = manifest.match(/^\s*title:\s*(['"`])(.+?)\1/m)
+      if (match) titles.push(match[2].replace(/\\(['"`])/g, '$1'))
+    } catch {
+      /* A folder without a manifest is not a game. */
+    }
+  }
+  return titles.sort((a, b) => a.localeCompare(b, 'fr'))
+}
+
+export function buildPrompt(tag, log, titles = []) {
+  const games = titles.length
+    ? `\n\nThe games of the application, with the exact names users see: ${titles.join(' ; ')}. When you name a game, use one of these names exactly; never invent or translate a name, and if a commit does not map to one of them, describe it without naming it.`
+    : ''
   return `You are writing the "what's new" summary shown once to Orthobox users right after they update to a new version. Orthobox is a French-language web app used during speech-therapy sessions: a toolbox of short games for a speech therapist and their patient, often a child. Your audience is a parent, a speech therapist, or occasionally a curious teenager, never a developer.
 
 This release is tagged ${tag}. Here are every commit's subject and body since the previous release, most recent first, each block separated by a line of three dashes:
 
-${log}
+${log}${games}
 
 From those commits, write the list of the three main highlights at most (fewer if there is less to say), the most important first, each a single short French sentence, for a change a user would actually notice: a new game, a visible interface or usability improvement, or a bug fix that affected what they could do or see. Leave out anything purely internal: dependency bumps, CI or release-workflow changes, refactors, test additions, documentation, build tooling, or performance work invisible to the user. If the release has nothing a user would notice, use an empty list rather than inventing a line. Merge commits that describe facets of the same visible change into a single line rather than listing each separately, and when several new games arrive together, announce them in one line rather than one line each.
+
+Be concrete: say what a user can now do or see, never a vague claim such as "better", "more adapted" or "more content". One theme per line, no catch-all line grouping unrelated things. When the release adds a page or a screen (for example a page presenting the application, or a richer session report), say so plainly.
 
 Write in plain, warm French: one clause per idea, no jargon, no markdown, no emoji, each line capitalised and ending with a period like an ordinary sentence.
 
@@ -50,7 +73,8 @@ export function extractHighlights(answer) {
   if (start === -1 || end <= start) throw new Error('No JSON object in the answer')
   const { highlights } = JSON.parse(answer.slice(start, end + 1))
   if (!Array.isArray(highlights)) throw new Error('"highlights" is not a list')
-  const lines = highlights.map((line) => (typeof line === 'string' ? line.trim() : ''))
+  // Typographic apostrophes, like the rest of the interface.
+  const lines = highlights.map((line) => (typeof line === 'string' ? line.trim().replaceAll("'", '’') : ''))
   if (lines.some((line) => line === '')) throw new Error('"highlights" holds an empty or non-text line')
   return lines.slice(0, MAX_HIGHLIGHTS)
 }
@@ -62,7 +86,7 @@ export function whatsNewFor(tag, highlights) {
 function main() {
   const tag = process.env.NEW_TAG
   if (!tag) throw new Error('NEW_TAG is required (e.g. "v0.6.0")')
-  const prompt = buildPrompt(tag, process.env.COMMIT_LOG ?? '')
+  const prompt = buildPrompt(tag, process.env.COMMIT_LOG ?? '', readGameTitles())
 
   const answer = execFileSync('npx', ['--yes', '@anthropic-ai/claude-code', '-p', '--model', MODEL, '--tools', ''], {
     cwd: ROOT,
