@@ -233,8 +233,7 @@ Concretely, on every landing on `main`:
    against a Claude subscription rather than paid API credits) turns the
    release's commits into `public/whats-new.json`, a short, French,
    user-facing summary — never the same text as `CHANGELOG.md`. The app
-   shows it once, in a popup, the first time it runs on a new version, and
-   on demand from the bell icon in the header (see
+   shows it once, in a popup, the first time it runs on a new version (see
    `src/components/WhatsNew.jsx`). This step reads a
    `CLAUDE_CODE_OAUTH_TOKEN` repository secret, but never blocks the
    release: if it fails for any reason, the release still publishes, just
