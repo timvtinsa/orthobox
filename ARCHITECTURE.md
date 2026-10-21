@@ -360,10 +360,8 @@ before writing anything" failure. Claude writes its result directly to
 `public/whats-new.json` (gitignored: meaningful only inside the build that
 just generated it), which `src/components/WhatsNew.jsx` reads both
 automatically (once, the first time the app runs on a version different
-from the one recorded in `localStorage`) and on demand (a bell icon in the
-header, next to the donate and install buttons — it always opens the
-popup, with a "nothing new" message when there is genuinely no file or no
-highlights, rather than doing nothing and reading as broken). A later,
+from the one recorded in `localStorage`; there is no button to reopen it, a
+real notification system being left for later). A later,
 plain step (`scripts/update-release-notes.mjs`, no LLM call) reads that
 same file back and prepends its highlights to the GitHub release notes
 when there are any; a missing file there logs a `::warning::` annotation,
@@ -377,8 +375,8 @@ subscription itself. `continue-on-error: true` keeps it from ever blocking
 a release: if the token is missing, expired, or the call fails for any
 other reason, the step is reported as failed in the workflow run but the
 job carries on regardless, simply without `public/whats-new.json` (and
-so without a user-facing changelog that time — the in-app bell still opens
-and says so, rather than staying silent).
+so without a user-facing changelog that time — the popup then simply does
+not show).
 
 `wrangler.jsonc` is unrelated to that release process: it only configures a
 Cloudflare Workers project, connected directly to this repository through
