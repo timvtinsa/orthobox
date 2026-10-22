@@ -210,6 +210,7 @@ worker, useful for a hosted preview.
 | --- | --- |
 | `.github/workflows/ci.yml` | lint, tests and build on `main`, `integ` and every pull request |
 | `.github/workflows/release-please.yml` | version computation, changelog, tag and release |
+| `.github/workflows/claude-code-review.yml` | a first-pass review of a pull request by Claude Code, once when it is opened (add the `claude-review` label to ask again) |
 
 The repository follows three levels: working branches start from `integ`,
 `integ` is the integration branch, and `main` only receives what is ready to
